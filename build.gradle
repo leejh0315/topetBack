@@ -40,7 +40,12 @@ dependencies {
 	
 	
 	implementation 'com.google.code.gson:gson:2.8.6' //json
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.14.1' //objectMapper (json_)
 	implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml'//json
+
+
+
+	
 	
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'	//jpa 사용
 	
