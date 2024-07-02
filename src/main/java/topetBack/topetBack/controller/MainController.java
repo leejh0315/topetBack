@@ -1,7 +1,6 @@
 package topetBack.topetBack.controller;
 
 
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,16 +12,15 @@ import topetBack.topetBack.form.PostForm;
 
 @RestController
 @Slf4j
-@CrossOrigin(origins = "http://localhost:3000")
 public class MainController {
-    //temp
+
     @GetMapping("/api/temp")
     @ResponseBody
     public String getHome() {
         log.info("get Home");
         return "Back Front Connected!";
     }
-    
+    //get post 
     @PostMapping("/api/postTemp")
     public String postHome(@RequestBody PostForm postForm) {
         log.info("postName : " + postForm);
@@ -31,4 +29,6 @@ public class MainController {
         
         return "입력한 내용은 " + postForm;
     }
+    
+    
 }
