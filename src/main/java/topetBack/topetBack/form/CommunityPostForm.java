@@ -21,7 +21,6 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import topetBack.topetBack.domain.Community;
 
 import java.awt.Image;
 import java.time.LocalDateTime;
@@ -61,18 +60,23 @@ public class CommunityPostForm {
     @Column(nullable = false)
     private String hashtag;
     
+    @Column(nullable = false)
+    private String category;
+    
     @Builder
-    public CommunityPostForm(String title, String content, String hashtag) {
+    public CommunityPostForm(String title, String content, String hashtag , String category) {
     	this.title = title;
     	this.content = content;
     	this.hashtag = hashtag;
+    	this.category = category;
     }
     
-    public static CommunityPostForm createPost(String title , String content , String hashtag) {
+    public static CommunityPostForm createPost(String title , String content , String hashtag, String category) {
     	return CommunityPostForm.builder()
     			.title(title)
     			.content(content)
     			.hashtag(hashtag)
+    			.category(category)
     			.build();
     }
     
