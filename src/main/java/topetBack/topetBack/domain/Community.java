@@ -1,6 +1,8 @@
 package topetBack.topetBack.domain;
 
+import java.awt.Image;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
@@ -17,11 +19,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
 
 @Getter
-@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -35,7 +35,7 @@ public class Community {
     @Column(name = "post_id")
 	private Long id;
 	
-//	 @ManyToOne(fetch = FetchType.LAZY)
+//	 @ManyToOne(fetch = FetchType.LAZY
 //	 @JoinColumn(name = "member_id")
 //	 private Member member;
 	 
@@ -57,8 +57,10 @@ public class Community {
     
     @Column(nullable = false)
     private String hashtag;
-	
-    @Column(name = "image_path", nullable = false)
-    private String imagePath;
-
+    
+//    @OneToMany(mappedBy = "boadr", cashcade = CascadeType.PERSIST , orphanRemoval = true)
+//    private List<Image> images;
+    //프로필 , 스케줄 , 커뮤니티 , 쇼츠
+    
+   
 }

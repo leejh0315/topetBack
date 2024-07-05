@@ -36,9 +36,8 @@ import java.util.Map;
 @Table(name = "community")
 @ToString
 @Entity
-@MappedSuperclass
 public class CommunityPostForm {
-	@Id 
+	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY) //MySQL의 AUTO_INCREMENT를 사용
     @Column(name = "post_id")
 	private Long id;
@@ -49,30 +48,30 @@ public class CommunityPostForm {
 	@UpdateTimestamp
     private LocalDateTime updatedTime;	
 	
-	@ColumnDefault("true")
-	private Boolean deleted;
+//	@ColumnDefault("true")
+//	private Boolean deleted;
 	
     @Column(nullable = false)
 	private String title;
     
     @Column(nullable = false)
     @Lob
-    private String contents;
+    private String content;
     
     @Column(nullable = false)
     private String hashtag;
     
     @Builder
-    public CommunityPostForm(String title, String contents, String hashtag) {
+    public CommunityPostForm(String title, String content, String hashtag) {
     	this.title = title;
-    	this.contents = contents;
+    	this.content = content;
     	this.hashtag = hashtag;
     }
     
-    public static CommunityPostForm createPost(String title , String contents , String hashtag) {
+    public static CommunityPostForm createPost(String title , String content , String hashtag) {
     	return CommunityPostForm.builder()
     			.title(title)
-    			.contents(contents)
+    			.content(content)
     			.hashtag(hashtag)
     			.build();
     }

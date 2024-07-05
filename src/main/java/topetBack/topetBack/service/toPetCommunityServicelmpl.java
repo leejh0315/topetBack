@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class toPetCommunityServicelmpl {
-	private final toPetCommunityServicelmpl ToPetCommunityRepository;
 	
 	
 	
