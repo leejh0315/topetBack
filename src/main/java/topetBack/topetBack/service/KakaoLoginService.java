@@ -1,5 +1,7 @@
 package topetBack.topetBack.service;
 
+import java.util.Map;
+
 public interface KakaoLoginService {
-	String kakaoLogin(String code)throws Exception;
+	Map<String, Object>  kakaoLogin(String code)throws Exception;
 }

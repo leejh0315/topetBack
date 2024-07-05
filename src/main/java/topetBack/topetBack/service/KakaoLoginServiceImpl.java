@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -33,8 +34,8 @@ public class KakaoLoginServiceImpl implements KakaoLoginService{
 	private String backAddress;
 	
 	@Override
-	public String kakaoLogin(String code) throws Exception {
-
+	public Map<String, Object>  kakaoLogin(String code) throws Exception {
+		Map userInfoMap = new HashMap<>();
 		/*로그인 성공 여부 + 카카오 엑세스 토큰*/
 		//////////////////////////////////////////////////////////////////////
 		RestTemplate rt = new RestTemplate();	
@@ -141,17 +142,22 @@ public class KakaoLoginServiceImpl implements KakaoLoginService{
 
             String nickname = properties.path("nickname").asText();
             String email = kakaoAccount.path("email").asText();
-
-            userInfo.put("nickname", nickname);
-            userInfo.put("email", email);
-
+            long kakaoId = rootNode.path("id").asLong();
+            
+            //userInfo.put("nickname", nickname);
+            //userInfo.put("email", email);
+            
+            
+            userInfoMap.put("nickname", nickname);
+            userInfoMap.put("email", email);
+            userInfoMap.put("kid", kakaoId);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        System.out.println(userInfo.toString());
+        
 		
-		return response.toString();
+		return userInfoMap;
 	}
 
 }
