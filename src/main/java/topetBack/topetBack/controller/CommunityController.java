@@ -3,6 +3,7 @@ package topetBack.topetBack.controller;
 import java.io.File;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,21 +12,25 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import topetBack.topetBack.form.CommunityPostForm;
 import topetBack.topetBack.repository.TestRepository;
 import topetBack.topetBack.repository.ToPetCommunityRepository;
 
 @RestController
+@RequiredArgsConstructor
 @Slf4j
 public class CommunityController {
 	
+	@Autowired
+    private ToPetCommunityRepository toPetCommunityRepository;
+
     @PostMapping("/api/community/community/post")
     public String communityPostHome(@RequestBody CommunityPostForm communityPostForm) {
 		return "?" + communityPostForm;
     	
-    }    
-    
+    }
     @PostMapping(value = "/api/community/community/postPhoto", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public String communityPostPhoto(@RequestPart(value = "photos", required = true) MultipartFile[] photos) {
         if (photos.length > 10) {
