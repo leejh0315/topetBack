@@ -14,9 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import topetBack.topetBack.form.CommunityPostForm;
-import topetBack.topetBack.repository.TestRepository;
-import topetBack.topetBack.repository.ToPetCommunityRepository;
+import topetBack.topetBack.form.CommunityForm;
 
 @RestController
 @RequiredArgsConstructor
@@ -27,8 +25,8 @@ public class CommunityController {
     private ToPetCommunityRepository toPetCommunityRepository;
 
     @PostMapping("/api/community/community/post")
-    public String communityPostHome(@RequestBody CommunityPostForm communityPostForm) {
-		return "?" + communityPostForm;
+    public String communityPostHome(@RequestBody CommunityForm communityForm) {
+		return "?" + communityForm;
     	
     }
     @PostMapping(value = "/api/community/community/postPhoto", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
