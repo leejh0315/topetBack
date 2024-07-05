@@ -49,10 +49,11 @@ public class LoginController {
 		
 		
 		if(response != null) {
-			Member member = new Member();
-			member.setMemberKid((Long) response.get("kid"));
-			member.setMemberEmail((String) response.get("email"));
-			member.setMemberName((String) response.get("nickname"));
+			Member member = new Member( (Long) response.get("kid"), 
+										(String) response.get("email"), 
+										(String) response.get("nickname")
+										);
+			
 			
 			Optional<Member> dbMember= memberService.selectByKakaoId((Long) response.get("kid"));
 			

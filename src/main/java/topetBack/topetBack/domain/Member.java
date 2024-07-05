@@ -7,6 +7,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import lombok.Builder;
 import lombok.Data;
 
 @Data
@@ -23,4 +24,12 @@ public class Member {
 	
 	private String memberEmail;
 	private String activeUUID;
+	
+	
+	 @Builder
+	 public Member(Long kid, String email, String nickname){
+	      this.memberKid = kid;
+	      this.memberEmail = email;
+	      this.memberName = nickname;
+	   }
 }

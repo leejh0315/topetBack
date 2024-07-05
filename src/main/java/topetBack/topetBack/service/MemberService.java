@@ -3,7 +3,6 @@ package topetBack.topetBack.service;
 
 
 
-import java.util.List;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -24,10 +23,9 @@ public class MemberService {
     }
     
     public Member memberJoin(Member memberInfo) {
-    	Member member = new Member();
-        member.setMemberName(memberInfo.getMemberName());
-        member.setMemberEmail(memberInfo.getMemberEmail());
-        member.setMemberKid(memberInfo.getMemberKid());
+    	Member member = new Member( memberInfo.getMemberKid(), 
+				(String) memberInfo.getMemberEmail(), 
+				(String) memberInfo.getMemberName());
         return memberRepository.save(member);
     }
     
