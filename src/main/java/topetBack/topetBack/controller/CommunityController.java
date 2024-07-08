@@ -10,7 +10,10 @@ import java.util.UUID;
 
 import org.springframework.http.MediaType;
 import org.springframework.util.FileCopyUtils;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,17 +30,32 @@ import topetBack.topetBack.domain.Image;
 import topetBack.topetBack.form.CommunityPostForm;
 import topetBack.topetBack.repository.ImageRepository;
 import topetBack.topetBack.repository.ToPetCommunityRepository;
+import topetBack.topetBack.validation.Vaildator;
 
 @RestController
 @RequiredArgsConstructor
 @Slf4j
+
 public class CommunityController {
 	
     private final ToPetCommunityRepository toPetCommunityRepository;
-    
+    private final Vaildator vaildator;
+	
+	@InitBinder
+	public void init(WebDataBinder  webDataBinder) {
+		webDataBinder.addValidators(vaildator);
+	}
+	
     @PostMapping("/api/community/community/post")
-    public void communityTest(@RequestBody CommunityPostForm communityPostForm){
+    public Object communityTest(@RequestBody CommunityPostForm communityPostForm ,BindingResult bindingResult){
+    	vaildator.validate(communityPostForm, bindingResult);
+    	log.info(bindingResult.toString());
+    	if(bindingResult.hasErrors()) {
+            return bindingResult.getFieldErrors();
+        }
     	toPetCommunityRepository.save(communityPostForm);
+        return "success";
+        
     }
     
     @GetMapping("/post_id/{communityId}")
