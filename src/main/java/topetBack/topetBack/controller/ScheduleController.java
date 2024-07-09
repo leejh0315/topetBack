@@ -9,7 +9,10 @@ import java.util.UUID;
 
 import org.springframework.http.MediaType;
 import org.springframework.util.FileCopyUtils;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -24,13 +27,24 @@ import topetBack.topetBack.domain.Schedule;
 import topetBack.topetBack.repository.ScheduleRepository;
 import topetBack.topetBack.service.KakaoLoginService;
 import topetBack.topetBack.service.MemberService;
+import topetBack.topetBack.repository.ImageRepository;
+import topetBack.topetBack.repository.ToPetCommunityRepository;
+import topetBack.topetBack.validation.CommunityVaildator;
+import topetBack.topetBack.validation.ScheduleVaildator;
 
 @RestController
+@RequiredArgsConstructor
 @Slf4j
 @RequiredArgsConstructor
 public class ScheduleController {
 	
 	private final ScheduleRepository scheduleRepository;
+	private final ScheduleVaildator vaildator;
+	
+	@InitBinder
+	public void init(WebDataBinder webDataBinder) {
+		webDataBinder.addValidators(vaildator);
+	}
 	
 	@GetMapping("/api/schedule")
     public String getCalendar() {
@@ -40,7 +54,11 @@ public class ScheduleController {
     //get post 
 	
 	 @PostMapping("/api/schedule/post")
-	    public String schedulePost(@ModelAttribute Schedule schedule) {
+	    public Object schedulePost(@ModelAttribute Schedule schedule , BindingResult bindingResult) {
+	    	vaildator.validate(schedule, bindingResult);
+	    	if(bindingResult.hasErrors()) {
+	            return bindingResult.getFieldErrors();
+	        }
 	        log.info("/api/schedule/post 진입");
 	        log.info("입력한 내용은 {}", schedule);
 	        

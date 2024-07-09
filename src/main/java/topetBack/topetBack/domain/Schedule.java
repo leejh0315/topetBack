@@ -6,6 +6,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
@@ -20,7 +21,10 @@ public class Schedule {
 	private LocalDateTime endDate;
 	private String scheduleTitle;
 	private String scheduleContent;
-	private Boolean isComplete;
+	
+	@NotNull
+	private boolean isComplete;
+	
 	private String color;
 	private int writerId;
 	private int editorId;
