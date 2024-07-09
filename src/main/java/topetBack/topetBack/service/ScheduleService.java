@@ -2,7 +2,7 @@ package topetBack.topetBack.service;
 
 import org.springframework.stereotype.Service;
 
-import topetBack.topetBack.repository.MemberRepository;
+import topetBack.topetBack.domain.Schedule;
 import topetBack.topetBack.repository.ScheduleRepository;
 
 @Service
@@ -12,6 +12,12 @@ public class ScheduleService {
 	
 	public ScheduleService(ScheduleRepository scheduleRepository) {
         this.scheduleRepository = scheduleRepository;
+    }
+	public Schedule saveSchedule(Schedule schedule) {
+    	 
+		scheduleRepository.save(schedule);
+		
+        return schedule;
     }
 
 }

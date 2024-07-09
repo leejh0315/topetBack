@@ -3,6 +3,7 @@ package topetBack.topetBack.controller;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Map;
 import java.util.UUID;
 
 
@@ -17,13 +18,19 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.google.gson.JsonObject;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import topetBack.topetBack.domain.Schedule;
+import topetBack.topetBack.repository.ScheduleRepository;
+import topetBack.topetBack.service.KakaoLoginService;
+import topetBack.topetBack.service.MemberService;
 
 @RestController
 @Slf4j
+@RequiredArgsConstructor
 public class ScheduleController {
 	
+	private final ScheduleRepository scheduleRepository;
 	
 	@GetMapping("/api/schedule")
     public String getCalendar() {
@@ -37,8 +44,8 @@ public class ScheduleController {
 	        log.info("/api/schedule/post 진입");
 	        log.info("입력한 내용은 {}", schedule);
 	        
-	     
-	        
+	    	Schedule response = scheduleRepository.save(schedule);
+	    	log.info("schedule db저장 " + response);
 	        return "일정이 성공적으로 등록되었습니다.";
 	    }
 	 
