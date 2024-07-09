@@ -23,7 +23,6 @@ public class Image {
     
     @Column(nullable = false)
 	private String fileUUID;
-
 	
 	@Builder
     public Image(Long fileId, String fileUrl, String fileUUID) {

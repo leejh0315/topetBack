@@ -9,7 +9,7 @@ import topetBack.topetBack.form.CommunityForm;
 import topetBack.topetBack.form.CommunityPostForm;
 
 @Component
-public class Vaildator implements Validator{
+public class CommunityVaildator implements Validator{
 
 	@Override
 	public boolean supports(Class<?> clazz) {

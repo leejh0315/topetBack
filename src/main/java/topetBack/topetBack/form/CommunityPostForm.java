@@ -63,21 +63,32 @@ public class CommunityPostForm {
     @Column(nullable = false)
     private String category;
     
+    @Column(nullable = false)
+    private String animal;
+    
     @Builder
-    public CommunityPostForm(String title, String content, String hashtag , String category) {
+    public CommunityPostForm(String title, String content, String hashtag , String category , String animal) {
     	this.title = title;
     	this.content = content;
     	this.hashtag = hashtag;
     	this.category = category;
+    	this.animal = animal;
     }
     
-    public static CommunityPostForm createPost(String title , String content , String hashtag, String category) {
+    public static CommunityPostForm createPost(String title , String content , String hashtag, String category , String animal) {
     	return CommunityPostForm.builder()
     			.title(title)
     			.content(content)
     			.hashtag(hashtag)
     			.category(category)
+    			.animal(animal)
     			.build();
+    }
+    
+    public void update(String title, String content) {
+    	this.title = title;
+        this.content = content;
+        this.updatedTime = LocalDateTime.now();
     }
     
 }

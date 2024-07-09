@@ -8,7 +8,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
@@ -30,35 +33,45 @@ import topetBack.topetBack.domain.Image;
 import topetBack.topetBack.form.CommunityPostForm;
 import topetBack.topetBack.repository.ImageRepository;
 import topetBack.topetBack.repository.ToPetCommunityRepository;
-import topetBack.topetBack.validation.Vaildator;
+import topetBack.topetBack.service.ToPetCommunityService;
+import topetBack.topetBack.validation.CommunityVaildator;
 
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-
+@Controller
 public class CommunityController {
 	
     private final ToPetCommunityRepository toPetCommunityRepository;
-    private final Vaildator vaildator;
+    private final CommunityVaildator vaildator;
+    
+    @Autowired
+	private ToPetCommunityService toPetCommunityService;
 	
+    
 	@InitBinder
 	public void init(WebDataBinder  webDataBinder) {
 		webDataBinder.addValidators(vaildator);
 	}
 	
+	//커뮤니티 글 작성
     @PostMapping("/api/community/community/post")
     public Object communityTest(@RequestBody CommunityPostForm communityPostForm ,BindingResult bindingResult){
+    	
     	vaildator.validate(communityPostForm, bindingResult);
     	log.info(bindingResult.toString());
+    	
     	if(bindingResult.hasErrors()) {
             return bindingResult.getFieldErrors();
         }
+    	
     	toPetCommunityRepository.save(communityPostForm);
         return "success";
         
     }
     
-    @GetMapping("/post_id/{communityId}")
+    
+    @GetMapping("/api/post_id/{communityId}")
     public String getPostByPostId(
           @PathVariable("communityId") Long communityId, HttpServletRequest req) {
     	  
@@ -69,6 +82,7 @@ public class CommunityController {
     
     private final ImageRepository imageRepository;
 
+    //파일 저장
     @PostMapping(value = "/api/community/community/postPhoto", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public String communityPostPhoto(@RequestPart(value = "photos", required = true) MultipartFile[] photos) {
         if (photos.length > 10) {
@@ -120,4 +134,30 @@ public class CommunityController {
         imageRepository.saveAll(imageList);
         return "성공";
     }
+    
+    //게시판 리스트
+    @GetMapping("/api/community/{animal}/{category}")
+    public String boardList(Model model, @PathVariable("animal")String animal, @PathVariable("category")String category
+    	) {
+    	System.out.println(animal + category);
+    	System.out.println("test" + toPetCommunityService.getCommunityPreviewByType(animal, category).toString());
+    	return animal + " " + category;
+    }
+    
+    @GetMapping("/api/community/list")
+    public String list() {
+    	System.out.println(toPetCommunityService.findAll());
+    	return "";
+    }
+
+    
+    //게시물 삭제
+    @GetMapping("/api/community/delete/{postId}")
+    public String deleteCommunity(@PathVariable("postId") Long postId) {
+        toPetCommunityService.deleteCommunity(postId);
+        System.out.println("삭제 게시물 번호: " + postId);
+        
+        return "삭제 게시물 번호: " + postId;
+    }
+    
 }
