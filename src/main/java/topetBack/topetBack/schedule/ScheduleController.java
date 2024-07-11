@@ -1,4 +1,4 @@
-package topetBack.topetBack.controller;
+package topetBack.topetBack.schedule;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -22,18 +22,18 @@ import com.google.gson.JsonObject;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import topetBack.topetBack.domain.Schedule;
-import topetBack.topetBack.repository.ImageRepository;
-import topetBack.topetBack.repository.ToPetCommunityRepository;
-import topetBack.topetBack.validation.CommunityVaildator;
-import topetBack.topetBack.validation.ScheduleVaildator;
+import topetBack.topetBack.community.dao.CommunityRepository;
+import topetBack.topetBack.community.validation.CommunityVaildator;
+import topetBack.topetBack.file.dao.ImageRepository;
+import topetBack.topetBack.schedule.domain.Schedule;
+import topetBack.topetBack.schedule.validation.ScheduleValidator;
 
 @RestController
 @RequiredArgsConstructor
 @Slf4j
 public class ScheduleController {
 	
-	private final ScheduleVaildator vaildator;
+	private final ScheduleValidator vaildator;
 	
 	@InitBinder
 	public void init(WebDataBinder webDataBinder) {

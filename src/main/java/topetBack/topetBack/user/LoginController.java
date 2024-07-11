@@ -1,4 +1,4 @@
-	package topetBack.topetBack.controller;
+	package topetBack.topetBack.user;
 
 
 import java.util.Map;
@@ -14,10 +14,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import topetBack.topetBack.domain.Member;
-import topetBack.topetBack.service.KakaoLoginService;
-import topetBack.topetBack.service.MemberService;
-import topetBack.topetBack.session.SessionVar;
+import topetBack.topetBack.global.session.SessionVar;
+import topetBack.topetBack.user.application.KakaoLoginService;
+import topetBack.topetBack.user.application.MemberService;
+import topetBack.topetBack.user.domain.Member;
 
 @RestController
 @Slf4j

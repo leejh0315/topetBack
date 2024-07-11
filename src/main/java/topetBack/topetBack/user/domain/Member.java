@@ -1,4 +1,4 @@
-package topetBack.topetBack.domain;
+package topetBack.topetBack.user.domain;
 
 
 

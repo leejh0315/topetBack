@@ -1,4 +1,4 @@
-package topetBack.topetBack.service;
+package topetBack.topetBack.user.application;
 
 
 
@@ -9,8 +9,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import topetBack.topetBack.domain.Member;
-import topetBack.topetBack.repository.MemberRepository;
+import topetBack.topetBack.user.dao.MemberRepository;
+import topetBack.topetBack.user.domain.Member;
 
 @Service
 public class MemberService {

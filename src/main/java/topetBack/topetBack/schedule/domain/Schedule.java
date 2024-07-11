@@ -1,4 +1,4 @@
-package topetBack.topetBack.domain;
+package topetBack.topetBack.schedule.domain;
 
 import java.time.LocalDateTime;
 

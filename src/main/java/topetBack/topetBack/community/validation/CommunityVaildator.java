@@ -1,12 +1,11 @@
-package topetBack.topetBack.validation;
+package topetBack.topetBack.community.validation;
 
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
-import topetBack.topetBack.form.CommunityForm;
-import topetBack.topetBack.form.CommunityPostForm;
+import topetBack.topetBack.community.domain.CommunityDomain;
 
 @Component
 public class CommunityVaildator implements Validator{
@@ -14,13 +13,13 @@ public class CommunityVaildator implements Validator{
 	@Override
 	public boolean supports(Class<?> clazz) {
 		// TODO Auto-generated method stub
-	      return CommunityPostForm.class.isAssignableFrom(clazz);
+	      return CommunityDomain.class.isAssignableFrom(clazz);
 	   }
 
 	@Override
 	public void validate(Object target, Errors errors) {
 		// TODO Auto-generated method stub
-		CommunityPostForm communityPostForm = (CommunityPostForm)target;
+		CommunityDomain communityPostForm = (CommunityDomain)target;
 	      
 	      if(!StringUtils.hasText(communityPostForm.getContent())) {
 	         errors.rejectValue("content", null, "내용 작성해주세요.");         

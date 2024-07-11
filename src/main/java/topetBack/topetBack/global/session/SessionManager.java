@@ -1,4 +1,4 @@
-package topetBack.topetBack.session;
+package topetBack.topetBack.global.session;
 
 import java.util.HashMap;
 import java.util.Map;

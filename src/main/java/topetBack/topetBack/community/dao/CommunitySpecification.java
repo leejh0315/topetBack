@@ -1,4 +1,4 @@
-package topetBack.topetBack.repository;
+package topetBack.topetBack.community.dao;
 
 public class CommunitySpecification {
 	

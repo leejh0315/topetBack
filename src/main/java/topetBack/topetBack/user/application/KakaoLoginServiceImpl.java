@@ -1,4 +1,4 @@
-package topetBack.topetBack.service;
+package topetBack.topetBack.user.application;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -24,7 +24,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
-import topetBack.topetBack.domain.OAuthToken;
+import topetBack.topetBack.user.domain.OAuthToken;
 
 @Service
 @Slf4j

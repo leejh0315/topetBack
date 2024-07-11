@@ -1,4 +1,4 @@
-package topetBack.topetBack.repository;
+package topetBack.topetBack.community.dao;
 
 import java.awt.print.Pageable;
 import java.util.List;
@@ -12,14 +12,13 @@ import org.springframework.data.repository.NoRepositoryBean;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import topetBack.topetBack.Dto.CommunityResponseDto;
-import topetBack.topetBack.form.CommunityPostForm;
+import topetBack.topetBack.community.domain.CommunityDomain;
 
 @Repository
-public interface ToPetCommunityRepository extends JpaRepository<CommunityPostForm , Long> , JpaSpecificationExecutor<CommunityPostForm>{
+public interface CommunityRepository extends JpaRepository<CommunityDomain , Long> , JpaSpecificationExecutor<CommunityDomain>{
 	
 
-	List<CommunityPostForm> findByAnimalAndCategory(String animal , String category);
+	List<CommunityDomain> findByAnimalAndCategory(String animal , String category);
 	
 	
 	

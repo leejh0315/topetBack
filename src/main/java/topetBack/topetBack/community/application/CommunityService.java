@@ -1,20 +1,21 @@
-package topetBack.topetBack.service;
+package topetBack.topetBack.community.application;
 
 import java.util.List;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.transaction.Transactional;
-import topetBack.topetBack.Dto.CommunityResponseDto;
-import topetBack.topetBack.form.CommunityPostForm;
-import topetBack.topetBack.repository.ToPetCommunityRepository;
+import topetBack.topetBack.community.domain.CommunityDomain;
+import topetBack.topetBack.community.domain.CommunityVo;
 
 
-public interface  ToPetCommunityService {
-	 public List<CommunityPostForm> getCommunityList();
-	 public List<CommunityPostForm> getCommunityPreviewByType(String animal, String category);
+public interface  CommunityService {
+	 public List<CommunityDomain> getCommunityList();
+	 public List<CommunityDomain> getCommunityPreviewByType(String animal, String category);
 	 public void deleteCommunity(Long id);
-	 public List<CommunityResponseDto> findAll();
+	 public Long create(CommunityVo requstVo , List<MultipartFile> files);
+
 }

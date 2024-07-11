@@ -1,18 +1,16 @@
-package topetBack.topetBack.service;
+package topetBack.topetBack.file.application;
 
 import org.springframework.stereotype.Service;
-import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
-import topetBack.topetBack.domain.Image;
-import topetBack.topetBack.repository.ImageRepository;
+import org.springframework.web.multipart.MultipartFile;
 
-@RequiredArgsConstructor
+import jakarta.transaction.Transactional;
+import jakarta.validation.constraints.AssertFalse.List;
+import lombok.RequiredArgsConstructor;
+import topetBack.topetBack.file.dao.ImageRepository;
+import topetBack.topetBack.file.domain.Image;
+
+
 @Service
-public class ImageService {
-	private final ImageRepository imageRepository;
-	
-//	@Transactional
-//	public Long save(Image image) {
-//		return imageRepository.save(image.createPost()).getFileId();
-//	}
+public interface ImageService {
+	public String communityPostPhoto(MultipartFile[] photos);
 }

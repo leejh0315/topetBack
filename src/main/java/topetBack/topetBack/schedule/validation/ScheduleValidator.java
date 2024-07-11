@@ -1,4 +1,4 @@
-package topetBack.topetBack.validation;
+package topetBack.topetBack.schedule.validation;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -8,11 +8,11 @@ import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
-import topetBack.topetBack.domain.Schedule;
-import topetBack.topetBack.form.CommunityPostForm;
+import topetBack.topetBack.community.domain.CommunityDomain;
+import topetBack.topetBack.schedule.domain.Schedule;
 
 @Component
-public class ScheduleVaildator implements Validator{
+public class ScheduleValidator implements Validator{
 	SimpleDateFormat  dateFormat = new  SimpleDateFormat("yyyy-MM-dd");
 
 	@Override

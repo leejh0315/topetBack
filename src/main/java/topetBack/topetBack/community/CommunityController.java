@@ -1,4 +1,4 @@
-package topetBack.topetBack.controller;
+package topetBack.topetBack.community;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -9,7 +9,9 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.FileCopyUtils;
@@ -20,7 +22,9 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -29,12 +33,13 @@ import com.google.gson.JsonObject;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import topetBack.topetBack.domain.Image;
-import topetBack.topetBack.form.CommunityPostForm;
-import topetBack.topetBack.repository.ImageRepository;
-import topetBack.topetBack.repository.ToPetCommunityRepository;
-import topetBack.topetBack.service.ToPetCommunityService;
-import topetBack.topetBack.validation.CommunityVaildator;
+import topetBack.topetBack.community.application.CommunityService;
+import topetBack.topetBack.community.dao.CommunityRepository;
+import topetBack.topetBack.community.domain.CommunityDomain;
+import topetBack.topetBack.community.domain.CommunityVo;
+import topetBack.topetBack.community.validation.CommunityVaildator;
+import topetBack.topetBack.file.dao.ImageRepository;
+import topetBack.topetBack.file.domain.Image;
 
 @RestController
 @RequiredArgsConstructor
@@ -42,11 +47,10 @@ import topetBack.topetBack.validation.CommunityVaildator;
 @Controller
 public class CommunityController {
 	
-    private final ToPetCommunityRepository toPetCommunityRepository;
     private final CommunityVaildator vaildator;
     
     @Autowired
-	private ToPetCommunityService toPetCommunityService;
+	private CommunityService toPetCommunityService;
 	
     
 	@InitBinder
@@ -54,87 +58,31 @@ public class CommunityController {
 		webDataBinder.addValidators(vaildator);
 	}
 	
-	//커뮤니티 글 작성
-    @PostMapping("/api/community/community/post")
-    public Object communityTest(@RequestBody CommunityPostForm communityPostForm ,BindingResult bindingResult){
-    	
-    	vaildator.validate(communityPostForm, bindingResult);
-    	log.info(bindingResult.toString());
-    	
-    	if(bindingResult.hasErrors()) {
-            return bindingResult.getFieldErrors();
-        }
-    	
-    	toPetCommunityRepository.save(communityPostForm);
-        return "success";
-        
-    }
-    
-    
-    @GetMapping("/api/post_id/{communityId}")
-    public String getPostByPostId(
-          @PathVariable("communityId") Long communityId, HttpServletRequest req) {
-    	  
-    	Optional<CommunityPostForm> c = toPetCommunityRepository.findById(communityId);
-    	  System.out.println(c);
-	 return "";
-	 }
-    
-    private final ImageRepository imageRepository;
+	@PostMapping("/api/community/community/post")
+    public Long create(
+    		 @RequestParam(value="photos", required=false) List<MultipartFile> photos,
+    		 @RequestParam(value="title") String title,
+    	     @RequestParam(value="content") String content,
+    	     @RequestParam(value="category") String category,
+    	     @RequestParam(value="hashtag") String hashtag,
+    	     @RequestParam(value="animal") String animal
+    	     ) throws Exception  {
+		
+		 System.out.println("Received data: " + title + ", " + content + ", " + category + ", " + hashtag + ", " + animal  + ", " + photos);
+		 
+		CommunityVo requseVo = CommunityVo.builder()
+				.title(title)
+	            .content(content)
+	            .category(category)
+	            .hashtag(hashtag)
+	            .animal(animal)
+	            .build();
+		
+        return toPetCommunityService.create(requseVo, photos);
 
-    //파일 저장
-    @PostMapping(value = "/api/community/community/postPhoto", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public String communityPostPhoto(@RequestPart(value = "photos", required = true) MultipartFile[] photos) {
-        if (photos.length > 10) {
-            return "최대 10개의 사진만 업로드할 수 있습니다.";
-        }
- 
-//        Map photoMap = new HashMap<Integer , List<String>>();
-        List<Image> imageList = new ArrayList<Image>();
-        
-       
-        for (int i = 0; i < photos.length; i++) {
-        		
-         // JSON 객체 생성
-	        JsonObject jsonObject = new JsonObject();
-	        // 이미지 파일이 저장될 경로 설정
-	        String fileRoot  = "C:\\DevBack/image/";
-	        // 업로드된 파일의 원본 파일명과 확장자 추출
-	        String originalFileName = photos[i].getOriginalFilename();
-	        String extension = originalFileName.substring(originalFileName.lastIndexOf("."));
-	        // 새로운 파일명 생성 (고유한 식별자 + 확장자)
-	        String savedFileName = UUID.randomUUID() + extension;
-	        // 저장될 파일의 경로와 파일명을 나타내는 File 객체 생성
-	        File targetFile = new File(fileRoot + savedFileName);
-
-	        try {
-	            // 업로드된 파일의 InputStream 얻기
-	            java.io.InputStream fileStream = photos[i].getInputStream();
-	            // 업로드된 파일을 지정된 경로에 저장
-	            FileCopyUtils.copy(fileStream, new FileOutputStream(targetFile));
-	            
-	            // JSON 객체에 이미지 URL과 응답 코드 추가
-	            jsonObject.addProperty("DevBack", "/image/" + savedFileName);
-	            jsonObject.addProperty("responseCode", "success");
-	            
-	        } catch (IOException e) {
-	            // 파일 저장 중 오류가 발생한 경우 해당 파일 삭제 및 에러 응답 코드 추가
-	            if (targetFile.exists()) {
-	                targetFile.delete();
-	            }
-	            jsonObject.addProperty("responseCode", "error");
-	            e.printStackTrace();
-	        }
-	        Image tempImage = new Image(null ,fileRoot, savedFileName);
-	        imageList.add(tempImage);
-	        // JSON 객체를 문자열로 변환하여 반환
-	        String result = jsonObject.toString();
-	        System.out.println(imageList.get(i));
-        }
-        imageRepository.saveAll(imageList);
-        return "성공";
-    }
-    
+	}
+	
+		
     //게시판 리스트
     @GetMapping("/api/community/{animal}/{category}")
     public String boardList(Model model, @PathVariable("animal")String animal, @PathVariable("category")String category
@@ -142,12 +90,6 @@ public class CommunityController {
     	System.out.println(animal + category);
     	System.out.println("test" + toPetCommunityService.getCommunityPreviewByType(animal, category).toString());
     	return animal + " " + category;
-    }
-    
-    @GetMapping("/api/community/list")
-    public String list() {
-    	System.out.println(toPetCommunityService.findAll());
-    	return "";
     }
 
     
