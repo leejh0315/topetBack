@@ -3,6 +3,7 @@ package topetBack.topetBack.schedule;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Map;
 import java.util.UUID;
 
 
@@ -22,18 +23,23 @@ import com.google.gson.JsonObject;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import topetBack.topetBack.community.dao.CommunityRepository;
-import topetBack.topetBack.community.validation.CommunityVaildator;
-import topetBack.topetBack.file.dao.ImageRepository;
-import topetBack.topetBack.schedule.domain.Schedule;
-import topetBack.topetBack.schedule.validation.ScheduleValidator;
+import topetBack.topetBack.domain.Schedule;
+import topetBack.topetBack.repository.ScheduleRepository;
+import topetBack.topetBack.service.KakaoLoginService;
+import topetBack.topetBack.service.MemberService;
+import topetBack.topetBack.repository.ImageRepository;
+import topetBack.topetBack.repository.ToPetCommunityRepository;
+import topetBack.topetBack.validation.CommunityVaildator;
+import topetBack.topetBack.validation.ScheduleVaildator;
 
 @RestController
 @RequiredArgsConstructor
 @Slf4j
+@RequiredArgsConstructor
 public class ScheduleController {
 	
-	private final ScheduleValidator vaildator;
+	private final ScheduleRepository scheduleRepository;
+	private final ScheduleVaildator vaildator;
 	
 	@InitBinder
 	public void init(WebDataBinder webDataBinder) {
@@ -56,8 +62,8 @@ public class ScheduleController {
 	        log.info("/api/schedule/post 진입");
 	        log.info("입력한 내용은 {}", schedule);
 	        
-	     
-	        
+	    	Schedule response = scheduleRepository.save(schedule);
+	    	log.info("schedule db저장 " + response);
 	        return "일정이 성공적으로 등록되었습니다.";
 	    }
 	 

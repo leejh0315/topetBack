@@ -28,6 +28,7 @@ public class LoginController {
 	private String backAddress;
 	
 	private final KakaoLoginService kakaoLoginService;
+	
 	private final MemberService memberService;
 	
 	
