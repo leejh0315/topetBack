@@ -35,7 +35,7 @@ import topetBack.topetBack.validation.ScheduleVaildator;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-@RequiredArgsConstructor
+
 public class ScheduleController {
 	
 	private final ScheduleRepository scheduleRepository;
