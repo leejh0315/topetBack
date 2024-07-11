@@ -1,5 +1,6 @@
 package topetBack.topetBack.community.domain;
 
+import java.beans.ConstructorProperties;
 import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
@@ -17,6 +18,7 @@ public class CommunityVo {
     private List<MultipartFile> image;
     
     @Builder
+    @ConstructorProperties({"title", "content", "hashtag", "category", "animal"})
 	public CommunityVo(String title, String content, String hashtag , String category , String animal) {
 	    this.title = title;
 	    this.content = content;

@@ -3,9 +3,7 @@ package topetBack.topetBack.schedule;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Map;
 import java.util.UUID;
-
 
 import org.springframework.http.MediaType;
 import org.springframework.util.FileCopyUtils;
@@ -23,14 +21,10 @@ import com.google.gson.JsonObject;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import topetBack.topetBack.domain.Schedule;
-import topetBack.topetBack.repository.ScheduleRepository;
-import topetBack.topetBack.service.KakaoLoginService;
-import topetBack.topetBack.service.MemberService;
-import topetBack.topetBack.repository.ImageRepository;
-import topetBack.topetBack.repository.ToPetCommunityRepository;
-import topetBack.topetBack.validation.CommunityVaildator;
-import topetBack.topetBack.validation.ScheduleVaildator;
+import topetBack.topetBack.schedule.dao.ScheduleRepository;
+import topetBack.topetBack.schedule.domain.Schedule;
+import topetBack.topetBack.schedule.validation.ScheduleValidator;
+
 
 @RestController
 @RequiredArgsConstructor
@@ -39,7 +33,7 @@ import topetBack.topetBack.validation.ScheduleVaildator;
 public class ScheduleController {
 	
 	private final ScheduleRepository scheduleRepository;
-	private final ScheduleVaildator vaildator;
+	private final ScheduleValidator vaildator;
 	
 	@InitBinder
 	public void init(WebDataBinder webDataBinder) {

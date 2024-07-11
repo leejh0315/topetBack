@@ -1,39 +1,28 @@
 package topetBack.topetBack.community.domain;
 
-import org.hibernate.annotations.ColumnDefault;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import topetBack.topetBack.file.domain.Image;
-import topetBack.topetBack.user.domain.Member;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 @Getter
 @Builder
@@ -56,10 +45,10 @@ public class CommunityDomain {
 	@Comment("업데이트 시간")
     private LocalDateTime updatedTime;	
 		
-	@ManyToOne(cascade = CascadeType.MERGE , targetEntity = Member.class)
-	@JoinColumn(name = "member_id" , updatable = false)
-    private Member member;
-		
+	
+	@Column(nullable = false)
+	@Comment("작성자")
+	private int writerId;
 		
     @Column(nullable = false)
 	@Comment("제목") 
@@ -101,7 +90,7 @@ public class CommunityDomain {
     
     public CommunityDomain toEntity() {
     	return CommunityDomain.builder()
-    			.member(member)
+    			.writerId(writerId)
     			.title(title)
     			.content(content)
     			.hashtag(hashtag)

@@ -32,10 +32,7 @@ private ImageRepository imageRepository;
     }
     
     @Transactional
-    public Long create(
-    		CommunityVo requstVo,
-        List<MultipartFile> files
-    ) {
+    public Long create(CommunityVo requstVo, List<MultipartFile> files) {
     	CommunityDomain communityDomain = new CommunityDomain(
     			requstVo.getTitle(),
     			requstVo.getContent(),
@@ -48,17 +45,18 @@ private ImageRepository imageRepository;
 		
     	try {
 			photoList = FileHandler.parseFileInfo(files);
+		      if(!photoList.isEmpty()) {
+		            for(Image image : photoList) {
+		                // 파일을 DB에 저장
+		            	communityDomain.addPhoto(imageRepository.save(image));
+		            }
+		        }
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
         
         // 파일이 존재할 때에만 처리
-        if(!photoList.isEmpty()) {
-            for(Image image : photoList) {
-                // 파일을 DB에 저장
-            	communityDomain.addPhoto(imageRepository.save(image));
-            }
-        }
+  
 
         return communityRepository.save(communityDomain).getId();
        

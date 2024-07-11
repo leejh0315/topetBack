@@ -2,8 +2,8 @@ package topetBack.topetBack.schedule.application;
 
 import org.springframework.stereotype.Service;
 
-import topetBack.topetBack.domain.Schedule;
-import topetBack.topetBack.repository.ScheduleRepository;
+import topetBack.topetBack.schedule.dao.ScheduleRepository;
+import topetBack.topetBack.schedule.domain.Schedule;
 
 @Service
 public class ScheduleService {
