@@ -1,11 +1,12 @@
-package topetBack.topetBack.user.dao;
+package topetBack.topetBack.member.dao;
 
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import topetBack.topetBack.user.domain.Member;
+import topetBack.topetBack.member.domain.Member;
 
 public interface MemberRepository extends JpaRepository<Member, Integer>{
-	Optional<Member> findByMemberKid(long memberKid);
+
+	Optional<Member> findBySocialId(String socialId);
 }

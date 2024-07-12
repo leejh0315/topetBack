@@ -1,4 +1,4 @@
-package topetBack.topetBack.user.application;
+package topetBack.topetBack.member.application;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -24,7 +24,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
-import topetBack.topetBack.user.domain.OAuthToken;
+import topetBack.topetBack.member.domain.OAuthToken;
 
 @Service
 @Slf4j
@@ -142,7 +142,7 @@ public class KakaoLoginServiceImpl implements KakaoLoginService{
 
             String nickname = properties.path("nickname").asText();
             String email = kakaoAccount.path("email").asText();
-            long kakaoId = rootNode.path("id").asLong();
+            String kakaoId = rootNode.path("id").asText();
             
             //userInfo.put("nickname", nickname);
             //userInfo.put("email", email);

@@ -5,7 +5,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
-import topetBack.topetBack.community.domain.CommunityDomain;
+import topetBack.topetBack.community.domain.CommunityEntity;
 
 @Component
 public class CommunityVaildator implements Validator{
@@ -13,13 +13,13 @@ public class CommunityVaildator implements Validator{
 	@Override
 	public boolean supports(Class<?> clazz) {
 		// TODO Auto-generated method stub
-	      return CommunityDomain.class.isAssignableFrom(clazz);
+	      return CommunityEntity.class.isAssignableFrom(clazz);
 	   }
 
 	@Override
 	public void validate(Object target, Errors errors) {
 		// TODO Auto-generated method stub
-		CommunityDomain communityPostForm = (CommunityDomain)target;
+		CommunityEntity communityPostForm = (CommunityEntity)target;
 	      
 	      if(!StringUtils.hasText(communityPostForm.getContent())) {
 	         errors.rejectValue("content", null, "내용 작성해주세요.");         

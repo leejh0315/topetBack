@@ -1,4 +1,4 @@
-package topetBack.topetBack.global.config;
+package topetBack.topetBack.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
@@ -16,7 +16,7 @@ public class WebConfig implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
                 .allowedOrigins(frontAddress)
-                .allowedMethods("GET", "POST", "PUT", "DELETE")
+                .allowedMethods("GET", "POST", "PATCH", "PUT", "DELETE")
                 .allowedHeaders("Authorization", "Content-Type")
                 .exposedHeaders("Custom-Header")
                 .allowCredentials(true)

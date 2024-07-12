@@ -1,4 +1,4 @@
-package topetBack.topetBack.user.domain;
+package topetBack.topetBack.member.domain;
 
 import lombok.Data;
 

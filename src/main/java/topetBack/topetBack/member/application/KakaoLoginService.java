@@ -1,4 +1,4 @@
-package topetBack.topetBack.user.application;
+package topetBack.topetBack.member.application;
 
 import java.util.Map;
 
