@@ -2,8 +2,9 @@ package topetBack.topetBack.community;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,40 +25,28 @@ import topetBack.topetBack.community.validation.CommunityVaildator;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-@Controller
 public class CommunityController {
 	
+    private static final Logger logger = LoggerFactory.getLogger(CommunityController.class);
     private final CommunityVaildator vaildator;
     
     @Autowired
 	private CommunityService toPetCommunityService;
 	
-    
-	@InitBinder
+    @InitBinder
 	public void init(WebDataBinder  webDataBinder) {
 		webDataBinder.addValidators(vaildator);
 	}
 	
-	@PostMapping("/api/community/communityPost")
+	@PostMapping("/community/communityPost")
     public Long communityPost(
-    		@RequestParam(value="photos", required=false) List<MultipartFile> photos,
-    		@ModelAttribute CommunityVo communityVO
-    	     ) throws Exception  {
+		    		@RequestParam(value="photos", required=false) List<MultipartFile> photos,
+		    		@ModelAttribute CommunityVo communityVO) throws Exception  {
 		System.out.println("communityPost 요청 등록됨");
 		System.out.println("photos" + photos);
-		
+		System.out.println(communityVO);
 		toPetCommunityService.create(communityVO, photos);
-//		 System.out.println("Received data: " + title + ", " + content + ", " + category + ", " + hashtag + ", " + animal  + ", " + photos);
-		 
-//		CommunityVo requseVo = CommunityVo.builder()
-//				.title(title)
-//	            .content(content)
-//	            .category(category)
-//	            .hashtag(hashtag)
-//	            .animal(animal)
-//	            .build();
-//		
-        //return toPetCommunityService.create(requseVo, photos);
+
 		return (long) 1;
 
 	}

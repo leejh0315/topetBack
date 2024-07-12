@@ -32,7 +32,7 @@ private ImageRepository imageRepository;
     }
     
     @Transactional
-    public Long create(CommunityVo requstVo, List<MultipartFile> files) {
+    public Long create(CommunityVo requstVo, List<MultipartFile> files) throws Exception {
     	CommunityDomain communityDomain = new CommunityDomain(
     			requstVo.getTitle(),
     			requstVo.getContent(),
@@ -43,7 +43,7 @@ private ImageRepository imageRepository;
         
     	List<Image> photoList = null;
 		
-    	try {
+    	
 			photoList = FileHandler.parseFileInfo(files);
 		      if(!photoList.isEmpty()) {
 		            for(Image image : photoList) {
@@ -51,9 +51,7 @@ private ImageRepository imageRepository;
 		            	communityDomain.addPhoto(imageRepository.save(image));
 		            }
 		        }
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		
         
         // 파일이 존재할 때에만 처리
   

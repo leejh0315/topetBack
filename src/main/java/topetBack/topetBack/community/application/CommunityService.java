@@ -16,6 +16,6 @@ public interface  CommunityService {
 	 public List<CommunityDomain> getCommunityList();
 	 public List<CommunityDomain> getCommunityPreviewByType(String animal, String category);
 	 public void deleteCommunity(Long id);
-	 public Long create(CommunityVo requstVo , List<MultipartFile> files);
+	 public Long create(CommunityVo requstVo , List<MultipartFile> files) throws Exception;
 
 }

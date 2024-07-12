@@ -26,4 +26,5 @@ public class CommunityVo {
 	    this.category = category;
 	    this.animal = animal;
 	}
+    
 }
