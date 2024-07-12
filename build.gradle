@@ -24,8 +24,8 @@ repositories {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	   implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.3'
-	runtimeOnly 'com.mysql:mysql-connector-j'	//mySql
-	
+//	runtimeOnly 'com.mysql:mysql-connector-j'	//mySql
+	implementation("org.mariadb.jdbc:mariadb-java-client:2.1.2")
 	
 	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.3'
 	
@@ -37,12 +37,9 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	
 	implementation 'org.springframework.boot:spring-boot-starter-validation' //유효성 검사
-	
-	
+
+
 	implementation 'com.google.code.gson:gson:2.8.6' //json
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.14.1' //objectMapper (json_)
-	implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml'//json
-	implementation 'com.fasterxml.jackson.core:jackson-databind'
 
 
 
