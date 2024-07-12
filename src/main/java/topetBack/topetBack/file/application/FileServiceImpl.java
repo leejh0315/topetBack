@@ -55,7 +55,9 @@ public class FileServiceImpl implements FileService{
                 // 리스트에 추가
                 fileInfoEntityList.add(FileInfoEntity);
             } catch (IOException e) {
-                throw new IOException();
+            	 System.err.println("Failed to upload photo: " + photo.getOriginalFilename());
+                 e.printStackTrace();
+                 throw e; // 예외를 다시 던져 호출자가 처리하도록 합니다.
             }
         }
 

@@ -19,20 +19,20 @@ import topetBack.topetBack.community.validation.CommunityVaildator;
 import topetBack.topetBack.member.domain.Member;
 
 @RestController
+@RequiredArgsConstructor
 @Controller
-//@RequestMapping("/community")
+@RequestMapping("/community")
 public class CommunityController {
     
 
 	private final CommunityService communityService;
 
-    public CommunityController(CommunityService communityService) {
-        this.communityService = communityService;
-    }
-
-	@PostMapping("/api/community/community/post")
+    @PostMapping("/communityPost")
     public ResponseEntity<CommunityResponseDTO> communityPost(@ModelAttribute CommunityRequestDTO communityRequestDTO) throws Exception  {
 		System.out.println("communityPost 요청 등록됨");
+		System.out.println(communityRequestDTO);
+		//TODO
+		communityRequestDTO.setAuthor(new Member(1, "test", "test","test"));
 
 		CommunityResponseDTO communityResponseDTO = communityService.createCommunity(communityRequestDTO);
 
@@ -52,8 +52,20 @@ public class CommunityController {
     	) {
     	System.out.println(animal + category);
     	System.out.println("test" + communityService.getCommunityListByCategory(category).toString());
-    	return animal + " " + category;
+    	return communityService.getCommunityListByCategory(category).toString();
     }
+    
+    //게시판 디테일
+    @GetMapping("/{aniaml}/{category}/{id}")
+    public String boardDetail(Model model , @PathVariable("animal")String animal , @PathVariable("category") String category ,  @PathVariable("id") int id)
+    {
+    	System.out.println(animal + category + id);
+    	return "테스트";
+    	
+    }
+    
+    
+    
 
     
     //게시물 삭제
