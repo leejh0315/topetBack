@@ -142,7 +142,7 @@ public class KakaoLoginServiceImpl implements KakaoLoginService{
 
             String nickname = properties.path("nickname").asText();
             String email = kakaoAccount.path("email").asText();
-            long kakaoId = rootNode.path("id").asLong();
+            String kakaoId = rootNode.path("id").asText();
             
             //userInfo.put("nickname", nickname);
             //userInfo.put("email", email);

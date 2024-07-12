@@ -32,7 +32,7 @@ public class FileServiceImpl implements FileService{
         List<FileInfoEntity> fileInfoEntityList = new ArrayList<>();
 
         String baseDir = fileBasePath + middlePath;
-
+        if(photos!=null) {
         for (MultipartFile photo : photos) {
             try {
                 // 파일 저장 경로 생성
@@ -55,12 +55,10 @@ public class FileServiceImpl implements FileService{
                 // 리스트에 추가
                 fileInfoEntityList.add(FileInfoEntity);
             } catch (IOException e) {
-            	 System.err.println("Failed to upload photo: " + photo.getOriginalFilename());
-                 e.printStackTrace();
-                 throw e; // 예외를 다시 던져 호출자가 처리하도록 합니다.
+                throw new IOException();
             }
         }
-
+        }
         fileGroupEntity.setFileList(fileInfoEntityList);
 
         return fileGroupEntity;

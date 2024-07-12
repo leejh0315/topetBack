@@ -14,17 +14,25 @@ import topetBack.topetBack.member.domain.Member;
 
 @Service
 public class MemberService {
-	private final MemberRepository memberRepository;
 
+	private final MemberRepository memberRepository;
     private static final Logger logger = LoggerFactory.getLogger(MemberService.class);
 
     public MemberService(MemberRepository memberRepository) {
         this.memberRepository = memberRepository;
     }
-
     
     public Optional<Member> findBySocialId(String socialId) {
         return memberRepository.findBySocialId(socialId);
     }
-
+    public Member memberJoin(Member memberInfo) {
+    	Member member = new Member(
+    			0,
+    			memberInfo.getSocialId(), 
+				(String) memberInfo.getEmail(), 
+				(String) memberInfo.getName());
+        return memberRepository.save(member);
+    }
+    
+    
 }
