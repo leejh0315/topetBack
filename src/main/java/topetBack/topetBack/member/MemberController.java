@@ -69,7 +69,8 @@ public class MemberController {
 		System.out.println("getHOme");
 		HttpSession session = req.getSession(true);
 		Member member = (Member) session.getAttribute(SessionVar.LOGIN_MEMBER);
-	    System.out.println(member);
+		//member.getId();
+		System.out.println(member);
 		return member.toString();
 	}
 }

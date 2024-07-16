@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.web.multipart.MultipartFile;
 
 import lombok.Data;
+import topetBack.topetBack.comment.domain.CommentResponseDTO;
 import topetBack.topetBack.file.domain.FileGroupEntity;
 import topetBack.topetBack.member.domain.Member;
 
@@ -17,7 +18,8 @@ public class CommunityRequestDTO {
     private String category;                       
     private String animal;
     private List<MultipartFile> images;
-
+    
+    
 	public CommunityEntity toCommunityEntity() {
 
 		FileGroupEntity fileGroupEntity = new FileGroupEntity();

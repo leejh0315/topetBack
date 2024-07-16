@@ -2,6 +2,7 @@ package topetBack.topetBack.community.domain;
 
 import lombok.Builder;
 import lombok.Data;
+import topetBack.topetBack.comment.domain.CommentResponseDTO;
 import topetBack.topetBack.file.domain.FileResponseDTO;
 import topetBack.topetBack.member.domain.Member;
 
@@ -21,5 +22,6 @@ public class CommunityResponseDTO {
 	private String category;
 	private String animal;
     private List<FileResponseDTO> images;
+    private List<CommentResponseDTO> comments;
 
 }

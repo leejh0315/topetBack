@@ -11,7 +11,8 @@ import topetBack.topetBack.community.domain.CommunityEntity;
 public interface CommunityRepository extends JpaRepository<CommunityEntity, Long> , JpaSpecificationExecutor<CommunityEntity>{
 
 
-	List<CommunityEntity> findByAnimalAndCategory(String animal , String category);
+	List<CommunityEntity> findByAnimalAndCategory(String animal, String category);
 
 	List<CommunityEntity> findByCategory(String category);
+	
 }

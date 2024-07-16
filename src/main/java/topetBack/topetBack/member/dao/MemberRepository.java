@@ -9,4 +9,6 @@ import topetBack.topetBack.member.domain.Member;
 public interface MemberRepository extends JpaRepository<Member, Integer>{
 
 	Optional<Member> findBySocialId(String socialId);
+	Member findByName(String name);
+
 }

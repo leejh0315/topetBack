@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import topetBack.topetBack.community.application.CommunityService;
+import topetBack.topetBack.community.dao.CommunityRepository;
 import topetBack.topetBack.community.domain.CommunityRequestDTO;
 import topetBack.topetBack.community.domain.CommunityResponseDTO;
 import topetBack.topetBack.community.validation.CommunityVaildator;
@@ -38,29 +39,24 @@ public class CommunityController {
 
 		return ResponseEntity.ok(communityResponseDTO);
 	}
-
-    @GetMapping("/get")
-    public ResponseEntity<CommunityResponseDTO> getCommunity(@RequestParam int communityId) throws Exception {
-
-        return ResponseEntity.ok(communityService.getCommunityById(1));
-    }
-	
 		
     //게시판 리스트
     @GetMapping("/{animal}/{category}")
-    public String boardList(Model model, @PathVariable("animal")String animal, @PathVariable("category")String category
+    public Object[] boardList(Model model, @PathVariable("animal")String animal, @PathVariable("category")String category
     	) {
     	System.out.println(animal + category);
     	System.out.println("test" + communityService.getCommunityListByCategory(category).toString());
-    	return communityService.getCommunityListByCategory(category).toString();
+    	System.out.println("동물 + 카테고리 : " + " " + communityService.getCommunityListByAnimalAndCategory(animal, category));
+    	return communityService.getCommunityListByAnimalAndCategory(animal, category).toArray();
     }
     
     //게시판 디테일
-    @GetMapping("/{aniaml}/{category}/{id}")
-    public String boardDetail(Model model , @PathVariable("animal")String animal , @PathVariable("category") String category ,  @PathVariable("id") int id)
+    @GetMapping("/detail/{id}")
+    public CommunityResponseDTO communityDetail(Model model ,  @PathVariable("id") int id)
     {
-    	System.out.println(animal + category + id);
-    	return "테스트";
+    	System.out.println("게시물 ID : " + id);
+    	
+    	return communityService.getCommunityById(id);
     	
     }
     
@@ -69,7 +65,7 @@ public class CommunityController {
 
     
     //게시물 삭제
-    @GetMapping("/api/community/delete/{postId}")
+    @GetMapping("/delete/{postId}")
     public String deleteCommunity(@PathVariable("postId") Long postId) {
         communityService.deleteCommunity(postId);
         System.out.println("삭제 게시물 번호: " + postId);

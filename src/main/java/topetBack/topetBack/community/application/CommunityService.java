@@ -14,7 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import jakarta.transaction.Transactional;
 
 
-
+@Service
 public interface  CommunityService {
 
 	List<CommunityResponseDTO> getCommunityListByCategory(String category);
@@ -24,4 +24,6 @@ public interface  CommunityService {
 	CommunityResponseDTO getCommunityById(long communityId);
 
 	void deleteCommunity(Long id);
+
+	List<CommunityResponseDTO> getCommunityListByAnimalAndCategory(String animal, String category);
 }
