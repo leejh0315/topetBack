@@ -19,6 +19,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import topetBack.topetBack.comment.domain.CommentResponseDTO;
 
 @Getter
 @Builder
@@ -27,7 +28,7 @@ import lombok.ToString;
 @Table(name = "pet")
 @ToString
 @Entity
-public class PetDomain {
+public class PetEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY) //MySQL의 AUTO_INCREMENT를 사용
 	@Comment("반려동물 번호")
@@ -62,7 +63,7 @@ public class PetDomain {
 	    
 	 @Column(nullable = true)
      @Comment("체중")
-	 private String weigth;
+	 private String weight;
 	    
 	 @Column(nullable = true)
      @Comment("알레르기")
@@ -72,38 +73,44 @@ public class PetDomain {
      @Comment("건강상태")
 	 private String health;
 	    
-	
-	// private File image;
-//	 @OneToMany(
-//	     mappedBy = "communityDomain",
-//	     cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
-//	      orphanRemoval = true
-//   )
-	 //private List<Image> image = new ArrayList<>(); 
-	    
-	    
-    @Builder
-    @ConstructorProperties({"type", "kind", "gender", "name",  "birth", "weigth", "allergy", "health"})
-	public PetDomain(String type, String kind, String gender , String name, Date birth, String weigth, String allergy, String health) {
-	    this.type = type;
-	    this.kind = kind;
-	    this.gender = gender;
-	    this.name = name;
-	    this.birth = birth;
-	    this.weigth = weigth;
-	    this.allergy=allergy;
-	    this.health=health;
-	}
+
+	 public PetResponseDTO toResponseDTO() {
+	        return PetResponseDTO.builder()
+	                .id(this.id)
+	                .type(this.type)
+	                .kind(this.kind)
+	                .gender(this.gender)
+	                .name(this.name)
+	                .birth(this.birth)
+	                .weight(this.weight)
+	                .allergy(this.allergy)
+	                .health(this.health)
+	                .build();
+	    }
     
-    public PetDomain toEntity() {
-    	return PetDomain.builder()
-    			.type(type)
-    			.kind(kind)
-    			.gender(gender)
-    			.name(name)
-    			.build();
-    }
-    
+//	    
+//    @Builder
+//    @ConstructorProperties({"type", "kind", "gender", "name",  "birth", "weigth", "allergy", "health"})
+//	public PetEntity(String type, String kind, String gender , String name, Date birth, String weigth, String allergy, String health) {
+//	    this.type = type;
+//	    this.kind = kind;
+//	    this.gender = gender;
+//	    this.name = name;
+//	    this.birth = birth;
+//	    this.weigth = weigth;
+//	    this.allergy=allergy;
+//	    this.health=health;
+//	}
+//    
+//    public PetEntity toEntity() {
+//    	return PetEntity.builder()
+//    			.type(type)
+//    			.kind(kind)
+//    			.gender(gender)
+//    			.name(name)
+//    			.build();
+//    }
+//    
 
 //    public void addPhoto(Image image) {
 //        this.image.add(image);

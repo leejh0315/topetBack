@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
 import jakarta.servlet.http.Cookie;
@@ -17,7 +19,13 @@ public class SessionManager {
 
 	public static final String SESSION_COOKIE_NAME = "SessionId";
 	
+	
+	
 	private Map<String, Object> sessionMap = new HashMap<String, Object>();
+	
+	 @Autowired
+	 private RedisTemplate<String, Object> redisTemplate;
+	
 
 	public void create(Object object, HttpServletResponse resp) {
 		log.info("session create");
@@ -26,7 +34,6 @@ public class SessionManager {
 
 		Cookie cookie = new Cookie(SESSION_COOKIE_NAME, sessionId);
 		resp.addCookie(cookie);
-
 	}
 
 	public void remove(HttpServletRequest req) {
