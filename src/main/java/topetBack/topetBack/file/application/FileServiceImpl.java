@@ -33,31 +33,31 @@ public class FileServiceImpl implements FileService{
 
         String baseDir = fileBasePath + middlePath;
         if(photos!=null) {
-        for (MultipartFile photo : photos) {
-            try {
-                // 파일 저장 경로 생성
-                String fileName = photo.getOriginalFilename();
-                Path filePath = Paths.get(baseDir, fileName);
-
-                // 디렉토리 생성
-                Files.createDirectories(filePath.getParent());
-
-                // 파일 저장
-                Files.copy(photo.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-
-                // File 엔티티 생성
-                FileInfoEntity FileInfoEntity = new FileInfoEntity();
-                FileInfoEntity.setOrigFileName(fileName);
-                FileInfoEntity.setFilePath(filePath.toString());
-                FileInfoEntity.setFileSize(photo.getSize());
-                FileInfoEntity.setFileGroupEntity(fileGroupEntity);
-
-                // 리스트에 추가
-                fileInfoEntityList.add(FileInfoEntity);
-            } catch (IOException e) {
-                throw new IOException();
-            }
-        }
+	        for (MultipartFile photo : photos) {
+	            try {
+	                // 파일 저장 경로 생성
+	                String fileName = photo.getOriginalFilename();
+	                Path filePath = Paths.get(baseDir, fileName);
+	
+	                // 디렉토리 생성
+	                Files.createDirectories(filePath.getParent());
+	
+	                // 파일 저장
+	                Files.copy(photo.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+	
+	                // File 엔티티 생성
+	                FileInfoEntity FileInfoEntity = new FileInfoEntity();
+	                FileInfoEntity.setOrigFileName(fileName);
+	                FileInfoEntity.setFilePath(filePath.toString());
+	                FileInfoEntity.setFileSize(photo.getSize());
+	                FileInfoEntity.setFileGroupEntity(fileGroupEntity);
+	
+	                // 리스트에 추가
+	                fileInfoEntityList.add(FileInfoEntity);
+	            } catch (IOException e) {
+	                throw new IOException();
+	            }
+	        }
         }
         fileGroupEntity.setFileList(fileInfoEntityList);
 

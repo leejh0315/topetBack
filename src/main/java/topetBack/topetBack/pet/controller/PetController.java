@@ -10,7 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import topetBack.topetBack.pet.domain.PetDomain;
+import topetBack.topetBack.pet.domain.PetEntity;
 
 
 
@@ -23,7 +23,7 @@ public class PetController {
 	
 	@PostMapping("/petRegistration")
 	public String petRegistPost(@RequestParam(value="photo", required=false) MultipartFile image,
-								@ModelAttribute PetDomain petDomain) {
+								@ModelAttribute PetEntity petDomain) {
 		System.out.println(image);
 		System.out.println(petDomain);
 		

@@ -1,22 +1,22 @@
 package topetBack.topetBack.community;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import topetBack.topetBack.community.application.CommunityService;
-import topetBack.topetBack.community.dao.CommunityRepository;
 import topetBack.topetBack.community.domain.CommunityRequestDTO;
 import topetBack.topetBack.community.domain.CommunityResponseDTO;
-import topetBack.topetBack.community.validation.CommunityVaildator;
+import topetBack.topetBack.config.SessionVar;
 import topetBack.topetBack.member.domain.Member;
 
 @RestController
@@ -29,14 +29,22 @@ public class CommunityController {
 	private final CommunityService communityService;
 
     @PostMapping("/communityPost")
-    public ResponseEntity<CommunityResponseDTO> communityPost(@ModelAttribute CommunityRequestDTO communityRequestDTO) throws Exception  {
+    public ResponseEntity<CommunityResponseDTO> communityPost(@ModelAttribute CommunityRequestDTO communityRequestDTO, HttpServletRequest req) throws Exception  {
+    	
+    	HttpSession session = req.getSession(false);
+		Member member = (Member) session.getAttribute(SessionVar.LOGIN_MEMBER);
+		
+		System.out.println("DTO : " + communityRequestDTO);
+		System.out.println("member :" + member);
+		
+		communityRequestDTO.setAuthor(member);
+		
 		System.out.println("communityPost 요청 등록됨");
 		System.out.println(communityRequestDTO);
-		//TODO
-		communityRequestDTO.setAuthor(new Member(1, "test", "test","test"));
 
 		CommunityResponseDTO communityResponseDTO = communityService.createCommunity(communityRequestDTO);
 
+		
 		return ResponseEntity.ok(communityResponseDTO);
 	}
 		
