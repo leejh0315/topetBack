@@ -9,18 +9,27 @@ import lombok.RequiredArgsConstructor;
 import topetBack.topetBack.comment.dao.CommentRepository;
 import topetBack.topetBack.comment.domain.CommentEntity;
 import topetBack.topetBack.comment.domain.CommentRequestDTO;
+import topetBack.topetBack.community.application.CommunityService;
 import topetBack.topetBack.community.dao.CommunityRepository;
 import topetBack.topetBack.community.domain.CommunityEntity;
+import topetBack.topetBack.file.application.FileService;
 import topetBack.topetBack.member.dao.MemberRepository;
 import topetBack.topetBack.member.domain.Member;
 
-@RequiredArgsConstructor
+
 @Service
-public class CommentServiceImpl {
+public class CommentServiceImpl implements CommentService{
 	
 	private final CommentRepository commentRepositoy;
 	private final CommunityRepository communityRepositoy;
 	private final MemberRepository memberRepositoty;
+	
+	 public CommentServiceImpl(CommentRepository commentRepositoy, CommunityRepository communityRepositoy , MemberRepository memberRepositoty) { 
+	        this.commentRepositoy = commentRepositoy;
+	        this.communityRepositoy = communityRepositoy;
+	        this.memberRepositoty = memberRepositoty;
+	      
+	    }
 	
 	@Transactional
 	public Long commentSave(String name , Long id , CommentRequestDTO dto) {

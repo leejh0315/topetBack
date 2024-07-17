@@ -64,9 +64,7 @@ public class CommentEntity {
     private String content;
 
     public CommentResponseDTO toResponseDTO() {
-    	
-	    	
-        
+    	     
         return CommentResponseDTO.builder()
                 .id(this.id)
                 .createdTime(this.createdTime)
