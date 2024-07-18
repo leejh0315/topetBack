@@ -28,13 +28,13 @@ import topetBack.topetBack.member.domain.OAuthToken;
 
 @Service
 @Slf4j
-public class KakaoLoginServiceImpl implements KakaoLoginService{
+public class SocialLoginServiceImpl implements SocialLoginService{
 
 	@Value("${toPet.back.address}")
 	private String backAddress;
 	
 	@Override
-	public Map<String, Object>  kakaoLogin(String code) throws Exception {
+	public Map<String, Object> kakaoLogin(String code) throws Exception {
 		Map userInfoMap = new HashMap<>();
 		/*로그인 성공 여부 + 카카오 엑세스 토큰*/
 		//////////////////////////////////////////////////////////////////////
@@ -42,18 +42,14 @@ public class KakaoLoginServiceImpl implements KakaoLoginService{
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Content-Type", "application/x-www-form-urlencoded;charset=utf-8");
-		
 		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 		params.add("grant_type", "authorization_code");
 		params.add("client_id", "3494afad7131fc9645ae9b08ed0dfda6");
 		params.add("redirect_uri", backAddress+"api/kakaoLogin/OAuth");
 		params.add("code", code);
 		
-		
-		
 		HttpEntity<MultiValueMap<String, String>> kakaoTokenRequest = new HttpEntity<>(params, headers);
 
-			
 		// POST 방식으로 Http 요청한다. 그리고 response 변수의 응답 받는다.
 		ResponseEntity<String> response = rt.exchange(
 				"https://kauth.kakao.com/oauth/token", // https://{요청할 서버 주소}
