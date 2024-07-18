@@ -25,8 +25,7 @@ public class CommentRequestDTO {
 	private String content;
 
 	public CommentEntity toCommentEntity() {
-
-
+		
 		return CommentEntity.builder()
 				.author(this.author)
 				.content(this.content)
