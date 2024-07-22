@@ -1,13 +1,13 @@
 package topetBack.topetBack.community.domain;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 import lombok.Builder;
 import lombok.Data;
 import topetBack.topetBack.comment.domain.CommentResponseDTO;
 import topetBack.topetBack.file.domain.FileResponseDTO;
 import topetBack.topetBack.member.domain.Member;
-
-import java.time.LocalDateTime;
-import java.util.List;
 
 @Data
 @Builder

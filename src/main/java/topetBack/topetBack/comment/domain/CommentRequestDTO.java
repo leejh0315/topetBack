@@ -1,9 +1,6 @@
 package topetBack.topetBack.comment.domain;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
-import org.springframework.web.multipart.MultipartFile;
+import java.util.ArrayList;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,20 +15,22 @@ import topetBack.topetBack.member.domain.Member;
 @NoArgsConstructor
 @Builder
 public class CommentRequestDTO {
-	
-	private Long id;   
-	private Member author;	    	    
-	private CommunityEntity community;		
+
+	private Long id;
+	private Member author;
+	private CommunityEntity community;
 	private String content;
+	private Long parentId;
 
 	public CommentEntity toCommentEntity() {
-		
+
 		return CommentEntity.builder()
 				.author(this.author)
 				.content(this.content)
 				.community(this.community)
+				.children(new ArrayList<>()) 
 				.build();
 	}
 
-	
+
 }
