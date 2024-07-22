@@ -20,6 +20,7 @@ public class Member implements Serializable{
     @GeneratedValue(strategy = GenerationType.IDENTITY) // 값이 없어도 자동으로 할당 합니다.
     private int id;
 
+    
     private String socialId;
 
     private String name;
