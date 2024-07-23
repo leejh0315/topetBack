@@ -84,4 +84,3 @@ compileQuerydsl.doFirst {
 tasks.named('compileQuerydsl').configure {
     enabled = false
 } */
-
