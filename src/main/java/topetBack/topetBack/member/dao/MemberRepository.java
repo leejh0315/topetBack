@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import topetBack.topetBack.member.domain.Member;
 
-public interface MemberRepository extends JpaRepository<Member, Integer>{
+public interface MemberRepository extends JpaRepository<Member, Long>{
 
 	Optional<Member> findBySocialId(String socialId);
 	Member findByName(String name);

@@ -27,7 +27,7 @@ public class MemberService {
     }
     public Member memberJoin(Member memberInfo) {
     	Member member = new Member(
-    			0,
+    			0L,
     			memberInfo.getSocialId(), 
 				(String) memberInfo.getEmail(), 
 				(String) memberInfo.getName());

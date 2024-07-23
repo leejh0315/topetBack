@@ -18,7 +18,7 @@ public class Member implements Serializable{
 
     @Id // 해당 변수가 PK가 됩니다.
     @GeneratedValue(strategy = GenerationType.IDENTITY) // 값이 없어도 자동으로 할당 합니다.
-    private int id;
+    private Long id;
 
     
     private String socialId;
@@ -29,7 +29,7 @@ public class Member implements Serializable{
 
 
     @Builder
-    public Member(int id, String socialId, String email, String nickname) {
+    public Member(Long id, String socialId, String email, String nickname) {
         this.id = id;
         this.socialId = socialId;
         this.email = email;

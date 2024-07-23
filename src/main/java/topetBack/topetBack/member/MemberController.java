@@ -59,7 +59,7 @@ public class MemberController {
 		RedirectView redirectView = new RedirectView();
 
 		if (response != null) {
-			Member member = new Member(0, response.get("kid").toString(), (String) response.get("email"), (String) response.get("nickname"));
+			Member member = new Member((long) 0, response.get("kid").toString(), (String) response.get("email"), (String) response.get("nickname"));
 			
 			String sId = response.get("kid").toString();
 			
