@@ -46,10 +46,11 @@ public class PetController {
 	    Member sessionMember = sessionManager.getSessionObject(req).toMember();
 	    petRequestDTO.setMember(sessionMember);
 	    
-	    List<MultipartFile> images = new ArrayList<MultipartFile>();
-        images.add(image);
-        
-        petRequestDTO.setImage(images);
+	    if(image!=null) {
+		    List<MultipartFile> images = new ArrayList<MultipartFile>();
+	        images.add(image);
+	        petRequestDTO.setImage(images);
+	    }
 	    // PetService를 통해 Pet 등록
 	    PetResponseDTO petResponseDTO = petService.createPet(petRequestDTO);
 	    

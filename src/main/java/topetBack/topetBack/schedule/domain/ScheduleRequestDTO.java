@@ -1,6 +1,7 @@
 package topetBack.topetBack.schedule.domain;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
@@ -22,7 +23,7 @@ public class ScheduleRequestDTO {
     private Member author;
     private PetEntity animal;
     private LocalDateTime createdTime;
-    private List<MultipartFile> images;
+    private List<MultipartFile> images = new ArrayList<>();
 
     public ScheduleEntity toScheduleEntity() {
         FileGroupEntity fileGroupEntity = new FileGroupEntity();

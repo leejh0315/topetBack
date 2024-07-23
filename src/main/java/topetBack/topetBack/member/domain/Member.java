@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -35,11 +36,18 @@ public class Member implements Serializable {
 
 	private String email;
 	
-	@ManyToMany(fetch=FetchType.EAGER)
+	private String profileSrc;
+	//@ManyToMany(cascade = { CascadeType.PERSIST })
+	@ManyToMany(fetch=FetchType.LAZY
+			, cascade = {
+					CascadeType.ALL
+//					, CascadeType.PERSIST
+					}
+	)
 	@JoinTable(name = "pet_member_relation",
     	joinColumns = @JoinColumn(name = "member_id"),
 	    inverseJoinColumns = @JoinColumn(name = "pet_id"))
-	@JsonManagedReference
+//	@JsonManagedReference
 	private List<PetEntity> pets = new ArrayList<>();
 
 

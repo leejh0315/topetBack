@@ -33,6 +33,7 @@ public class PetRequestDTO {
 	private String health;
 	
 	private String UID;
+	private String profileSrc;
 	
 	private List<MultipartFile> image;
 	
@@ -55,6 +56,7 @@ public class PetRequestDTO {
                 .health(this.health)
                 .UID(this.UID)
                 .fileGroupEntity(fileGroupEntity)
+                .profileSrc(this.profileSrc)
                 .build();
 	}
 

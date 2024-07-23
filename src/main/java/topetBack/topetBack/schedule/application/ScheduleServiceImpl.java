@@ -1,13 +1,17 @@
 package topetBack.topetBack.schedule.application;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import jakarta.persistence.EntityManager;
+import topetBack.topetBack.community.domain.CommunityEntity;
 import topetBack.topetBack.file.application.FileService;
 import topetBack.topetBack.file.domain.FileCategory;
+import topetBack.topetBack.member.domain.Member;
 import topetBack.topetBack.schedule.dao.ScheduleRepository;
 import topetBack.topetBack.schedule.domain.ScheduleEntity;
 import topetBack.topetBack.schedule.domain.ScheduleRequestDTO;
@@ -25,18 +29,7 @@ public class ScheduleServiceImpl implements ScheduleService{
         this.fileService = fileService;
         this.entityManager = entityManager;
     }
-	
-    @Transactional
-//    public CommunityResponseDTO createCommunity(CommunityRequestDTO communityRequestDTO) throws IOException {
-//        CommunityEntity communityEntity = communityRequestDTO.toCommunityEntity();
-//
-//        fileService.uploadPhoto(communityRequestDTO.getImages(), communityEntity.getFileGroupEntity(), FileCategory.COMMUNITY.getPath());
-//
-//        CommunityEntity result = communityRepository.save(communityEntity);
-//
-//        return result.toResponseDTO();
-//    }
-    
+	    
     public ScheduleResponseDTO createSchedule(ScheduleRequestDTO scheduleRequestDTO) throws IOException{
     	ScheduleEntity scheduleEntity = scheduleRequestDTO.toScheduleEntity();
     	
@@ -48,5 +41,14 @@ public class ScheduleServiceImpl implements ScheduleService{
     	ScheduleEntity result = scheduleRepository.save(scheduleEntity);
     	return result.toResponseDTO();
     }
+
+	@Override
+	public List<ScheduleResponseDTO> findByAuthor(Member author) {
+		List<ScheduleEntity> scheduleList = scheduleRepository.findByAuthor(author);
+		return scheduleList.stream()
+                .map(ScheduleEntity::toResponseDTO)
+                .collect(Collectors.toList());
+
+	}
 
 }

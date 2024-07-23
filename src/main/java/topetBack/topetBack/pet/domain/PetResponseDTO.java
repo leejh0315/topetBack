@@ -27,7 +27,8 @@ public class PetResponseDTO {
 	private String weight;
 	private String allergy;
 	private String health;
-	private List<FileResponseDTO> image;
+	
+	private List<FileResponseDTO> image = new ArrayList<>();
 	private List<MemberResponseDTO> member = new ArrayList<MemberResponseDTO>();
  
 }

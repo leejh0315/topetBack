@@ -66,7 +66,7 @@ public class ScheduleController {
     	Member sessionMember = sessionManager.getSessionObject(req).toMember();
     	scheduleRequestDTO.setAuthor(sessionMember);
     	
-    	List<MultipartFile> images = new ArrayList<MultipartFile>();
+    	List<MultipartFile> images = new ArrayList<>();
     	images.add(image);
     	scheduleRequestDTO.setImages(images);
     	

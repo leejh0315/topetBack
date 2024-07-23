@@ -1,9 +1,11 @@
 package topetBack.topetBack.schedule.application;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import topetBack.topetBack.member.domain.Member;
 import topetBack.topetBack.schedule.domain.ScheduleRequestDTO;
 import topetBack.topetBack.schedule.domain.ScheduleResponseDTO;
 
@@ -11,17 +13,6 @@ import topetBack.topetBack.schedule.domain.ScheduleResponseDTO;
 public interface ScheduleService {
 
 	ScheduleResponseDTO createSchedule(ScheduleRequestDTO scheduleRequestDTO)throws IOException;
-//	private final ScheduleRepository scheduleRepository;
-//	
-//	public ScheduleService(ScheduleRepository scheduleRepository) {
-//        this.scheduleRepository = scheduleRepository;
-//    }
-//	
-//	public ScheduleEntity saveSchedule(ScheduleEntity scheduleEntity) {
-//    	 
-//		scheduleRepository.save(scheduleEntity);
-//		
-//        return scheduleEntity;
-//    }
+	List<ScheduleResponseDTO> findByAuthor(Member author);
 
 }
