@@ -42,7 +42,6 @@ public class Member implements Serializable {
 	@JsonManagedReference
 	private List<PetEntity> pets = new ArrayList<>();
 
-<<<<<<< HEAD
 
     @Builder
     public Member(Long id, String socialId, String email, String nickname) {
@@ -51,15 +50,6 @@ public class Member implements Serializable {
         this.email = email;
         this.name = nickname;
     }
-=======
-	@Builder
-	public Member(Long id, String socialId, String email, String nickname, List<PetEntity> pets) {
-		this.id = id;
-		this.socialId = socialId;
-		this.email = email;
-		this.name = nickname;
-		this.pets = pets;
-	}
 	
 	public SessionMember toSessionMember() {
 		List<PetResponseDTO> newPets = new ArrayList<>();
@@ -89,6 +79,5 @@ public class Member implements Serializable {
 		
 	}
 	
->>>>>>> ea1352b8200cfc1048dbc254fdc8fc56e194b8ce
 
 }
