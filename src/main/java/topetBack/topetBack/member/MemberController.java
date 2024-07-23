@@ -1,5 +1,7 @@
 package topetBack.topetBack.member;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -22,11 +24,12 @@ import topetBack.topetBack.member.application.MemberService;
 import topetBack.topetBack.member.application.SocialLoginService;
 import topetBack.topetBack.member.domain.Member;
 import topetBack.topetBack.member.domain.SessionMember;
+import topetBack.topetBack.schedule.application.ScheduleService;
+import topetBack.topetBack.schedule.domain.ScheduleResponseDTO;
 
 @RestController
 @Slf4j
 @RequiredArgsConstructor
-
 public class MemberController {
 
 	@Value("${toPet.back.address}")
@@ -39,10 +42,9 @@ public class MemberController {
 	private String clientId;
 
 	private final SocialLoginService kakaoLoginService;
-
 	private final MemberService memberService;
-
 	private final SessionManager sessionManager;
+	private final ScheduleService scheduleService;
 
 	@GetMapping("/kakaoLogin")
 	public String getKakaoLogin() {
@@ -67,7 +69,7 @@ public class MemberController {
 
 		if (response != null) {
 			Member member = new Member(0L, response.get("kid").toString(), (String) response.get("email"),
-					(String) response.get("nickname"), null);
+					(String) response.get("nickname"));
 			String sId = response.get("kid").toString();
 			Optional<Member> dbMember = memberService.findBySocialId(sId);
 			if (dbMember.isPresent()) {
@@ -87,9 +89,27 @@ public class MemberController {
 
 	@Transactional
 	@GetMapping("/home")
-	public String getHome(HttpServletRequest req) throws JsonMappingException, JsonProcessingException {
+	public Object getHome(HttpServletRequest req) throws JsonMappingException, JsonProcessingException {
+		System.out.println("----------------------------------------------");
+		System.out.println("-------------------getHome--------------------");
+		System.out.println("----------------------------------------------");
 		SessionMember member = sessionManager.getSessionObject(req);
-		System.out.println(member);
+		List<ScheduleResponseDTO> scheduleList = scheduleService.findByAuthor(member.toMember());
+		Map<String, Object> homeData = new HashMap<String, Object>();
+		
+		homeData.put("member", member);
+		homeData.put("pet", member.getPets());
+		homeData.put("schedule", scheduleList);
+		
+		return homeData;
+	}
+	
+	
+	
+	@Transactional
+	@GetMapping("/home/sessionData")
+	public Object getSessionData(HttpServletRequest req) throws JsonMappingException, JsonProcessingException {
+		SessionMember member = sessionManager.getSessionObject(req);
 		return member.toString();
 	}
 }

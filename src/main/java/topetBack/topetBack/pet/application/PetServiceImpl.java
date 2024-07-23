@@ -1,17 +1,15 @@
 package topetBack.topetBack.pet.application;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import lombok.extern.slf4j.Slf4j;
 import topetBack.topetBack.file.application.FileService;
 import topetBack.topetBack.file.domain.FileCategory;
+import topetBack.topetBack.file.domain.FileGroupEntity;
 import topetBack.topetBack.pet.dao.PetRepository;
 import topetBack.topetBack.pet.domain.PetEntity;
 import topetBack.topetBack.pet.domain.PetRequestDTO;
@@ -34,11 +32,14 @@ public class PetServiceImpl implements PetService{
     public PetResponseDTO createPet(PetRequestDTO petRequestDTO) throws IOException {
     	petRequestDTO.setUID(createKey());
     	log.info("petRequestDTO : " + petRequestDTO.toString());
-        PetEntity petEntity = petRequestDTO.toPetEntity();
-        log.info("petEntity : " + petEntity.toString());
         
-        fileService.uploadPhoto(petRequestDTO.getImage(), petEntity.getFileGroupEntity(), FileCategory.PET.getPath());
-        PetEntity result = petRepository.save(petEntity);
+        if(petRequestDTO.getImage() != null) {
+        	FileGroupEntity fileGroupEntity = fileService.uploadPhoto(petRequestDTO.getImage(), petRequestDTO.toPetEntity().getFileGroupEntity(), FileCategory.PET.getPath());
+        	petRequestDTO.setProfileSrc(fileGroupEntity.getFileList().get(0).getFilePath());
+        }
+        
+        PetEntity result = petRepository.save(petRequestDTO.toPetEntity());
+        log.info("petEntity : " + result.toString());
         return result.toResponseDTO();
         
     }

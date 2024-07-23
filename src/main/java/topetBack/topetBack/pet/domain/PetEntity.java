@@ -76,8 +76,18 @@ public class PetEntity {
 	@Comment("고유코드")
 	private String UID;
 
-	@JsonBackReference
-	@ManyToMany(mappedBy = "pets", fetch = FetchType.EAGER)
+	@Column(nullable = true)
+	@Comment("사진경로")
+	private String profileSrc;
+	
+//	@JsonBackReference
+	
+	
+	
+	
+	@ManyToMany(mappedBy = "pets", fetch = FetchType.LAZY, cascade = { CascadeType.MERGE})
+    		//,cascade = {CascadeType.MERGE}
+			
 	private List<Member> member = new ArrayList<>();
 
 	@OneToOne(cascade = CascadeType.ALL)
@@ -100,6 +110,7 @@ public class PetEntity {
 				.weight(this.weight)
 				.allergy(this.allergy)
 				.health(this.health)
+				.profileSrc(this.profileSrc)
 				//.image(this.fileGroupEntity.getFileResponseDTOList())
 				.build();
 	}
