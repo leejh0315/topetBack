@@ -110,7 +110,6 @@ public class CommunityEntity {
                 .category(this.category)
                 .animal(this.animal)
                 .images(this.fileGroupEntity.getFileResponseDTOList())
-//                .comments(commentResponseDtoList)
                 .build();
     }
     

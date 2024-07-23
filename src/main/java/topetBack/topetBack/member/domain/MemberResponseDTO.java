@@ -1,0 +1,17 @@
+package topetBack.topetBack.member.domain;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@Builder 
+@NoArgsConstructor
+@AllArgsConstructor
+public class MemberResponseDTO {
+	private Long id;
+	private String socialId;
+	private String name;
+	private String email;
+}

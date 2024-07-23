@@ -4,17 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.annotations.Comment;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
@@ -25,6 +25,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import topetBack.topetBack.file.domain.FileGroupEntity;
 import topetBack.topetBack.member.domain.Member;
+import topetBack.topetBack.member.domain.MemberResponseDTO;
 
 @Getter
 @Builder
@@ -75,8 +76,13 @@ public class PetEntity {
 	@Comment("고유코드")
 	private String UID;
 
-	@ManyToMany(cascade = { CascadeType.PERSIST })
-	@JoinTable(name = "pet_member_relation", joinColumns = @JoinColumn(name = "pet_id"), inverseJoinColumns = @JoinColumn(name = "member_id"))
+//	@ManyToMany(cascade = { CascadeType.PERSIST } ,mappedBy = "pet")//	
+//	@ManyToMany(fetch = FetchType.EAGER , mappedBy = "pets")
+	//(cascade = { CascadeType.PERSIST } , mappedBy = "pets")
+	
+//	@JoinTable(name = "pet_member_relation", joinColumns = @JoinColumn(name = "pet_id"), inverseJoinColumns = @JoinColumn(name = "member_id"))
+	@JsonBackReference
+	@ManyToMany(mappedBy = "pets", fetch = FetchType.EAGER)
 	private List<Member> member = new ArrayList<>();
 
 	@OneToOne(cascade = CascadeType.ALL)
@@ -84,37 +90,23 @@ public class PetEntity {
 	private FileGroupEntity fileGroupEntity;
 
 	public PetResponseDTO toResponseDTO() {
-		return PetResponseDTO.builder().id(this.id).type(this.type).kind(this.kind).gender(this.gender).name(this.name)
-				.birth(this.birth).member(this.member).weight(this.weight).allergy(this.allergy).health(this.health)
-				.image(this.fileGroupEntity.getFileResponseDTOList()).build();
+		List<MemberResponseDTO> newMembers = new ArrayList<>();
+        for (Member member : this.member) {
+            newMembers.add(member.toResponseDTO());
+        }
+		return PetResponseDTO.builder()
+				.id(this.id)
+				.type(this.type)
+				.kind(this.kind)
+				.gender(this.gender)
+				.name(this.name)
+				.birth(this.birth)
+				.member(newMembers)
+				.weight(this.weight)
+				.allergy(this.allergy)
+				.health(this.health)
+				.image(this.fileGroupEntity.getFileResponseDTOList())
+				.build();
 	}
-
-//	    
-//    @Builder
-//    @ConstructorProperties({"type", "kind", "gender", "name",  "birth", "weigth", "allergy", "health"})
-//	public PetEntity(String type, String kind, String gender , String name, Date birth, String weigth, String allergy, String health) {
-//	    this.type = type;
-//	    this.kind = kind;
-//	    this.gender = gender;
-//	    this.name = name;
-//	    this.birth = birth;
-//	    this.weigth = weigth;
-//	    this.allergy=allergy;
-//	    this.health=health;
-//	}
-//    
-//    public PetEntity toEntity() {
-//    	return PetEntity.builder()
-//    			.type(type)
-//    			.kind(kind)
-//    			.gender(gender)
-//    			.name(name)
-//    			.build();
-//    }
-//    
-
-//    public void addPhoto(Image image) {
-//        this.image.add(image);
-//    }    
 
 }

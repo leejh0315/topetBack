@@ -1,5 +1,6 @@
 package topetBack.topetBack.pet.domain;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
@@ -25,7 +26,7 @@ public class PetRequestDTO {
 	private String gender;
 	
 	private String name;
-	private List<Member> member;
+	private Member member;
 	private String birth;
 	private String weight;
 	private String allergy;
@@ -37,13 +38,16 @@ public class PetRequestDTO {
 	
 	
 	public PetEntity toPetEntity() {
+		List<Member> newMember = new ArrayList<Member>();
+		newMember.add(this.member);
+		
 		FileGroupEntity fileGroupEntity = new FileGroupEntity();
 		return PetEntity.builder()
 	            .id(this.id)
                 .type(this.type)
                 .kind(this.kind)
                 .gender(this.gender)
-                .member(this.member)
+                .member(newMember)
                 .name(this.name)
                 .birth(this.birth)
                 .weight(this.weight)

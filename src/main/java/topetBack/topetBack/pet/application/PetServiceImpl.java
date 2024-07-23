@@ -1,10 +1,13 @@
 package topetBack.topetBack.pet.application;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import lombok.extern.slf4j.Slf4j;
 import topetBack.topetBack.file.application.FileService;
@@ -31,12 +34,10 @@ public class PetServiceImpl implements PetService{
     public PetResponseDTO createPet(PetRequestDTO petRequestDTO) throws IOException {
     	petRequestDTO.setUID(createKey());
     	log.info("petRequestDTO : " + petRequestDTO.toString());
-    	
         PetEntity petEntity = petRequestDTO.toPetEntity();
-        
         log.info("petEntity : " + petEntity.toString());
         
-        //fileService.uploadPhoto(petRequestDTO.getImage(), petEntity.getFileGroupEntity(), FileCategory.PET.getPath());
+        fileService.uploadPhoto(petRequestDTO.getImage(), petEntity.getFileGroupEntity(), FileCategory.PET.getPath());
         PetEntity result = petRepository.save(petEntity);
         return result.toResponseDTO();
         
