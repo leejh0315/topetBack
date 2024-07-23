@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import topetBack.topetBack.config.SessionManager;
 import topetBack.topetBack.member.domain.Member;
+import topetBack.topetBack.member.domain.SessionMember;
 import topetBack.topetBack.pet.application.PetService;
 import topetBack.topetBack.pet.domain.PetRequestDTO;
 import topetBack.topetBack.pet.domain.PetResponseDTO;
@@ -43,12 +44,13 @@ public class PetController {
 								) throws IOException {
 		
 		log.info("petRegistration : " + petRequestDTO);
-	    Member sessionMember = (Member) sessionManager.getSessionObject(req);
-	    
+	    Member sessionMember = sessionManager.getSessionObject(req).toMember();
+	    sessionMember.toSessionMember();
 	    List<Member> members = new ArrayList<>();
-	    members.add(sessionMember);
-	    petRequestDTO.setMember(members);
 	    
+	    members.add(sessionMember);
+	    
+	    petRequestDTO.setMember(members);
 	    // PetService를 통해 Pet 등록
 	    PetResponseDTO petResponseDTO = petService.createPet(petRequestDTO);
 	    

@@ -25,12 +25,15 @@ public class MemberService {
     public Optional<Member> findBySocialId(String socialId) {
         return memberRepository.findBySocialId(socialId);
     }
+//    public Optional<SessionMember> findBySocialId(String socialId) {
+//        return memberRepository.findBySocialId(socialId);
+//    }
     public Member memberJoin(Member memberInfo) {
     	Member member = new Member(
-    			0,
+    			0L,
     			memberInfo.getSocialId(), 
 				(String) memberInfo.getEmail(), 
-				(String) memberInfo.getName());
+				(String) memberInfo.getName(), null);
         return memberRepository.save(member);
     }
     

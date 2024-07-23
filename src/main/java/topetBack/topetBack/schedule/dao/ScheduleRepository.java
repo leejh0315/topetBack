@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import topetBack.topetBack.schedule.domain.ScheduleEntity;
 import topetBack.topetBack.member.domain.Member;
 
-public interface ScheduleRepository  extends JpaRepository<Member, Integer>{
+public interface ScheduleRepository  extends JpaRepository<ScheduleEntity, Long>{
 
 	ScheduleEntity save(ScheduleEntity scheduleEntity);
 

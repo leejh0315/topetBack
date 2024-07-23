@@ -70,26 +70,11 @@ public class CommunityEntity {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "file_group_id")
     private FileGroupEntity fileGroupEntity;
-    
-//    @OneToMany(mappedBy = "community", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
-//    @OrderBy("id asc") // 댓글 정렬    
-//    private List<CommentEntity> comments;
-
-
+  
     public CommunityResponseDTO toResponseDTO() {
-    	
-//    	if (this.fileGroupEntity != null) {
-//    		List<FileResponseDTO> fileResponseDTOList = this.fileGroupEntity.getFileList()
-//                    .stream().map(FileInfoEntity::toResponseDTO).collect(Collectors.toList());
-//    		} else {
-//
-//    		}
-
 	    	
-        List<FileResponseDTO> fileResponseDTOList = this.fileGroupEntity.getFileList()
-                .stream().map(FileInfoEntity::toResponseDTO).collect(Collectors.toList());
-        
-//        List<CommentResponseDTO> commentResponseDtoList = this.getComments().stream().map(CommentEntity::toResponseDTO).collect(Collectors.toList());
+	    List<FileResponseDTO> fileResponseDTOList = this.fileGroupEntity.getFileList()
+            .stream().map(FileInfoEntity::toResponseDTO).collect(Collectors.toList());
         
         return CommunityResponseDTO.builder()
                 .id(this.id)
@@ -102,7 +87,6 @@ public class CommunityEntity {
                 .category(this.category)
                 .animal(this.animal)
                 .images(this.fileGroupEntity.getFileResponseDTOList())
-//                .comments(commentResponseDtoList)
                 .build();
     }
 

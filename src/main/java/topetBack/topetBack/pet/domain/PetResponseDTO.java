@@ -1,15 +1,20 @@
 
 package topetBack.topetBack.pet.domain;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import topetBack.topetBack.file.domain.FileResponseDTO;
-import topetBack.topetBack.member.domain.Member;
+import topetBack.topetBack.member.domain.MemberResponseDTO;
 
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class PetResponseDTO {
 	
 	private Long id;
@@ -23,7 +28,6 @@ public class PetResponseDTO {
 	private String allergy;
 	private String health;
 	private List<FileResponseDTO> image;
-	private List<Member> member;
-	 
-	
+	private List<MemberResponseDTO> member = new ArrayList<MemberResponseDTO>();
+ 
 }

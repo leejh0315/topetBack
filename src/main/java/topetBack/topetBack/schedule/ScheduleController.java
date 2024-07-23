@@ -21,28 +21,33 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.google.gson.JsonObject;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import topetBack.topetBack.schedule.dao.ScheduleRepository;
+import topetBack.topetBack.config.SessionManager;
+import topetBack.topetBack.member.domain.Member;
+import topetBack.topetBack.schedule.application.ScheduleService;
 import topetBack.topetBack.schedule.domain.ScheduleEntity;
+import topetBack.topetBack.schedule.domain.ScheduleRequestDTO;
+import topetBack.topetBack.schedule.domain.ScheduleResponseDTO;
 import topetBack.topetBack.schedule.validation.ScheduleValidator;
 
 
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-
 public class ScheduleController {
 
-    private final ScheduleRepository scheduleRepository;
+    private final ScheduleService scheduleService;
     private final ScheduleValidator scheduleValidator;
+    private final SessionManager sessionManager;
 
     @InitBinder
     public void init(WebDataBinder webDataBinder) {
         webDataBinder.addValidators(scheduleValidator);
     }
 
-    @GetMapping("/api/schedule")
+    @GetMapping("/schedule")
     public ResponseEntity<ScheduleEntity> getCalendar() {
         log.info("get Calendar");
 		ScheduleEntity scheduleEntity = new ScheduleEntity(); // select from DB
@@ -50,18 +55,36 @@ public class ScheduleController {
     }
 
 
-    @PostMapping("/api/schedule/post")
-    public ResponseEntity<ScheduleEntity> schedulePost(@ModelAttribute ScheduleEntity scheduleEntity, BindingResult bindingResult) {
-        scheduleValidator.validate(scheduleEntity, bindingResult);
-        if (bindingResult.hasErrors()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(scheduleEntity);
-        }
+    @PostMapping("/schedule/post")
+    public String schedulePost(@ModelAttribute ScheduleRequestDTO scheduleRequestDTO
+    														, BindingResult bindingResult, HttpServletRequest req) throws IOException{
+    	
+    	System.out.println("schedulePost요청왔음");
+    	Member sessionMember = sessionManager.getSessionObject(req).toMember();
+    	sessionMember.toSessionMember();
+    	System.out.println("sessionMember : " + sessionMember);
+    	scheduleRequestDTO.setAuthor(sessionMember);
+    	
+//    	
+//        scheduleValidator.validate(scheduleRequestDTO, bindingResult);
+//        
+//        
+//        
+//        
+//        if (bindingResult.hasErrors()) {
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(scheduleRequestDTO).toString();
+//        }
+        
         log.info("/api/schedule/post 진입");
-        log.info("입력한 내용은 {}", scheduleEntity);
+        log.info("입력한 내용은 {}", scheduleRequestDTO);
+        
+//		CommunityResponseDTO communityResponseDTO = communityService.createCommunity(communityRequestDTO);
+        ScheduleResponseDTO scheduleResponseDTO = scheduleService.createSchedule(scheduleRequestDTO);
 
-        ScheduleEntity response = scheduleRepository.save(scheduleEntity);
-        log.info("schedule DB 저장: {}", response);
-        return ResponseEntity.ok(response);
+        
+//        log.info("schedule DB 저장: {}", response);
+        return "success"; 
+//        		ResponseEntity.ok(response).toString();
     }
 
     @PostMapping(value = "/api/schedule/postPhoto", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
