@@ -14,12 +14,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import ch.qos.logback.core.model.Model;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import topetBack.topetBack.comment.application.CommentService;
 import topetBack.topetBack.comment.domain.CommentEntity;
 import topetBack.topetBack.comment.domain.CommentRequestDTO;
 import topetBack.topetBack.comment.domain.CommentResponseDTO;
+import topetBack.topetBack.config.SessionManager;
 import topetBack.topetBack.member.domain.Member;
+import topetBack.topetBack.member.domain.SessionMember;
 
 
 @RestController
@@ -28,17 +31,18 @@ import topetBack.topetBack.member.domain.Member;
 public class CommentController {
 
 	private final CommentService commentService;
-
+	private final SessionManager sessionManager;
 
 	 @PostMapping("/{id}/comentPost")
-	    public ResponseEntity<CommentResponseDTO> communityPost(@ModelAttribute CommentRequestDTO commentRequestDTO , @PathVariable("id")Long id) throws Exception  {
-
+	    public ResponseEntity<CommentResponseDTO> communityPost(@ModelAttribute CommentRequestDTO commentRequestDTO , @PathVariable("id")Long id, HttpServletRequest req) throws Exception  {
+		 	SessionMember member = sessionManager.getSessionObject(req);
+		 	
 //	    	HttpSession session = req.getSession(false);
 //			Member member = (Member) session.getAttribute(SessionVar.LOGIN_MEMBER);
 			System.out.println("DTO : " + commentRequestDTO);
 //			System.out.println("member :" + member);
 
-			commentRequestDTO.setAuthor(new Member(1L, "test", "test","test"));
+			commentRequestDTO.setAuthor(member.toMember());
 
 
 			System.out.println("commentPost 요청 등록됨");

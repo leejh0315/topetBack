@@ -14,11 +14,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import topetBack.topetBack.community.application.CommunityService;
 import topetBack.topetBack.community.domain.CommunityRequestDTO;
 import topetBack.topetBack.community.domain.CommunityResponseDTO;
+import topetBack.topetBack.config.SessionManager;
 import topetBack.topetBack.member.domain.Member;
+import topetBack.topetBack.member.domain.SessionMember;
 
 @RestController
 @RequiredArgsConstructor
@@ -28,10 +31,11 @@ public class CommunityController {
 
 
 	private final CommunityService communityService;
-
+	private final SessionManager sessionManager;
+	
     @PostMapping("/communityPost")
-    public ResponseEntity<CommunityResponseDTO> communityPost(@ModelAttribute CommunityRequestDTO communityRequestDTO) throws Exception  {
-
+    public ResponseEntity<CommunityResponseDTO> communityPost(@ModelAttribute CommunityRequestDTO communityRequestDTO, HttpServletRequest req) throws Exception  {
+    	SessionMember member = sessionManager.getSessionObject(req);
 //    	HttpSession session = req.getSession(false);
 //		Member member = (Member) session.getAttribute(SessionVar.LOGIN_MEMBER);
 
@@ -39,7 +43,7 @@ public class CommunityController {
 //		System.out.println("member :" + member);
 
 //		communityRequestDTO.setAuthor(member);
-		communityRequestDTO.setAuthor(new Member(1L, "test", "test","test"));
+		communityRequestDTO.setAuthor(member.toMember());
 
 		System.out.println("communityPost 요청 등록됨");
 		System.out.println(communityRequestDTO);

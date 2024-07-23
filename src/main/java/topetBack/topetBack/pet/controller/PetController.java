@@ -42,15 +42,14 @@ public class PetController {
 								@ModelAttribute PetRequestDTO petRequestDTO,
 								HttpServletRequest req
 								) throws IOException {
-		
 		log.info("petRegistration : " + petRequestDTO);
 	    Member sessionMember = sessionManager.getSessionObject(req).toMember();
-	    sessionMember.toSessionMember();
-	    List<Member> members = new ArrayList<>();
+	    petRequestDTO.setMember(sessionMember);
 	    
-	    members.add(sessionMember);
-	    
-	    petRequestDTO.setMember(members);
+	    List<MultipartFile> images = new ArrayList<MultipartFile>();
+        images.add(image);
+        
+        petRequestDTO.setImage(images);
 	    // PetService를 통해 Pet 등록
 	    PetResponseDTO petResponseDTO = petService.createPet(petRequestDTO);
 	    

@@ -105,7 +105,7 @@ public class PetEntity {
 				.weight(this.weight)
 				.allergy(this.allergy)
 				.health(this.health)
-				//.image(this.fileGroupEntity.getFileResponseDTOList())
+				.image(this.fileGroupEntity.getFileResponseDTOList())
 				.build();
 	}
 
