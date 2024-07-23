@@ -19,7 +19,12 @@ public class FileInfoEntity {
     @Column(nullable = false)
     private String filePath;  // 파일 저장 경로
 
+    @Column(nullable = false)
+    private String newFileName;	//파일 새로운 이름
+    
     private Long fileSize;
+    
+    
 
     @ManyToOne
     @JoinColumn(name = "file_group_id")
@@ -30,6 +35,7 @@ public class FileInfoEntity {
 
         return FileResponseDTO.builder()
                 .origFileName(this.origFileName)
+                .newFileName(this.newFileName)
                 .filePath(this.filePath)
                 .build();
     }

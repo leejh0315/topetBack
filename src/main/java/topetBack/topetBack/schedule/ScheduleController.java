@@ -3,6 +3,8 @@ package topetBack.topetBack.schedule;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.http.HttpStatus;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -56,41 +59,37 @@ public class ScheduleController {
 
 
     @PostMapping("/schedule/post")
-    public String schedulePost(@ModelAttribute ScheduleRequestDTO scheduleRequestDTO
-    														, BindingResult bindingResult, HttpServletRequest req) throws IOException{
+    public ResponseEntity<Object> schedulePost(@ModelAttribute ScheduleRequestDTO scheduleRequestDTO, 
+    							@RequestParam(value="photo", required=false) MultipartFile image,
+    							BindingResult bindingResult, HttpServletRequest req) throws IOException{
     	
-    	System.out.println("schedulePost요청왔음");
     	Member sessionMember = sessionManager.getSessionObject(req).toMember();
-    	sessionMember.toSessionMember();
-    	System.out.println("sessionMember : " + sessionMember);
     	scheduleRequestDTO.setAuthor(sessionMember);
     	
-//    	
-//        scheduleValidator.validate(scheduleRequestDTO, bindingResult);
-//        
-//        
-//        
-//        
-//        if (bindingResult.hasErrors()) {
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(scheduleRequestDTO).toString();
-//        }
+    	List<MultipartFile> images = new ArrayList<MultipartFile>();
+    	images.add(image);
+    	scheduleRequestDTO.setImages(images);
+    	
+    	System.out.println("schedulePost요청왔음");
+    	
+        scheduleValidator.validate(scheduleRequestDTO, bindingResult);
+        
+        if (bindingResult.hasErrors()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(scheduleRequestDTO);
+        }
         
         log.info("/api/schedule/post 진입");
         log.info("입력한 내용은 {}", scheduleRequestDTO);
         
-//		CommunityResponseDTO communityResponseDTO = communityService.createCommunity(communityRequestDTO);
         ScheduleResponseDTO scheduleResponseDTO = scheduleService.createSchedule(scheduleRequestDTO);
 
-        
-//        log.info("schedule DB 저장: {}", response);
-        return "success"; 
-//        		ResponseEntity.ok(response).toString();
+//        return "success"; 
+        		return ResponseEntity.ok(scheduleResponseDTO);
     }
 
     @PostMapping(value = "/api/schedule/postPhoto", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public String schedulePostPhoto(@RequestPart(value = "photo", required = true) MultipartFile photo) {
         log.info("/api/schedule/postPhoto 진입");
-
 
         // JSON 객체 생성
         JsonObject jsonObject = new JsonObject();

@@ -14,56 +14,57 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
-public class FileServiceImpl implements FileService{
+public class FileServiceImpl implements FileService {
 
-    private final FileRepository fileRepository;
+	private final FileRepository fileRepository;
 
-    @Value("${toPet.fileStorePath}")
-    private String fileBasePath;
+	@Value("${toPet.fileStorePath}")
+	private String fileBasePath;
 
-    public FileServiceImpl(FileRepository fileRepository) {
-        this.fileRepository = fileRepository;
-    }
+	public FileServiceImpl(FileRepository fileRepository) {
+		this.fileRepository = fileRepository;
+	}
 
-    @Override
-    public FileGroupEntity uploadPhoto(List<MultipartFile> photos, FileGroupEntity fileGroupEntity, String middlePath) throws IOException {
-        List<FileInfoEntity> fileInfoEntityList = new ArrayList<>();
+	@Override
+	public FileGroupEntity uploadPhoto(List<MultipartFile> photos, FileGroupEntity fileGroupEntity, String middlePath)
+			throws IOException {
+		List<FileInfoEntity> fileInfoEntityList = new ArrayList<>();
 
-        String baseDir = fileBasePath + middlePath;
-        if(photos!=null) {
-	        for (MultipartFile photo : photos) {
-	            try {
-	                // 파일 저장 경로 생성
-	                String fileName = photo.getOriginalFilename();
-	                Path filePath = Paths.get(baseDir, fileName);
-	
-	                // 디렉토리 생성
-	                Files.createDirectories(filePath.getParent());
-	
-	                // 파일 저장
-	                Files.copy(photo.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-	
-	                // File 엔티티 생성
-	                FileInfoEntity FileInfoEntity = new FileInfoEntity();
-	                FileInfoEntity.setOrigFileName(fileName);
-	                FileInfoEntity.setFilePath(filePath.toString());
-	                FileInfoEntity.setFileSize(photo.getSize());
-	                FileInfoEntity.setFileGroupEntity(fileGroupEntity);
-	
-	                // 리스트에 추가
-	                fileInfoEntityList.add(FileInfoEntity);
-	            } catch (IOException e) {
-	                throw new IOException();
-	            }
-	        }
-        }
-        fileGroupEntity.setFileList(fileInfoEntityList);
+		String baseDir = fileBasePath + middlePath;
+		if (photos != null) {
+			for (MultipartFile photo : photos) {
+				try {
+					// 파일 저장 경로 생성
+					String fileName = photo.getOriginalFilename();
+					String extension = fileName.substring(fileName.lastIndexOf("."));
+					String newFileName = UUID.randomUUID().toString() + extension;
+					Path filePath = Paths.get(baseDir, newFileName);
+					// 디렉토리 생성
+					Files.createDirectories(filePath.getParent());
+					// 파일 저장
+					Files.copy(photo.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
-        return fileGroupEntity;
-    }
+					// File 엔티티 생성
+					FileInfoEntity FileInfoEntity = new FileInfoEntity();
+					FileInfoEntity.setOrigFileName(fileName);
+					FileInfoEntity.setFilePath(filePath.toString());
+					FileInfoEntity.setFileSize(photo.getSize());
+					FileInfoEntity.setFileGroupEntity(fileGroupEntity);
+					FileInfoEntity.setNewFileName(newFileName);
+					// 리스트에 추가
+					fileInfoEntityList.add(FileInfoEntity);
 
-	
+				} catch (IOException e) {
+					throw new IOException();
+				}
+			}
+		}
+		fileGroupEntity.setFileList(fileInfoEntityList);
+
+		return fileGroupEntity;
+	}
 
 }

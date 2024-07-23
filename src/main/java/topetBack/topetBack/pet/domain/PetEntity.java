@@ -76,11 +76,6 @@ public class PetEntity {
 	@Comment("고유코드")
 	private String UID;
 
-//	@ManyToMany(cascade = { CascadeType.PERSIST } ,mappedBy = "pet")//	
-//	@ManyToMany(fetch = FetchType.EAGER , mappedBy = "pets")
-	//(cascade = { CascadeType.PERSIST } , mappedBy = "pets")
-	
-//	@JoinTable(name = "pet_member_relation", joinColumns = @JoinColumn(name = "pet_id"), inverseJoinColumns = @JoinColumn(name = "member_id"))
 	@JsonBackReference
 	@ManyToMany(mappedBy = "pets", fetch = FetchType.EAGER)
 	private List<Member> member = new ArrayList<>();
@@ -105,7 +100,7 @@ public class PetEntity {
 				.weight(this.weight)
 				.allergy(this.allergy)
 				.health(this.health)
-				.image(this.fileGroupEntity.getFileResponseDTOList())
+				//.image(this.fileGroupEntity.getFileResponseDTOList())
 				.build();
 	}
 

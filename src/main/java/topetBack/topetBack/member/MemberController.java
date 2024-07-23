@@ -57,56 +57,34 @@ public class MemberController {
 
 		return url.toString();
 	}
-	
+
 	@GetMapping("/kakaoLogin/OAuth")
-	public RedirectView getOAuth(@RequestParam("code") String code, HttpServletRequest req, HttpServletResponse resp) throws Exception {
+	public RedirectView getOAuth(@RequestParam("code") String code, HttpServletRequest req, HttpServletResponse resp)
+			throws Exception {
 
 		Map<String, Object> response = kakaoLoginService.kakaoLogin(code);
 		RedirectView redirectView = new RedirectView();
-		
-		
+
 		if (response != null) {
-			Member member = new Member(0L, response.get("kid").toString(), (String) response.get("email"), (String) response.get("nickname"), null);
-			
+			Member member = new Member(0L, response.get("kid").toString(), (String) response.get("email"),
+					(String) response.get("nickname"), null);
 			String sId = response.get("kid").toString();
-			
 			Optional<Member> dbMember = memberService.findBySocialId(sId);
-			
-			if (dbMember.isPresent()) { //있어야 true
-//				memberService.memberJoin(member);
-//				System.out.println("주입완료");
+			if (dbMember.isPresent()) {
 				System.out.println("주입할 필요 없어서 안했음");
 			} else {
 				memberService.memberJoin(member);
 				System.out.println("주입완료");
 			}
-//			sMember  = memberService.findBySocialId(response.get("kid").toString()).get();
-			//member  = memberService.findBySocialId(response.get("kid").toString()).get();
-//			String sessionId = sessionManager.create(sMember, resp);
-			
 			Member newMember = memberService.findBySocialId(response.get("kid").toString()).get();
-			System.out.println("여기0");
-			System.out.println("newMember :" + newMember.getEmail());
-			System.out.println("newMember :" + newMember.getName());
-			System.out.println("newMember :" + newMember.getSocialId());
-			System.out.println("newMember :" + newMember.getId());
-			System.out.println("newMember :" + newMember.getPets());
-			
-			//.get(0).getMember().get(0).getPets().get(0).getMember().get(0).get
-			System.out.println("여기1");
-			
-			
-
-			
 			String sessionId = sessionManager.create(newMember, resp);
-			System.out.println("여기2");			
-			
 			redirectView.setUrl(fronAddress + "api/home");
 		} else {
 			redirectView.setUrl(fronAddress + "api");
 		}
 		return redirectView;
 	}
+
 	@Transactional
 	@GetMapping("/home")
 	public String getHome(HttpServletRequest req) throws JsonMappingException, JsonProcessingException {

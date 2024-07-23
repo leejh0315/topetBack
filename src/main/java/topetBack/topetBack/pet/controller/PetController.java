@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -38,11 +39,10 @@ public class PetController {
 	
 	@Transactional
 	@PostMapping("/petRegistration")
-	public String petRegistPost(@RequestParam(value="photo", required=false) MultipartFile image,
+	public ResponseEntity<PetResponseDTO> petRegistPost(@RequestParam(value="photo", required=false) MultipartFile image,
 								@ModelAttribute PetRequestDTO petRequestDTO,
 								HttpServletRequest req
 								) throws IOException {
-		log.info("petRegistration : " + petRequestDTO);
 	    Member sessionMember = sessionManager.getSessionObject(req).toMember();
 	    petRequestDTO.setMember(sessionMember);
 	    
@@ -53,11 +53,7 @@ public class PetController {
 	    // PetService를 통해 Pet 등록
 	    PetResponseDTO petResponseDTO = petService.createPet(petRequestDTO);
 	    
-	    
-		log.info("petRequestDTO" + petRequestDTO);
-		log.info("petResponseDTO" + petResponseDTO);
-		
-		return "";
+	    return ResponseEntity.ok(petResponseDTO);
 	}
 }
 
