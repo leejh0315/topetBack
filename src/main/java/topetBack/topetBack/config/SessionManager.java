@@ -36,7 +36,6 @@ public class SessionManager {
         String sessionId = UUID.randomUUID().toString();
         
         redisTemplate.opsForValue().set(sessionId, object.toSessionMember());
-        System.out.println("여기4");
         redisTemplate.expire(sessionId, 30, TimeUnit.MINUTES); // 예시: 세션 만료 시간 설정 (30분)
 
         Cookie cookie = new Cookie(SESSION_COOKIE_NAME, sessionId);
@@ -65,86 +64,18 @@ public class SessionManager {
             System.out.println("sessionManager에서 쿠키를 통해 찾은 sessionId : " + sessionId);
            
             SessionMember sessionData = (SessionMember) redisTemplate.opsForValue().get(sessionId);
-            System.out.println("여기는 1");
-            System.out.println(sessionData.toString());
             
             if(sessionData != null) {
-            	System.out.println("여기는 2");
             	if(sessionData instanceof SessionMember) {
-            		 
-            		 System.out.println("여기는 3");
-//                     try {
-                    	 System.out.println("여기는 4");
-                    	 Gson gson = new Gson();
-                    	 
-                    	 
-                    	 
                     	 SessionMember sessionMember = (SessionMember) sessionData;
-//                         SessionMember sessionMember = objectMapper.readValue((String)sessionData, SessionMember.class);
-                         System.out.println("여기는 5");
-//                         log.info("SessionManager: Session member found: {}", sessionMember);
                          return sessionMember;
-//                     } catch (JsonProcessingException e) {
-//                         log.error("SessionManager: Error deserializing session data: {}", e.getMessage());
-//                         return null;
-//                     }
             	}
             	
             }
         }
-        
-        return null; // 쿠키가 없을 경우나 역직렬화 실패 시 null 반환
+        return null; 
     }
-//    @Transactional
-//    public Object getSessionObject(HttpServletRequest req) {
-//
-//    	 log.info("session getSessionObject");
-//    	    Cookie sessionCookie = findCookie(req, SESSION_COOKIE_NAME);
-//    	    if (sessionCookie != null) {
-//    	        String sessionId = sessionCookie.getValue();
-//    	        System.out.println("sessionManager에서 쿠키를 통해 찾은 sessionId : " + sessionId);
-//    	        
-//    	        
-//    	        Object sessionData = redisTemplate.opsForValue().get(sessionId);
-//    	        ObjectMapper objMapper = new ObjectMapper();
-//    	        try {
-//    	        	Member sessionMember = objMapper.readValue((String) sessionData , Member.class);
-//    	        	System.out.println("sessionData : " + sessionMember);
-//    	        	return sessionMember;
-//    	        }catch(Exception E){
-//    	        	E.printStackTrace();
-//    	        	return null;
-//    	        }
-//    	        
-//    	        // Redis에서 데이터를 가져옴
-//    	        
-////    	        System.out.println(redisTemplate.opsForValue().get(sessionId).toString());
-//    	        
-//	        	
-////	        	if (sessionData instanceof Member) {
-////	        		return sessionData;
-////	        	}else {
-////	        		return null;
-////	        	}
-//
-////    	        if (sessionData instanceof Member) {
-////    	            ObjectMapper mapper = new ObjectMapper();
-////    	            try {
-////    	            	Member sessionMember = mapper.readValues((Member)sessionData, Member.class);/
-////                        System.out.println("SessionManager: Found session member: " + sessionMember);
-////                        return sessionMember;
-////    	            } catch (JsonProcessingException e) {
-////    	                e.printStackTrace();
-////    	                // 예외 처리: JSON 문자열을 Member 객체로 변환하는 데 실패한 경우
-////    	            }
-////    	        } else {
-////    	            System.out.println("Redis에서 가져온 데이터의 유형이 JSON 문자열이 아닙니다.");
-////    	        }
-//
-////    	        return null; // 변환 실패 시 null 반환
-//    	    }
-//    	    return null; // 쿠키가 없을 경우 null 반환
-//    	}
+
     public Cookie findCookie(HttpServletRequest req, String cookieName) {
         log.info("session findCookie");
         if (req.getCookies() != null) {
