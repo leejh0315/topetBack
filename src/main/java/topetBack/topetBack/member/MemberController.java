@@ -67,7 +67,7 @@ public class MemberController {
 
 		if (response != null) {
 			Member member = new Member(0L, response.get("kid").toString(), (String) response.get("email"),
-					(String) response.get("nickname"), null);
+					(String) response.get("nickname"));
 			String sId = response.get("kid").toString();
 			Optional<Member> dbMember = memberService.findBySocialId(sId);
 			if (dbMember.isPresent()) {

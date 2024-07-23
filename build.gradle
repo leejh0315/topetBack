@@ -72,7 +72,7 @@ sourceSets {
 compileQuerydsl {
     options.annotationProcessorPath = configurations.querydsl
 }
-/*clean {
+clean {
 	delete file('src/main/generated')
 }
 
@@ -83,4 +83,4 @@ compileQuerydsl.doFirst {
 
 tasks.named('compileQuerydsl').configure {
     enabled = false
-} */
+}
