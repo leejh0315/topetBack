@@ -20,9 +20,9 @@ public class CommunityVaildator implements Validator{
 	public void validate(Object target, Errors errors) {
 		// TODO Auto-generated method stub
 		CommunityEntity communityPostForm = (CommunityEntity)target;
-	      
+
 	      if(!StringUtils.hasText(communityPostForm.getContent())) {
-	         errors.rejectValue("content", null, "내용 작성해주세요.");         
+	         errors.rejectValue("content", null, "내용 작성해주세요.");
 	      }
 	      if(!StringUtils.hasText(communityPostForm.getTitle())) {
 	         errors.rejectValue("title", null, "제목을 작성해주세요.");
@@ -31,7 +31,7 @@ public class CommunityVaildator implements Validator{
 		         errors.rejectValue("category", null, "카테고리를 작성해주세요.");
 		  }
 
-		
+
 	}
 
 }

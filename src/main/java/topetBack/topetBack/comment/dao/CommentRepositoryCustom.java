@@ -1,0 +1,22 @@
+package topetBack.topetBack.comment.dao;
+
+import java.util.List;
+
+import topetBack.topetBack.comment.domain.CommentEntity;
+import topetBack.topetBack.comment.domain.CommentResponseDTO;
+import topetBack.topetBack.community.domain.CommunityEntity;
+
+public interface CommentRepositoryCustom {
+
+	List<CommentResponseDTO> findByCommunityId(Long community);
+
+	void updateComment(CommentEntity comment);
+
+
+
+
+
+//	List<CommentResponseDTO> findByCommunityId(Long id);
+
+
+}

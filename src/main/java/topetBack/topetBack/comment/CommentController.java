@@ -1,15 +1,24 @@
 package topetBack.topetBack.comment;
 
-import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
+import java.util.List;
+
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import ch.qos.logback.core.model.Model;
 import lombok.RequiredArgsConstructor;
 import topetBack.topetBack.comment.application.CommentService;
+import topetBack.topetBack.comment.domain.CommentEntity;
 import topetBack.topetBack.comment.domain.CommentRequestDTO;
-import topetBack.topetBack.community.application.CommunityService;
+import topetBack.topetBack.comment.domain.CommentResponseDTO;
 import topetBack.topetBack.member.domain.Member;
 
 
@@ -17,16 +26,51 @@ import topetBack.topetBack.member.domain.Member;
 @RequiredArgsConstructor
 @Controller
 public class CommentController {
-	
-	private final CommentService commentService;
-	
-	@PostMapping("/commynity/{id}/comment")
-    public String writeComment(@PathVariable Long id, CommentRequestDTO commentRequestDTO) {
-		Member Username = commentRequestDTO.getAuthor();
-		String name = Username.toString();
-        commentService.commentSave(name , id , commentRequestDTO);
 
-        return "성공";
-    }
+	private final CommentService commentService;
+
+
+	 @PostMapping("/{id}/comentPost")
+	    public ResponseEntity<CommentResponseDTO> communityPost(@ModelAttribute CommentRequestDTO commentRequestDTO , @PathVariable("id")Long id) throws Exception  {
+
+//	    	HttpSession session = req.getSession(false);
+//			Member member = (Member) session.getAttribute(SessionVar.LOGIN_MEMBER);
+			System.out.println("DTO : " + commentRequestDTO);
+//			System.out.println("member :" + member);
+
+			commentRequestDTO.setAuthor(new Member(1L, "test", "test","test"));
+
+
+			System.out.println("commentPost 요청 등록됨");
+			System.out.println(commentRequestDTO);
+
+			CommentResponseDTO commentEntity = commentService.insert(id, commentRequestDTO);
+			
+	        return ResponseEntity.ok(commentEntity);
+		}
+	 
+	 @GetMapping("/comment/{id}")
+	    public List<CommentResponseDTO> getCommentsByCommunityId(Model model ,@PathVariable("id") Long id) {
+		 	System.out.println("댓글 테스트" +  commentService.getCommentsByCommunityId(id));
+	        return commentService.getCommentsByCommunityId(id);
+	    }
+	 
+	 @PostMapping("/commentUpdate")
+	    public ResponseEntity<CommentResponseDTO> updateComment(@ModelAttribute CommentRequestDTO commentUpdateRequestDTO) throws Exception {
+	        CommentResponseDTO updatedComment = commentService.updateComment(commentUpdateRequestDTO);
+	        return ResponseEntity.ok(updatedComment);
+	    }
+	 
 	
+	 @PostMapping("/comment/delete/{id}")
+	    public ResponseEntity<Void> deleteComment(@PathVariable("id") Long id) {
+	        commentService.delete(id);
+	        return ResponseEntity.noContent().build();
+	    }
+	 
+	 
+	 
+	 
+
+
 }
