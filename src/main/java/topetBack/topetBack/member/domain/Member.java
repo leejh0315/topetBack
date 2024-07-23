@@ -42,14 +42,14 @@ public class Member implements Serializable {
 	@JsonManagedReference
 	private List<PetEntity> pets = new ArrayList<>();
 
-	@Builder
-	public Member(Long id, String socialId, String email, String nickname, List<PetEntity> pets) {
-		this.id = id;
-		this.socialId = socialId;
-		this.email = email;
-		this.name = nickname;
-		this.pets = pets;
-	}
+
+    @Builder
+    public Member(Long id, String socialId, String email, String nickname) {
+        this.id = id;
+        this.socialId = socialId;
+        this.email = email;
+        this.name = nickname;
+    }
 	
 	public SessionMember toSessionMember() {
 		List<PetResponseDTO> newPets = new ArrayList<>();
