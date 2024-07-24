@@ -13,8 +13,8 @@ public interface MemberRepository extends JpaRepository<Member, Long>{
 //	Optional<SessionMember> findBySocialId(String socialId);
 	Optional<Member> findBySocialId(String socialId);
 	Member findByName(String name);
-	@Query("SELECT m FROM Member m JOIN FETCH m.pets WHERE m.id = :id")
-    Member findByIdWithPets(@Param("id") Long id);
+//	@Query("SELECT m FROM Member m JOIN FETCH m. WHERE m.id = :id")
+//    Member findByIdWithPets(@Param("id") Long id);
 
 }
 

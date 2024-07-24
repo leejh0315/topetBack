@@ -30,6 +30,8 @@ public class QFileInfoEntity extends EntityPathBase<FileInfoEntity> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
+    public final StringPath newFileName = createString("newFileName");
+
     public final StringPath origFileName = createString("origFileName");
 
     public QFileInfoEntity(String variable) {
