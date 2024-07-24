@@ -95,29 +95,19 @@ public class MemberController {
 			}
 			String sessionId = sessionManager.create(newMember, pets, resp);
 			
-			redirectView.setUrl(fronAddress + "api/home");
+			redirectView.setUrl(fronAddress + "/api/home");
 		} else {
-			redirectView.setUrl(fronAddress + "api");
+			redirectView.setUrl(fronAddress + "/api");
 		}
 		return redirectView;
 	}
 
 	@Transactional
-	@GetMapping("/home")
-	public Object getHome(HttpServletRequest req) throws JsonMappingException, JsonProcessingException {
+	@GetMapping("/home_member")
+	public SessionMember getHome(HttpServletRequest req) throws JsonMappingException, JsonProcessingException {
 		SessionMember member = sessionManager.getSessionObject(req);
-		
-		List<ScheduleResponseDTO> scheduleList = scheduleService.findByAuthor(member.toMember());
-		Map<String, Object> homeData = new HashMap<String, Object>();
-		
-		homeData.put("member", member);
-		homeData.put("pet", member.getPets());
-		homeData.put("schedule", scheduleList);
-		
-		return homeData;
+		return member;
 	}
-	
-	
 	
 	@Transactional
 	@GetMapping("/home/sessionData")

@@ -3,6 +3,8 @@ package topetBack.topetBack.schedule;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -22,6 +24,8 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.google.gson.JsonObject;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -87,6 +91,24 @@ public class ScheduleController {
         		return ResponseEntity.ok(scheduleResponseDTO);
     }
 
+    @GetMapping("/home_schedule")
+    public List<ScheduleResponseDTO> getSchedule(HttpServletRequest req) throws JsonMappingException, JsonProcessingException {
+    	Member sessionMember = sessionManager.getSessionObject(req).toMember();
+    	List<ScheduleResponseDTO> scheduleResponseDTO = scheduleService.findByAuthor(sessionMember);
+    	List<ScheduleResponseDTO> homeSchedule = new ArrayList<ScheduleResponseDTO>();
+    	
+    	LocalDateTime today = LocalDateTime.now();
+    	for(ScheduleResponseDTO scheduleRespDTO : scheduleResponseDTO) {
+    		if(isDateInRange(today, scheduleRespDTO.getStartDate(), scheduleRespDTO.getEndDate())) {
+    			homeSchedule.add(scheduleRespDTO);
+    		}
+    	}
+    	return homeSchedule;
+    }
+    public static boolean isDateInRange(LocalDateTime date, LocalDateTime startDate, LocalDateTime endDate) {
+        return date.isEqual(startDate) || date.isEqual(endDate) || (date.isAfter(startDate) && date.isBefore(endDate));
+    }
+    
     @PostMapping(value = "/api/schedule/postPhoto", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public String schedulePostPhoto(@RequestPart(value = "photo", required = true) MultipartFile photo) {
         log.info("/api/schedule/postPhoto 진입");

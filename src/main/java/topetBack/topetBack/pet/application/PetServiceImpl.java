@@ -91,7 +91,6 @@ public class PetServiceImpl implements PetService{
     public PetResponseDTO findById(Long id) {
     	Optional<PetEntity> pet = petRepository.findById(id);
     	
-System.out.println("findPetById findPetById findPetById findPetById");
         return pet.map(petEntity -> {
             PetResponseDTO petResponseDTO = petEntity.toResponseDTO();
 
