@@ -41,6 +41,9 @@ public class PetServiceImpl implements PetService{
     @Transactional
     public PetResponseDTO createPet(PetRequestDTO petRequestDTO) throws IOException {
 
+    	String uid = createKey();
+    	petRequestDTO.setUID(uid);
+    	
         if(petRequestDTO.getImage() != null) {
         	FileGroupEntity fileGroupEntity = fileService.uploadPhoto(petRequestDTO.getImage(), petRequestDTO.toPetEntity().getFileGroupEntity(), FileCategory.PET.getPath());
         	petRequestDTO.setProfileSrc(fileGroupEntity.getFileList().get(0).getFilePath());
@@ -85,9 +88,10 @@ public class PetServiceImpl implements PetService{
     }
 
     @Override
-    public PetResponseDTO findPetById(Long id) {
-        Optional<PetEntity> pet = petRepository.findById(id);
-
+    public PetResponseDTO findById(Long id) {
+    	Optional<PetEntity> pet = petRepository.findById(id);
+    	
+System.out.println("findPetById findPetById findPetById findPetById");
         return pet.map(petEntity -> {
             PetResponseDTO petResponseDTO = petEntity.toResponseDTO();
 
@@ -102,4 +106,5 @@ public class PetServiceImpl implements PetService{
             return petResponseDTO;
         }).orElse(null);
     }
+
 }
