@@ -4,17 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -37,18 +27,6 @@ public class Member implements Serializable {
 	private String email;
 	
 	private String profileSrc;
-	//@ManyToMany(cascade = { CascadeType.PERSIST })
-	@ManyToMany(fetch=FetchType.LAZY
-			, cascade = {
-					CascadeType.ALL
-//					, CascadeType.PERSIST
-					}
-	)
-	@JoinTable(name = "pet_member_relation",
-    	joinColumns = @JoinColumn(name = "member_id"),
-	    inverseJoinColumns = @JoinColumn(name = "pet_id"))
-//	@JsonManagedReference
-	private List<PetEntity> pets = new ArrayList<>();
 
 
     @Builder
@@ -60,18 +38,11 @@ public class Member implements Serializable {
     }
 	
 	public SessionMember toSessionMember() {
-		List<PetResponseDTO> newPets = new ArrayList<>();
-        for (PetEntity pet : this.pets) {
-        	System.out.println(pet.getMember());
-        	
-            newPets.add(pet.toResponseDTO());
-        }
 		return SessionMember.builder()
 				.id(this.id)
 				.socialId(this.socialId)
 				.name(this.name)
 				.email(this.email)
-				.pets(newPets)
 				.build();
 	}
 	

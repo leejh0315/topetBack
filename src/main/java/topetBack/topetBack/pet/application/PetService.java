@@ -12,4 +12,6 @@ import topetBack.topetBack.pet.domain.PetResponseDTO;
 public interface PetService {
 
 	PetResponseDTO createPet(PetRequestDTO petRequestDTO) throws IOException;
+	PetResponseDTO findById(Long petId);
+	
 }

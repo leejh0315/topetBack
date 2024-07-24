@@ -1,10 +1,12 @@
 package topetBack.topetBack.member;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -23,7 +25,10 @@ import topetBack.topetBack.config.SessionManager;
 import topetBack.topetBack.member.application.MemberService;
 import topetBack.topetBack.member.application.SocialLoginService;
 import topetBack.topetBack.member.domain.Member;
+import topetBack.topetBack.member.domain.MemberPet;
 import topetBack.topetBack.member.domain.SessionMember;
+import topetBack.topetBack.pet.application.PetService;
+import topetBack.topetBack.pet.domain.PetResponseDTO;
 import topetBack.topetBack.schedule.application.ScheduleService;
 import topetBack.topetBack.schedule.domain.ScheduleResponseDTO;
 
@@ -43,9 +48,12 @@ public class MemberController {
 
 	private final SocialLoginService kakaoLoginService;
 	private final MemberService memberService;
+	@Autowired
+	private final PetService petService;
 	private final SessionManager sessionManager;
 	private final ScheduleService scheduleService;
-
+	
+	
 	@GetMapping("/kakaoLogin")
 	public String getKakaoLogin() {
 
@@ -64,8 +72,9 @@ public class MemberController {
 	public RedirectView getOAuth(@RequestParam("code") String code, HttpServletRequest req, HttpServletResponse resp)
 			throws Exception {
 
-		Map<String, Object> response = kakaoLoginService.kakaoLogin(code);
 		RedirectView redirectView = new RedirectView();
+
+		Map<String, Object> response = kakaoLoginService.kakaoLogin(code);
 
 		if (response != null) {
 			Member member = new Member(0L, response.get("kid").toString(), (String) response.get("email"),
@@ -79,37 +88,32 @@ public class MemberController {
 				System.out.println("주입완료");
 			}
 			Member newMember = memberService.findBySocialId(response.get("kid").toString()).get();
-			String sessionId = sessionManager.create(newMember, resp);
-			redirectView.setUrl(fronAddress + "api/home");
+			List<MemberPet> memberPet = memberService.findByMember(newMember);
+			List<PetResponseDTO> pets = new ArrayList<PetResponseDTO>();
+			for(int i = 0 ; i < memberPet.size(); i++) {
+				pets.add(petService.findById(memberPet.get(i).getPet().getId()));
+			}
+			String sessionId = sessionManager.create(newMember, pets, resp);
+			
+			redirectView.setUrl(fronAddress + "/api/home");
 		} else {
-			redirectView.setUrl(fronAddress + "api");
+			redirectView.setUrl(fronAddress + "/api");
 		}
 		return redirectView;
 	}
 
 	@Transactional
-	@GetMapping("/home")
-	public Object getHome(HttpServletRequest req) throws JsonMappingException, JsonProcessingException {
-		System.out.println("----------------------------------------------");
-		System.out.println("-------------------getHome--------------------");
-		System.out.println("----------------------------------------------");
+	@GetMapping("/home_member")
+	public SessionMember getHome(HttpServletRequest req) throws JsonMappingException, JsonProcessingException {
 		SessionMember member = sessionManager.getSessionObject(req);
-		List<ScheduleResponseDTO> scheduleList = scheduleService.findByAuthor(member.toMember());
-		Map<String, Object> homeData = new HashMap<String, Object>();
-		
-		homeData.put("member", member);
-		homeData.put("pet", member.getPets());
-		homeData.put("schedule", scheduleList);
-		
-		return homeData;
+		return member;
 	}
-	
-	
 	
 	@Transactional
 	@GetMapping("/home/sessionData")
 	public Object getSessionData(HttpServletRequest req) throws JsonMappingException, JsonProcessingException {
-		SessionMember member = sessionManager.getSessionObject(req);
+		Member member = sessionManager.getSessionObject(req).toMember();
+		
 		return member.toString();
 	}
 }

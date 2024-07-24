@@ -14,5 +14,6 @@ public interface ScheduleService {
 
 	ScheduleResponseDTO createSchedule(ScheduleRequestDTO scheduleRequestDTO)throws IOException;
 	List<ScheduleResponseDTO> findByAuthor(Member author);
+	
 
 }

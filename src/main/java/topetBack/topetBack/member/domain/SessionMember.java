@@ -7,7 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import topetBack.topetBack.pet.domain.PetEntity;
+import topetBack.topetBack.pet.domain.PetRequestDTO;
 import topetBack.topetBack.pet.domain.PetResponseDTO;
 
 @Data
@@ -23,12 +23,14 @@ public class SessionMember {
 	
 	
     public Member toMember() {
+    	
+		
     	return Member.builder()
     			.id(this.id)
     			.socialId(this.socialId)
     			.nickname(this.name)
     			.email(this.email)
-    			//.pets(this.pets)
+//    			.pets(this.pets)
     			.build();
     			
     }
