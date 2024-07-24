@@ -17,6 +17,7 @@ import topetBack.topetBack.pet.domain.PetResponseDTO;
 
 @Service
 @Slf4j
+@Transactional
 public class PetServiceImpl implements PetService{
 
     private final PetRepository petRepository;
@@ -39,10 +40,14 @@ public class PetServiceImpl implements PetService{
         }
         
         PetEntity result = petRepository.save(petRequestDTO.toPetEntity());
+        
+        
         log.info("petEntity : " + result.toString());
         return result.toResponseDTO();
         
     }
+    
+
 
     //고유번호 생성
     public static String createKey() {

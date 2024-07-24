@@ -37,17 +37,18 @@ public class Member implements Serializable {
 	private String email;
 	
 	private String profileSrc;
-	//@ManyToMany(cascade = { CascadeType.PERSIST })
-	@ManyToMany(fetch=FetchType.LAZY
-			, cascade = {
-					CascadeType.ALL
-//					, CascadeType.PERSIST
-					}
-	)
-	@JoinTable(name = "pet_member_relation",
-    	joinColumns = @JoinColumn(name = "member_id"),
-	    inverseJoinColumns = @JoinColumn(name = "pet_id"))
+	
+	
+//	@ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.MERGE })
+//	@JoinTable(name = "pet_member_relation",
+//	    joinColumns = @JoinColumn(name = "member_id"),
+//	    inverseJoinColumns = @JoinColumn(name = "pet_id"))
 //	@JsonManagedReference
+//	@ManyToMany(mappedBy = "pets", fetch = FetchType.LAZY, cascade = { CascadeType.MERGE })
+	@ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.MERGE })
+	@JoinTable(name = "pet_member_relation",
+	    joinColumns = @JoinColumn(name = "pet_id"),
+	    inverseJoinColumns = @JoinColumn(name = "mem_id"))
 	private List<PetEntity> pets = new ArrayList<>();
 
 

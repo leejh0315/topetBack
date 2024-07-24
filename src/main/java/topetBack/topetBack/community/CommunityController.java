@@ -3,6 +3,7 @@ package topetBack.topetBack.community;
 import org.apache.ibatis.javassist.NotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,7 +26,6 @@ import topetBack.topetBack.member.domain.SessionMember;
 
 @RestController
 @RequiredArgsConstructor
-@Controller
 @RequestMapping("/community")
 public class CommunityController {
 
@@ -33,17 +33,23 @@ public class CommunityController {
 	private final CommunityService communityService;
 	private final SessionManager sessionManager;
 	
+	@Transactional
     @PostMapping("/communityPost")
-    public ResponseEntity<CommunityResponseDTO> communityPost(@ModelAttribute CommunityRequestDTO communityRequestDTO, HttpServletRequest req) throws Exception  {
-    	SessionMember member = sessionManager.getSessionObject(req);
+    public 
+//    ResponseEntity<CommunityResponseDTO>
+    String
+	communityPost(@ModelAttribute CommunityRequestDTO communityRequestDTO, 
+    		HttpServletRequest req) throws Exception  {
+    	
+    	Member sessionMember = sessionManager.getSessionObject(req).toMember();
 //    	HttpSession session = req.getSession(false);
 //		Member member = (Member) session.getAttribute(SessionVar.LOGIN_MEMBER);
-
+    	System.out.println("sessionMember : " + sessionMember.getEmail());
 		System.out.println("DTO : " + communityRequestDTO);
 //		System.out.println("member :" + member);
 
 //		communityRequestDTO.setAuthor(member);
-		communityRequestDTO.setAuthor(member.toMember());
+		communityRequestDTO.setAuthor(sessionMember);
 
 		System.out.println("communityPost 요청 등록됨");
 		System.out.println(communityRequestDTO);
@@ -51,7 +57,7 @@ public class CommunityController {
 		CommunityResponseDTO communityResponseDTO = communityService.createCommunity(communityRequestDTO);
 
 
-		return ResponseEntity.ok(communityResponseDTO);
+		return ResponseEntity.ok(communityResponseDTO).toString();
 	}
 
     //게시판 리스트

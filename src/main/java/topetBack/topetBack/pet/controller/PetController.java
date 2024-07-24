@@ -19,8 +19,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import topetBack.topetBack.config.SessionManager;
 import topetBack.topetBack.member.domain.Member;
-import topetBack.topetBack.member.domain.SessionMember;
 import topetBack.topetBack.pet.application.PetService;
+import topetBack.topetBack.pet.domain.PetEntity;
 import topetBack.topetBack.pet.domain.PetRequestDTO;
 import topetBack.topetBack.pet.domain.PetResponseDTO;
 
@@ -37,6 +37,9 @@ public class PetController {
 	private final PetService petService;
 	private final SessionManager sessionManager;
 	
+
+	
+
 	@Transactional
 	@PostMapping("/petRegistration")
 	public ResponseEntity<PetResponseDTO> petRegistPost(@RequestParam(value="photo", required=false) MultipartFile image,
@@ -45,7 +48,11 @@ public class PetController {
 								) throws IOException {
 	    Member sessionMember = sessionManager.getSessionObject(req).toMember();
 	    petRequestDTO.setMember(sessionMember);
-	    
+	    System.out.println("sessionMember" + sessionMember.getEmail());
+	    System.out.println("sessionMember" + sessionMember.getName());
+	    System.out.println("sessionMember" + sessionMember.getSocialId());
+	    System.out.println("sessionMember" + sessionMember.getId());
+	    System.out.println("petRequestDTO" + petRequestDTO.getMember().getId());
 	    if(image!=null) {
 		    List<MultipartFile> images = new ArrayList<MultipartFile>();
 	        images.add(image);

@@ -41,8 +41,11 @@ public class PetRequestDTO {
 	public PetEntity toPetEntity() {
 		List<Member> newMember = new ArrayList<Member>();
 		newMember.add(this.member);
-		
+		System.out.println("--------------------------------");
+		System.out.println(newMember.get(0));
+		System.out.println("--------------------------------");
 		FileGroupEntity fileGroupEntity = new FileGroupEntity();
+		
 		return PetEntity.builder()
 	            .id(this.id)
                 .type(this.type)
