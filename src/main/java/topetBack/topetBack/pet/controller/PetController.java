@@ -8,10 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -20,7 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import topetBack.topetBack.config.SessionManager;
 import topetBack.topetBack.member.domain.Member;
 import topetBack.topetBack.pet.application.PetService;
-import topetBack.topetBack.pet.domain.PetEntity;
+import topetBack.topetBack.pet.dao.PetRepository;
 import topetBack.topetBack.pet.domain.PetRequestDTO;
 import topetBack.topetBack.pet.domain.PetResponseDTO;
 
@@ -36,9 +33,7 @@ public class PetController {
 	
 	private final PetService petService;
 	private final SessionManager sessionManager;
-	
-
-	
+	private final PetRepository petRepository;
 
 	@Transactional
 	@PostMapping("/petRegistration")
@@ -62,6 +57,32 @@ public class PetController {
 	    PetResponseDTO petResponseDTO = petService.createPet(petRequestDTO);
 	    
 	    return ResponseEntity.ok(petResponseDTO);
+	}
+
+	@Transactional
+	@PostMapping("/petRegistrationTest")
+	public ResponseEntity<PetResponseDTO> petRegistrationTest(@RequestParam(value="photo", required=false) MultipartFile image,
+														@ModelAttribute PetRequestDTO petRequestDTO,
+														HttpServletRequest req
+	) throws IOException {
+
+		if(image!=null) {
+			List<MultipartFile> images = new ArrayList<MultipartFile>();
+			images.add(image);
+			petRequestDTO.setImage(images);
+		}
+		// PetService를 통해 Pet 등록
+		PetResponseDTO petResponseDTO = petService.createPet(petRequestDTO);
+
+		return ResponseEntity.ok(petResponseDTO);
+	}
+
+	@GetMapping("/getPet")
+	public ResponseEntity<PetResponseDTO> getPet(@RequestParam(value = "id") Long id){
+
+		PetResponseDTO pet = petService.findPetById(id);
+
+		return ResponseEntity.ok(pet);
 	}
 }
 
