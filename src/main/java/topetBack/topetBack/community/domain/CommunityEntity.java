@@ -1,6 +1,7 @@
 package topetBack.topetBack.community.domain;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,6 +18,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -27,6 +29,7 @@ import lombok.ToString;
 import topetBack.topetBack.file.domain.FileGroupEntity;
 import topetBack.topetBack.file.domain.FileInfoEntity;
 import topetBack.topetBack.file.domain.FileResponseDTO;
+import topetBack.topetBack.like.domain.Like;
 import topetBack.topetBack.member.domain.Member;
 
 @Getter
@@ -78,26 +81,17 @@ public class CommunityEntity {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "file_group_id")
     private FileGroupEntity fileGroupEntity;
-
-//    @OneToMany(mappedBy = "community", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
-//    @OrderBy("id asc") // 댓글 정렬    
-//    private List<CommentEntity> comments;
-
+//    
+//    @ManyToOne
+//    @OneToMany(mappedBy = "community" , cascade = CascadeType.REMOVE)
+//    private List<Like> likesList = new ArrayList<>();
 
     public CommunityResponseDTO toResponseDTO() {
-
-//    	if (this.fileGroupEntity != null) {
-//    		List<FileResponseDTO> fileResponseDTOList = this.fileGroupEntity.getFileList()
-//                    .stream().map(FileInfoEntity::toResponseDTO).collect(Collectors.toList());
-//    		} else {
-//
-//    		}
 
 
         List<FileResponseDTO> fileResponseDTOList = this.fileGroupEntity.getFileList()
                 .stream().map(FileInfoEntity::toResponseDTO).collect(Collectors.toList());
 
-//        List<CommentResponseDTO> commentResponseDtoList = this.getComments().stream().map(CommentEntity::toResponseDTO).collect(Collectors.toList());
 
         return CommunityResponseDTO.builder()
                 .id(this.id)

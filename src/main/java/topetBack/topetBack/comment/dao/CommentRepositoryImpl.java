@@ -26,22 +26,21 @@ public class CommentRepositoryImpl implements CommentRepositoryCustom {
     @Override
     public List<CommentResponseDTO> findByCommunityId(Long id) {
         List<CommentEntity> commentEntities = queryFactory.selectFrom(commentEntity)
-                .leftJoin(commentEntity.parent)
-                .fetchJoin()
+                .leftJoin(commentEntity.parent).fetchJoin()
                 .where(commentEntity.community.id.eq(id)
-                        .and(commentEntity.deleted.isFalse())) //논리 삭제 여부 나중에 물리 삭제로 변환?
+                        .and(commentEntity.deleted.isFalse()))
                 .orderBy(commentEntity.parent.id.asc().nullsFirst(), commentEntity.createdTime.asc())
                 .fetch();
 
-        //트리구조로변환
+        // 트리구조로 변환
         Map<Long, CommentResponseDTO> commentMap = new HashMap<>();
-        for (CommentEntity commentEntity : commentEntities) {
-            CommentResponseDTO dto = commentEntity.toResponseDTO();
+        for (CommentEntity entity : commentEntities) {
+            CommentResponseDTO dto = entity.toResponseDTO();
             commentMap.put(dto.getId(), dto);
         }
 
-        for (CommentEntity commentEntity : commentEntities) {
-            CommentResponseDTO dto = commentMap.get(commentEntity.getId());
+        for (CommentEntity entity : commentEntities) {
+            CommentResponseDTO dto = commentMap.get(entity.getId());
             if (dto.getParentId() != null && commentMap.containsKey(dto.getParentId())) {
                 CommentResponseDTO parentDto = commentMap.get(dto.getParentId());
                 parentDto.getChildren().add(dto);
