@@ -37,10 +37,10 @@ public class SessionManager {
 		SessionMember sessionMember = object.toSessionMember();
 		sessionMember.setPets(pets);
 		redisTemplate.opsForValue().set(sessionId, sessionMember);
-		redisTemplate.expire(sessionId, 30, TimeUnit.MINUTES); // 예시: 세션 만료 시간 설정 (30분)
+		redisTemplate.expire(sessionId, 180, TimeUnit.MINUTES); // 예시: 세션 만료 시간 설정 (30분)
 
 		Cookie cookie = new Cookie(SESSION_COOKIE_NAME, sessionId);
-		cookie.setMaxAge(30 * 60); // 세션 만료 시간 설정 (초 단위)
+		cookie.setMaxAge(180 * 60); // 세션 만료 시간 설정 (초 단위)//180분
 		cookie.setPath("/"); // 쿠키 경로 설정
 		resp.addCookie(cookie);
 		return sessionId;

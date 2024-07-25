@@ -11,6 +11,7 @@ import jakarta.persistence.EntityManager;
 import topetBack.topetBack.community.domain.CommunityEntity;
 import topetBack.topetBack.file.application.FileService;
 import topetBack.topetBack.file.domain.FileCategory;
+import topetBack.topetBack.file.domain.FileGroupEntity;
 import topetBack.topetBack.member.domain.Member;
 import topetBack.topetBack.schedule.dao.ScheduleRepository;
 import topetBack.topetBack.schedule.domain.ScheduleEntity;
@@ -31,13 +32,13 @@ public class ScheduleServiceImpl implements ScheduleService{
     }
 	    
     public ScheduleResponseDTO createSchedule(ScheduleRequestDTO scheduleRequestDTO) throws IOException{
-    	ScheduleEntity scheduleEntity = scheduleRequestDTO.toScheduleEntity();
-    	
-    	if(scheduleEntity.getFileGroupEntity() != null) {
-    		entityManager.merge(scheduleEntity.getFileGroupEntity());
-    		fileService.uploadPhoto(scheduleRequestDTO.getImages(), scheduleEntity.getFileGroupEntity(), FileCategory.SCHEDULE.getPath());
+    	System.out.println("scheduleRequestDTO.getImages().size() : " +  scheduleRequestDTO.getImages().size() );
+    	System.out.println(scheduleRequestDTO.getImages());
+    	if(scheduleRequestDTO.getImages().size()>0) {
+    		FileGroupEntity fileGroupEntity = fileService.uploadPhoto(scheduleRequestDTO.getImages(), scheduleRequestDTO.toScheduleEntity().getFileGroupEntity(), FileCategory.SCHEDULE.getPath());
     	}
     	
+    	ScheduleEntity scheduleEntity = scheduleRequestDTO.toScheduleEntity();
     	ScheduleEntity result = scheduleRepository.save(scheduleEntity);
     	return result.toResponseDTO();
     }
@@ -49,6 +50,15 @@ public class ScheduleServiceImpl implements ScheduleService{
                 .map(ScheduleEntity::toResponseDTO)
                 .collect(Collectors.toList());
 
+	}
+
+	@Override
+	public List<ScheduleResponseDTO> findByAuthorId(Long authorId) {
+		List<ScheduleEntity> scheduleList = scheduleRepository.findByAuthorId(authorId);
+		return scheduleList.stream()
+                .map(ScheduleEntity::toResponseDTO)
+                .collect(Collectors.toList());
+		
 	}
 
 }

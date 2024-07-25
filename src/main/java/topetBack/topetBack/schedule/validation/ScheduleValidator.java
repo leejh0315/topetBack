@@ -26,20 +26,18 @@ public class ScheduleValidator implements Validator{
 		 
 		// TODO Auto-generated method stub
 		ScheduleRequestDTO scheduleReqDTO = (ScheduleRequestDTO)target;
-		ScheduleEntity scheduleEntity = scheduleReqDTO.toScheduleEntity();
-		
         
 //	      if(!StringUtils.hasText(scheduleEntity.getScheduleContent())) {
 //	         errors.rejectValue("scheduleContent", null, "내용을 작성해주세요.");         
 //	      }
-	      if(!StringUtils.hasText(scheduleEntity.getTitle())) {
+	      if(!StringUtils.hasText(scheduleReqDTO.getScheduleTitle())) {
 		         errors.rejectValue("scheduleTitle", null, "제목을 작성해주세요.");         
 		  }
-	      if(!StringUtils.hasText(scheduleEntity.getColor())) {
-		         errors.rejectValue("scheduleTitle", null, "컬러를 작성해주세요.");         
+	      if(!StringUtils.hasText(scheduleReqDTO.getColor())) {
+		         errors.rejectValue("scheduleColor", null, "컬러를 작성해주세요.");         
 		  }
-	      if(!scheduleEntity.getEndDate().isAfter(scheduleEntity.getStartDate())) {
-		         errors.rejectValue("scheduleTitle", null, "일정을 맞춰주세요.");         
+	      if(scheduleReqDTO.getEndDate().isBefore(scheduleReqDTO.getStartDate())) {
+		         errors.rejectValue("scheduleDate", null, "일정을 맞춰주세요.");         
 		  }
 	      
 	}
