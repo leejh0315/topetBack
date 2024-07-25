@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import topetBack.topetBack.member.domain.Member;
+import topetBack.topetBack.schedule.domain.ScheduleEntity;
 import topetBack.topetBack.schedule.domain.ScheduleRequestDTO;
 import topetBack.topetBack.schedule.domain.ScheduleResponseDTO;
 
@@ -14,6 +15,6 @@ public interface ScheduleService {
 
 	ScheduleResponseDTO createSchedule(ScheduleRequestDTO scheduleRequestDTO)throws IOException;
 	List<ScheduleResponseDTO> findByAuthor(Member author);
-	
+	List<ScheduleResponseDTO> findByAuthorId(Long authorId);
 
 }

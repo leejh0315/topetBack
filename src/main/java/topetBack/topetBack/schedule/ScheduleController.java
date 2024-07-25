@@ -3,7 +3,6 @@ package topetBack.topetBack.schedule;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +17,7 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -61,7 +61,6 @@ public class ScheduleController {
         return ResponseEntity.ok(scheduleEntity);
     }
 
-
     @PostMapping("/schedule/post")
     public ResponseEntity<Object> schedulePost(@ModelAttribute ScheduleRequestDTO scheduleRequestDTO, 
     							@RequestParam(value="photo", required=false) MultipartFile image,
@@ -70,31 +69,38 @@ public class ScheduleController {
     	Member sessionMember = sessionManager.getSessionObject(req).toMember();
     	scheduleRequestDTO.setAuthor(sessionMember);
     	
-    	List<MultipartFile> images = new ArrayList<>();
-    	images.add(image);
-    	scheduleRequestDTO.setImages(images);
+    	if(image!=null) {
+    		List<MultipartFile> images = new ArrayList<>();
+        	images.add(image);
+        	scheduleRequestDTO.setImages(images);
+    	}
+    	
     	
     	System.out.println("schedulePost요청왔음");
     	
+    	System.out.println("scheduleRequestDTO :  "+ scheduleRequestDTO);
         scheduleValidator.validate(scheduleRequestDTO, bindingResult);
         
         if (bindingResult.hasErrors()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(scheduleRequestDTO);
         }
         
+        
         log.info("/api/schedule/post 진입");
         log.info("입력한 내용은 {}", scheduleRequestDTO);
         
         ScheduleResponseDTO scheduleResponseDTO = scheduleService.createSchedule(scheduleRequestDTO);
-
+        
 //        return "success"; 
         		return ResponseEntity.ok(scheduleResponseDTO);
     }
 
     @GetMapping("/home_schedule")
-    public List<ScheduleResponseDTO> getSchedule(HttpServletRequest req) throws JsonMappingException, JsonProcessingException {
+    public List<ScheduleResponseDTO> getHomeSchedule(HttpServletRequest req) throws JsonMappingException, JsonProcessingException {
     	Member sessionMember = sessionManager.getSessionObject(req).toMember();
-    	List<ScheduleResponseDTO> scheduleResponseDTO = scheduleService.findByAuthor(sessionMember);
+    	
+    	List<ScheduleResponseDTO> scheduleResponseDTO = scheduleService.findByAuthorId(sessionMember.getId()); 
+    			//scheduleService.findByAuthor(sessionMember);
     	List<ScheduleResponseDTO> homeSchedule = new ArrayList<ScheduleResponseDTO>();
     	
     	LocalDateTime today = LocalDateTime.now();
@@ -108,6 +114,12 @@ public class ScheduleController {
     public static boolean isDateInRange(LocalDateTime date, LocalDateTime startDate, LocalDateTime endDate) {
         return date.isEqual(startDate) || date.isEqual(endDate) || (date.isAfter(startDate) && date.isBefore(endDate));
     }
+
+    @GetMapping("/getMySchedule/{id}")
+    public List<ScheduleResponseDTO> getMySchedule(@PathVariable("id")Long id){
+    	return scheduleService.findByAuthorId(id); 
+    }
+    
     
     @PostMapping(value = "/api/schedule/postPhoto", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public String schedulePostPhoto(@RequestPart(value = "photo", required = true) MultipartFile photo) {
