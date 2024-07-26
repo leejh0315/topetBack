@@ -33,29 +33,32 @@ public class CommentServiceImpl implements CommentService{
 
 	    }
 
-	@Transactional
+	 @Transactional
 	 public CommentResponseDTO insert(Long CommunityId, CommentRequestDTO commentRequestDTO) throws NotFoundException {
 	     Member member = memberRepositoty.findById(commentRequestDTO.getAuthor().getId())
 	             .orElseThrow(() -> new NotFoundException("해당 댓글을 찾을수 없습니다 : " + commentRequestDTO.getAuthor().getId()));
 
 	     CommunityEntity communityEntity = communityRepositoy.findById(CommunityId)
 	             .orElseThrow(() -> new NotFoundException("해당 댓글을 찾을수 없습니다 : " + CommunityId));
-
+	     
 	     CommentEntity commentEntity = commentRequestDTO.toCommentEntity();
 
 	     if (commentRequestDTO.getParentId() != null) {
 	         CommentEntity parentComment = commentRepositoy.findById(commentRequestDTO.getParentId())
 	                 .orElseThrow(() -> new NotFoundException("해당 댓글을 찾을수 없습니다 : " + commentRequestDTO.getParentId()));
 	         commentEntity.updateParent(parentComment);
+	         commentEntity.updateCommunity(null); // 부모 댓글이 있는 경우 community를 null로 설정
+	     } else {
+	         commentEntity.updateCommunity(communityEntity);
 	     }
 
 	     commentEntity.updateAuthor(member);
-	     commentEntity.updateCommunity(communityEntity);
 
 	     CommentEntity result = commentRepositoy.save(commentEntity);
 
 	     return result.toResponseDTO();
 	 }
+
 	 
 	@Transactional
 	public List<CommentResponseDTO> getCommentsByCommunityId(Long communityId) {
@@ -77,8 +80,7 @@ public class CommentServiceImpl implements CommentService{
 		 CommentEntity comment = commentRepositoy.findById(id)
 	                .orElseThrow(() -> new IllegalArgumentException("해당 댓글을 찾을수 없습니다 : " + id));
 		 
-		 comment.delete();
-		 commentRepositoy.save(comment);
+		 commentRepositoy.delete(comment);
 	 }
 
 }

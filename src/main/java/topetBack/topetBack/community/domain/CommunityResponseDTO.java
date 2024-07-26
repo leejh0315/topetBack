@@ -23,5 +23,6 @@ public class CommunityResponseDTO {
 	private String animal;
     private List<FileResponseDTO> images;
     private List<CommentResponseDTO> comments;
+    private boolean liked;
 
 }
