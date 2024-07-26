@@ -1,16 +1,15 @@
 package topetBack.topetBack.community;
 
+import java.util.List;
+
 import org.apache.ibatis.javassist.NotFoundException;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,7 +21,6 @@ import topetBack.topetBack.community.domain.CommunityRequestDTO;
 import topetBack.topetBack.community.domain.CommunityResponseDTO;
 import topetBack.topetBack.config.SessionManager;
 import topetBack.topetBack.member.domain.Member;
-import topetBack.topetBack.member.domain.SessionMember;
 
 @RestController
 @RequiredArgsConstructor
@@ -34,7 +32,7 @@ public class CommunityController {
 	private final SessionManager sessionManager;
 	
 	@Transactional
-    @PostMapping("/communityPost")
+    @PostMapping("/post")
     public 
 //    ResponseEntity<CommunityResponseDTO>
     String
@@ -91,10 +89,10 @@ public class CommunityController {
     }
 
     //게시물 삭제
-    @PostMapping("/delete/{postId}")
-    public ResponseEntity<Void> deleteCommunity(@PathVariable("postId") Long postId) throws NotFoundException {
-        communityService.deleteCommunity(postId);
-        System.out.println("삭제 게시물 번호: " + postId);
+    @PostMapping("/delete/{id}")
+    public ResponseEntity<Void> deleteCommunity(@PathVariable("id") Long id) throws NotFoundException {
+        communityService.deleteCommunity(id);
+        System.out.println("삭제 게시물 번호: " + id);
 
         return ResponseEntity.noContent().build();	
     }
@@ -106,6 +104,12 @@ public class CommunityController {
         CommunityResponseDTO updatedCommunity = communityService.updateCommunity(id, communityRequestDTO);
         System.out.println("수정 출력 테스트" + communityRequestDTO);
         return ResponseEntity.ok(updatedCommunity);
+    }
+    
+    //사용자에 맞는 게시글 가져오기
+    @GetMapping("/myCommunity/{id}")
+    public List<CommunityResponseDTO> getMyCommunity(@PathVariable("id") Long id){
+    	return communityService.findByAuthorId(id);
     }
 
 }

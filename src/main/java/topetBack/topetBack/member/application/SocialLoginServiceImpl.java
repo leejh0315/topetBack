@@ -45,7 +45,7 @@ public class SocialLoginServiceImpl implements SocialLoginService{
 		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 		params.add("grant_type", "authorization_code");
 		params.add("client_id", "3494afad7131fc9645ae9b08ed0dfda6");
-		params.add("redirect_uri", backAddress+"api/kakaoLogin/OAuth");
+		params.add("redirect_uri", backAddress+"api/member/kakaoLogin/OAuth");
 		params.add("code", code);
 		
 		HttpEntity<MultiValueMap<String, String>> kakaoTokenRequest = new HttpEntity<>(params, headers);
@@ -89,7 +89,7 @@ public class SocialLoginServiceImpl implements SocialLoginService{
 		MultiValueMap<String, String> paramsMemberInfo = new LinkedMultiValueMap<>();
 		paramsMemberInfo.add("grant_type", "authorization_code");
 		paramsMemberInfo.add("client_id", "3494afad7131fc9645ae9b08ed0dfda6");
-		paramsMemberInfo.add("redirect_uri", backAddress+"api/kakaoLogin/OAuth");
+		paramsMemberInfo.add("redirect_uri", backAddress+"api/member/kakaoLogin/OAuth");
 		paramsMemberInfo.add("code", code);
 		
 		HttpEntity<MultiValueMap<String, String>> kakaoTokenRequestMemberInfo = new HttpEntity<>(paramsMemberInfo, headersMemberInfo);

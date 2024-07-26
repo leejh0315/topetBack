@@ -17,6 +17,8 @@ import topetBack.topetBack.community.domain.CommunityRequestDTO;
 import topetBack.topetBack.community.domain.CommunityResponseDTO;
 import topetBack.topetBack.file.application.FileService;
 import topetBack.topetBack.file.domain.FileCategory;
+import topetBack.topetBack.member.domain.Member;
+import topetBack.topetBack.schedule.domain.ScheduleEntity;
 
 @Service
 public class CommunityServiceImpl implements CommunityService {
@@ -88,6 +90,14 @@ public class CommunityServiceImpl implements CommunityService {
 
         return updatedCommunity.toResponseDTO();
     }
+
+	@Override
+	public List<CommunityResponseDTO> findByAuthorId(Long id) {		//내 게시글 보기
+		List<CommunityEntity> myCommunityList = communityRepository.findByAuthorId(id);
+		return myCommunityList.stream()
+                .map(CommunityEntity::toResponseDTO)
+                .collect(Collectors.toList());
+	}
 
 
 }

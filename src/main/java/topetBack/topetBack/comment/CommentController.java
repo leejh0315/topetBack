@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import ch.qos.logback.core.model.Model;
@@ -28,12 +29,13 @@ import topetBack.topetBack.member.domain.SessionMember;
 @RestController
 @RequiredArgsConstructor
 @Controller
+@RequestMapping("/comment")
 public class CommentController {
 
 	private final CommentService commentService;
 	private final SessionManager sessionManager;
 
-	 @PostMapping("/{id}/comentPost")
+	 @PostMapping("/post/{id}")
 	    public ResponseEntity<CommentResponseDTO> communityPost(@ModelAttribute CommentRequestDTO commentRequestDTO , @PathVariable("id")Long id, HttpServletRequest req) throws Exception  {
 		 	SessionMember member = sessionManager.getSessionObject(req);
 		 	
@@ -53,13 +55,13 @@ public class CommentController {
 	        return ResponseEntity.ok(commentEntity);
 		}
 	 
-	 @GetMapping("/comment/{id}")
+	 @GetMapping("/{id}")
 	    public List<CommentResponseDTO> getCommentsByCommunityId(Model model ,@PathVariable("id") Long id) {
 		 	System.out.println("댓글 테스트" +  commentService.getCommentsByCommunityId(id));
 	        return commentService.getCommentsByCommunityId(id);
 	    }
 	 
-	 @PostMapping("/commentUpdate")
+	 @PostMapping("/update")
 	    public ResponseEntity<CommentResponseDTO> updateComment(@ModelAttribute CommentRequestDTO commentUpdateRequestDTO) throws Exception {
 	        CommentResponseDTO updatedComment = commentService.updateComment(commentUpdateRequestDTO);
 	        return ResponseEntity.ok(updatedComment);

@@ -1,7 +1,6 @@
 package topetBack.topetBack.member;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -9,6 +8,8 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.view.RedirectView;
@@ -30,11 +31,11 @@ import topetBack.topetBack.member.domain.SessionMember;
 import topetBack.topetBack.pet.application.PetService;
 import topetBack.topetBack.pet.domain.PetResponseDTO;
 import topetBack.topetBack.schedule.application.ScheduleService;
-import topetBack.topetBack.schedule.domain.ScheduleResponseDTO;
 
 @RestController
 @Slf4j
 @RequiredArgsConstructor
+@RequestMapping("/member")
 public class MemberController {
 
 	@Value("${toPet.back.address}")
@@ -58,7 +59,7 @@ public class MemberController {
 	public String getKakaoLogin() {
 
 		System.out.println("get KakaoLogin");
-		String redirectUri = backAddress + "api/kakaoLogin/OAuth";
+		String redirectUri = backAddress + "api/member/kakaoLogin/OAuth";
 		StringBuffer url = new StringBuffer();
 		url.append("https://kauth.kakao.com/oauth/authorize?");
 		url.append("client_id=" + clientId);
@@ -95,25 +96,25 @@ public class MemberController {
 			}
 			String sessionId = sessionManager.create(newMember, pets, resp);
 			
-			redirectView.setUrl(fronAddress + "/api/home");
+			redirectView.setUrl(fronAddress + "/home");
 		} else {
-			redirectView.setUrl(fronAddress + "/api");
+			redirectView.setUrl(fronAddress + "/");
 		}
 		return redirectView;
 	}
 
 	@Transactional
-	@GetMapping("/home_member")
+	@GetMapping("/home")
 	public SessionMember getHome(HttpServletRequest req) throws JsonMappingException, JsonProcessingException {
 		SessionMember member = sessionManager.getSessionObject(req);
 		return member;
 	}
 	
-	@Transactional
-	@GetMapping("/home/sessionData")
-	public Object getSessionData(HttpServletRequest req) throws JsonMappingException, JsonProcessingException {
-		Member member = sessionManager.getSessionObject(req).toMember();
-		
-		return member.toString();
+	//로그아웃
+	@PostMapping("/logout")
+	public void logout(HttpServletRequest req) {
+		sessionManager.remove(req);
 	}
+	
+
 }
