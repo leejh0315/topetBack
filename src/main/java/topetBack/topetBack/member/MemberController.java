@@ -42,7 +42,7 @@ public class MemberController {
 	private String backAddress;
 
 	@Value("${toPet.front.address}")
-	private String fronAddress;
+	private String frontAddress;
 
 	@Value("${toPet.kakao.clientId}")
 	private String clientId;
@@ -96,9 +96,9 @@ public class MemberController {
 			}
 			String sessionId = sessionManager.create(newMember, pets, resp);
 			
-			redirectView.setUrl(fronAddress + "/home");
+			redirectView.setUrl(frontAddress + "/home");
 		} else {
-			redirectView.setUrl(fronAddress + "/");
+			redirectView.setUrl(frontAddress + "/");
 		}
 		return redirectView;
 	}
@@ -112,8 +112,15 @@ public class MemberController {
 	
 	//로그아웃
 	@PostMapping("/logout")
-	public void logout(HttpServletRequest req) {
-		sessionManager.remove(req);
+	@Transactional
+	public String logout(HttpServletRequest req) {
+		String result = sessionManager.remove(req);
+		if(result.equals("success")) {
+			return "success";
+		}else{
+			return "fail";
+		}
+		   
 	}
 	
 

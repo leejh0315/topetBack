@@ -46,7 +46,7 @@ public class SessionManager {
 		return sessionId;
 		// key value
 	}
-
+	@Transactional
 	public void refreshPetAdd(PetResponseDTO petResponseDTO, HttpServletResponse resp, HttpServletRequest req) {
 		log.info("session refresh");
 		Cookie sessionCookie = findCookie(req, SESSION_COOKIE_NAME);
@@ -60,20 +60,14 @@ public class SessionManager {
 			redisTemplate.expire(sessionCookie.getValue(), 30, TimeUnit.MINUTES); // 예시: 세션 만료 시간 설정 (30분)
 		}
 	}
-
-	public void remove(HttpServletRequest req) {
-		log.info("session remove");
-		Cookie cookie = findCookie(req, SESSION_COOKIE_NAME);
-		if (cookie != null) {
-			redisTemplate.delete(cookie.getValue());
-		}
-	}
+	
 
 	@Transactional
 	public SessionMember getSessionObject(HttpServletRequest req) throws JsonMappingException, JsonProcessingException {
 		log.info("session getSessionObject");
 		Cookie sessionCookie = findCookie(req, SESSION_COOKIE_NAME);
-
+		
+		System.out.println("getSessionObject sessionCookie : " + sessionCookie.getValue()) ;
 		if (sessionCookie != null) {
 			String sessionId = sessionCookie.getValue();
 			System.out.println("sessionManager에서 쿠키를 통해 찾은 sessionId : " + sessionId);
@@ -85,12 +79,26 @@ public class SessionManager {
 					SessionMember sessionMember = (SessionMember) sessionData;
 					return sessionMember;
 				}
-
 			}
 		}
 		return null;
 	}
-
+	
+	
+	@Transactional
+	public String remove(HttpServletRequest req){
+		log.info("session remove");
+		Cookie sessionCookie = findCookie(req, SESSION_COOKIE_NAME);
+		if (sessionCookie != null) {
+			log.info("delete {} ",sessionCookie.getValue());
+			redisTemplate.delete(sessionCookie.getValue());
+			return "success";
+		}
+		return null;
+	}
+	
+	
+	@Transactional
 	public Cookie findCookie(HttpServletRequest req, String cookieName) {
 		log.info("session findCookie");
 		if (req.getCookies() != null) {
