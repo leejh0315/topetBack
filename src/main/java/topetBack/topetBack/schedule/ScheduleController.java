@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
@@ -43,6 +44,7 @@ import topetBack.topetBack.schedule.validation.ScheduleValidator;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
+@RequestMapping("/schedule")
 public class ScheduleController {
 
     private final ScheduleService scheduleService;
@@ -53,15 +55,15 @@ public class ScheduleController {
     public void init(WebDataBinder webDataBinder) {
         webDataBinder.addValidators(scheduleValidator);
     }
+//
+//    @GetMapping("/schedule")
+//    public ResponseEntity<ScheduleEntity> getCalendar() {
+//        log.info("get Calendar");
+//		ScheduleEntity scheduleEntity = new ScheduleEntity(); // select from DB
+//        return ResponseEntity.ok(scheduleEntity);
+//    }
 
-    @GetMapping("/schedule")
-    public ResponseEntity<ScheduleEntity> getCalendar() {
-        log.info("get Calendar");
-		ScheduleEntity scheduleEntity = new ScheduleEntity(); // select from DB
-        return ResponseEntity.ok(scheduleEntity);
-    }
-
-    @PostMapping("/schedule/post")
+    @PostMapping("/post")
     public ResponseEntity<Object> schedulePost(@ModelAttribute ScheduleRequestDTO scheduleRequestDTO, 
     							@RequestParam(value="photo", required=false) MultipartFile image,
     							BindingResult bindingResult, HttpServletRequest req) throws IOException{
@@ -95,7 +97,7 @@ public class ScheduleController {
         		return ResponseEntity.ok(scheduleResponseDTO);
     }
 
-    @GetMapping("/home_schedule")
+    @GetMapping("/home")
     public List<ScheduleResponseDTO> getHomeSchedule(HttpServletRequest req) throws JsonMappingException, JsonProcessingException {
     	Member sessionMember = sessionManager.getSessionObject(req).toMember();
     	
@@ -115,7 +117,7 @@ public class ScheduleController {
         return date.isEqual(startDate) || date.isEqual(endDate) || (date.isAfter(startDate) && date.isBefore(endDate));
     }
 
-    @GetMapping("/getMySchedule/{id}")
+    @GetMapping("/get/{id}")
     public List<ScheduleResponseDTO> getMySchedule(@PathVariable("id")Long id){
     	return scheduleService.findByAuthorId(id); 
     }

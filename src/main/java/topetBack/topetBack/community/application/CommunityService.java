@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import topetBack.topetBack.community.domain.CommunityRequestDTO;
 import topetBack.topetBack.community.domain.CommunityResponseDTO;
+import topetBack.topetBack.member.domain.Member;
 
 
 @Service
@@ -24,4 +25,7 @@ public interface  CommunityService {
 	List<CommunityResponseDTO> getCommunityListByAnimalAndCategory(String animal, String category);
 	
 	public CommunityResponseDTO updateCommunity(Long id, CommunityRequestDTO communityRequestDTO) throws NotFoundException;
+	
+	List<CommunityResponseDTO> findByAuthorId (Long id);	//사용자에맞는게시글가져오기
+	
 }

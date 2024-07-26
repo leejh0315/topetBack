@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -33,6 +34,7 @@ import topetBack.topetBack.pet.domain.PetResponseDTO;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
+@RequestMapping("/pet")
 public class PetController {
 
 	private static final Logger logger = LoggerFactory.getLogger(PetController.class);
@@ -44,7 +46,7 @@ public class PetController {
 	private final MemberService memberService;
 
 	@Transactional
-	@PostMapping("/petRegistration")
+	@PostMapping("/post")
 	public ResponseEntity<PetResponseDTO> petRegistPost(@RequestParam(value="photo", required=false) MultipartFile image,
 								@ModelAttribute PetRequestDTO petRequestDTO,
 								HttpServletRequest req,
