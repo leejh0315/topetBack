@@ -30,6 +30,7 @@ import topetBack.topetBack.file.domain.FileGroupEntity;
 import topetBack.topetBack.file.domain.FileInfoEntity;
 import topetBack.topetBack.file.domain.FileResponseDTO;
 import topetBack.topetBack.like.domain.Like;
+import topetBack.topetBack.like.domain.LikeResponseDTO;
 import topetBack.topetBack.member.domain.Member;
 
 @Getter
@@ -81,14 +82,6 @@ public class CommunityEntity {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "file_group_id")
     private FileGroupEntity fileGroupEntity;
-    
-    
-    @OneToMany(mappedBy = "community" , cascade = CascadeType.REMOVE)
-    private List<Like> likesList = new ArrayList<>();
-    
-    @Column(nullable = false)
-    @Comment("좋아요 여부")
-    private boolean likeBoolean;
 
     //likesList 내가 = true // 없으면 = false
     
@@ -96,8 +89,7 @@ public class CommunityEntity {
 
 
         List<FileResponseDTO> fileResponseDTOList = this.fileGroupEntity.getFileList()
-                .stream().map(FileInfoEntity::toResponseDTO).collect(Collectors.toList());
-
+                .stream().map(FileInfoEntity::toResponseDTO).collect(Collectors.toList());       
 
         return CommunityResponseDTO.builder()
                 .id(this.id)

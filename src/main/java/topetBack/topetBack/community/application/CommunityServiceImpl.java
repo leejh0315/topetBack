@@ -17,8 +17,6 @@ import topetBack.topetBack.community.domain.CommunityRequestDTO;
 import topetBack.topetBack.community.domain.CommunityResponseDTO;
 import topetBack.topetBack.file.application.FileService;
 import topetBack.topetBack.file.domain.FileCategory;
-import topetBack.topetBack.member.domain.Member;
-import topetBack.topetBack.schedule.domain.ScheduleEntity;
 
 @Service
 public class CommunityServiceImpl implements CommunityService {
@@ -47,6 +45,7 @@ public class CommunityServiceImpl implements CommunityService {
 
     @Override
     public CommunityResponseDTO getCommunityById(long communityId){
+    	
         return communityRepository.findById(communityId).get().toResponseDTO();
     }
 
@@ -98,6 +97,7 @@ public class CommunityServiceImpl implements CommunityService {
                 .map(CommunityEntity::toResponseDTO)
                 .collect(Collectors.toList());
 	}
+
 
 
 }

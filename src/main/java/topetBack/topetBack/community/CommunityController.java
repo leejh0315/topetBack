@@ -20,7 +20,6 @@ import topetBack.topetBack.community.application.CommunityService;
 import topetBack.topetBack.community.domain.CommunityRequestDTO;
 import topetBack.topetBack.community.domain.CommunityResponseDTO;
 import topetBack.topetBack.config.SessionManager;
-import topetBack.topetBack.like.application.LikeService;
 import topetBack.topetBack.member.domain.Member;
 
 @RestController
@@ -31,23 +30,15 @@ public class CommunityController {
 
 	private final CommunityService communityService;
 	private final SessionManager sessionManager;
-	private final LikeService likeService;
 	
 	@Transactional
     @PostMapping("/post")
     public 
-    String
-	communityPost(@ModelAttribute CommunityRequestDTO communityRequestDTO, 
+    String communityPost(@ModelAttribute CommunityRequestDTO communityRequestDTO, 
     		HttpServletRequest req) throws Exception  {
     	
     	Member sessionMember = sessionManager.getSessionObject(req).toMember();
-    	System.out.println("sessionMember : " + sessionMember.getEmail());
-		System.out.println("DTO : " + communityRequestDTO);
-
 		communityRequestDTO.setAuthor(sessionMember);
-
-		System.out.println("communityPost 요청 등록됨");
-		System.out.println(communityRequestDTO);
 
 		CommunityResponseDTO communityResponseDTO = communityService.createCommunity(communityRequestDTO);
 

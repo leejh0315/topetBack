@@ -67,7 +67,7 @@ public class Like {
         return LikeResponseDTO.builder()
                 .id(this.id)
                 .author(this.author)
-                .community(this.community).build();
+                .build();
                 
                 
     }
