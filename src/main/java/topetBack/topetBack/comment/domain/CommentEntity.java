@@ -78,7 +78,7 @@ public class CommentEntity {
     @OneToMany(mappedBy = "parent", orphanRemoval = true)
     @JsonManagedReference
     private List<CommentEntity> children = new ArrayList<>();
-
+    
     public void delete() {
         this.deleted = true;
     }
@@ -135,5 +135,8 @@ public class CommentEntity {
     public void setContent(String content) {
         this.content = content;
     }
+    
+    
+    
     
 }

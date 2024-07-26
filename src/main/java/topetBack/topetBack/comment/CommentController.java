@@ -33,32 +33,25 @@ public class CommentController {
 	private final CommentService commentService;
 	private final SessionManager sessionManager;
 
+	
+	 //삽입
 	 @PostMapping("/{id}/comentPost")
 	    public ResponseEntity<CommentResponseDTO> communityPost(@ModelAttribute CommentRequestDTO commentRequestDTO , @PathVariable("id")Long id, HttpServletRequest req) throws Exception  {
 		 	SessionMember member = sessionManager.getSessionObject(req);
-		 	
-//	    	HttpSession session = req.getSession(false);
-//			Member member = (Member) session.getAttribute(SessionVar.LOGIN_MEMBER);
-			System.out.println("DTO : " + commentRequestDTO);
-//			System.out.println("member :" + member);
-
+		 			
 			commentRequestDTO.setAuthor(member.toMember());
-
-
-			System.out.println("commentPost 요청 등록됨");
-			System.out.println(commentRequestDTO);
-
 			CommentResponseDTO commentEntity = commentService.insert(id, commentRequestDTO);
 			
 	        return ResponseEntity.ok(commentEntity);
 		}
 	 
+	 //읽기
 	 @GetMapping("/comment/{id}")
 	    public List<CommentResponseDTO> getCommentsByCommunityId(Model model ,@PathVariable("id") Long id) {
-		 	System.out.println("댓글 테스트" +  commentService.getCommentsByCommunityId(id));
 	        return commentService.getCommentsByCommunityId(id);
 	    }
 	 
+	 //수정
 	 @PostMapping("/commentUpdate")
 	    public ResponseEntity<CommentResponseDTO> updateComment(@ModelAttribute CommentRequestDTO commentUpdateRequestDTO) throws Exception {
 	        CommentResponseDTO updatedComment = commentService.updateComment(commentUpdateRequestDTO);
@@ -66,6 +59,7 @@ public class CommentController {
 	    }
 	 
 	
+	 //삭제
 	 @PostMapping("/comment/delete/{id}")
 	    public ResponseEntity<Void> deleteComment(@PathVariable("id") Long id) {
 	        commentService.delete(id);

@@ -81,11 +81,17 @@ public class CommunityEntity {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "file_group_id")
     private FileGroupEntity fileGroupEntity;
-//    
-//    @ManyToOne
-//    @OneToMany(mappedBy = "community" , cascade = CascadeType.REMOVE)
-//    private List<Like> likesList = new ArrayList<>();
+    
+    
+    @OneToMany(mappedBy = "community" , cascade = CascadeType.REMOVE)
+    private List<Like> likesList = new ArrayList<>();
+    
+    @Column(nullable = false)
+    @Comment("좋아요 여부")
+    private boolean likeBoolean;
 
+    //likesList 내가 = true // 없으면 = false
+    
     public CommunityResponseDTO toResponseDTO() {
 
 
@@ -111,5 +117,6 @@ public class CommunityEntity {
         this.title = title;
         this.content = content;
     }
+    
 
 }

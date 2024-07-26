@@ -21,6 +21,7 @@ import topetBack.topetBack.community.application.CommunityService;
 import topetBack.topetBack.community.domain.CommunityRequestDTO;
 import topetBack.topetBack.community.domain.CommunityResponseDTO;
 import topetBack.topetBack.config.SessionManager;
+import topetBack.topetBack.like.application.LikeService;
 import topetBack.topetBack.member.domain.Member;
 import topetBack.topetBack.member.domain.SessionMember;
 
@@ -32,23 +33,19 @@ public class CommunityController {
 
 	private final CommunityService communityService;
 	private final SessionManager sessionManager;
+	private final LikeService likeService;
 	
 	@Transactional
     @PostMapping("/communityPost")
     public 
-//    ResponseEntity<CommunityResponseDTO>
     String
 	communityPost(@ModelAttribute CommunityRequestDTO communityRequestDTO, 
     		HttpServletRequest req) throws Exception  {
     	
     	Member sessionMember = sessionManager.getSessionObject(req).toMember();
-//    	HttpSession session = req.getSession(false);
-//		Member member = (Member) session.getAttribute(SessionVar.LOGIN_MEMBER);
     	System.out.println("sessionMember : " + sessionMember.getEmail());
 		System.out.println("DTO : " + communityRequestDTO);
-//		System.out.println("member :" + member);
 
-//		communityRequestDTO.setAuthor(member);
 		communityRequestDTO.setAuthor(sessionMember);
 
 		System.out.println("communityPost 요청 등록됨");
@@ -85,6 +82,8 @@ public class CommunityController {
     public CommunityResponseDTO communityDetail(Model model ,  @PathVariable("id") int id)
     {
     	System.out.println("게시물 ID : " + id);
+        
+
 
     	return communityService.getCommunityById(id);
 
@@ -96,7 +95,7 @@ public class CommunityController {
         communityService.deleteCommunity(postId);
         System.out.println("삭제 게시물 번호: " + postId);
 
-        return ResponseEntity.noContent().build();	
+        return ResponseEntity.noContent().build() ;	
     }
     
     @PostMapping("/update/{id}")			
