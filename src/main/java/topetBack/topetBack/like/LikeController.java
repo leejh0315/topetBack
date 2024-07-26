@@ -15,41 +15,40 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import topetBack.topetBack.comment.application.CommentService;
 import topetBack.topetBack.community.domain.CommunityResponseDTO;
 import topetBack.topetBack.config.SessionManager;
-import topetBack.topetBack.like.application.LikeServiceImpl;
+import topetBack.topetBack.like.application.LikeService;
 import topetBack.topetBack.like.domain.LikeResponseDTO;
 import topetBack.topetBack.member.domain.Member;
 import topetBack.topetBack.member.domain.SessionMember;
 
+
 @RestController
 @RequiredArgsConstructor
-@Controller
 @RequestMapping("/like")
 public class LikeController {
-	private final LikeServiceImpl likeService;
+	private final LikeService likeService;
     private final SessionManager sessionManager;
 	
 	@PostMapping("/{id}")
-    public ResponseEntity<CommunityResponseDTO> likePost(@PathVariable("id") Long id, HttpServletRequest request) throws JsonMappingException, JsonProcessingException {
-		 SessionMember sessionMember = sessionManager.getSessionObject(request);
-	     Member author = sessionMember.toMember();
-        return likeService.likePost(id, author);
+    public ResponseEntity<CommunityResponseDTO> likePost(@PathVariable("id") Long id, HttpServletRequest req) throws JsonMappingException, JsonProcessingException {
+		SessionMember member = sessionManager.getSessionObject(req);
+		System.out.println("멤버 어디감" + member.toMember());
+        return likeService.likePost(id, member.toMember());
     }
 	
 	@GetMapping("/get")
 	 public List<LikeResponseDTO> getPost(HttpServletRequest request) throws JsonMappingException, JsonProcessingException {
-		 SessionMember sessionMember = sessionManager.getSessionObject(request);
-	     Member author = sessionMember.toMember();
-       return likeService.findByAuthor(author);
+		Member member = sessionManager.getSessionObject(request).toMember();
+
+       return likeService.findByAuthor(member);
    }
 	
 	@GetMapping("/detail/{id}")
 	public boolean detailGetPost(@PathVariable("id") Long id, HttpServletRequest request) throws JsonMappingException, JsonProcessingException {
-		 SessionMember sessionMember = sessionManager.getSessionObject(request);
-	     Member author = sessionMember.toMember();
-	     boolean likedByCurrentUser = likeService.getDetailLike(id, author);
+		Member member = sessionManager.getSessionObject(request).toMember();
+	    boolean likedByCurrentUser = likeService.getDetailLike(id, member);
+	    System.out.println("좋아요 여부 확인 : " + " : " + likedByCurrentUser);
        return likedByCurrentUser;
    }
 	

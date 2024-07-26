@@ -36,8 +36,7 @@ public class CommunityRequestDTO {
 				.content(this.content)
 				.hashtag(this.hashtag)
 				.category(this.category)
-				.animal(this.animal)
-				
+				.animal(this.animal)	
 				.fileGroupEntity(fileGroupEntity)
 				.build();
 	}

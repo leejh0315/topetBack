@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import topetBack.topetBack.comment.domain.CommentResponseDTO;
 import topetBack.topetBack.file.domain.FileResponseDTO;
+import topetBack.topetBack.like.domain.LikeResponseDTO;
 import topetBack.topetBack.member.domain.Member;
 
 @Data
@@ -23,6 +24,5 @@ public class CommunityResponseDTO {
 	private String animal;
     private List<FileResponseDTO> images;
     private List<CommentResponseDTO> comments;
-    private boolean liked;
 
 }
