@@ -28,8 +28,7 @@ jobs:
       run: chmod +x gradlew
 
     - name: Build with Gradle Wrapper
-      run: |
-        ./gradlew clean
-        ./gradlew build
+      run:
+        ./gradlew clean build
 
 
