@@ -2,6 +2,7 @@ package topetBack.topetBack.comment;
 
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -46,9 +47,10 @@ public class CommentController {
 		}
 	 
 	 @GetMapping("/get/{id}")
-	    public List<CommentResponseDTO> getCommentsByCommunityId(Model model ,@PathVariable("id") Long id) {
-	        return commentService.getCommentsByCommunityId(id);
-	    }
+	 public ResponseEntity<List<CommentResponseDTO>> getCommentsByCommunityId(Model model, @PathVariable("id") Long id) {
+		    List<CommentResponseDTO> comments = commentService.getCommentsByCommunityId(id);
+		    return new ResponseEntity<>(comments, HttpStatus.OK);
+		}
 	 
 	 @PostMapping("/update")
 	    public ResponseEntity<CommentResponseDTO> updateComment(@ModelAttribute CommentRequestDTO commentUpdateRequestDTO) throws Exception {

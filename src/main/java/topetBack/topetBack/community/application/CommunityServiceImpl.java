@@ -98,8 +98,9 @@ public class CommunityServiceImpl implements CommunityService {
 	}
 	
 	@Transactional
-	public List<CommunityResponseDTO> getCommunityListByAnimalAndCategoryAndLike(String animal , String category){
-		List<CommunityEntity> communityEntityList = communityRepository.findAllOrderByLikesCountDesc(animal , category);
+	public List<CommunityResponseDTO> getCommunityListByAnimalAndCategoryAndLike(String animal , String category , int page , int size){
+        PageRequest pageable = PageRequest.of(page, size);
+        Slice<CommunityEntity> communityEntityList = communityRepository.findAllOrderByLikesCountDesc(animal , category , pageable);
         return communityEntityList.stream()
                 .map(CommunityEntity::toResponseDTO)
                 .collect(Collectors.toList());

@@ -29,7 +29,7 @@ public interface CommunityRepository extends JpaRepository<CommunityEntity, Long
 	List<CommunityEntity> findByAuthorId(Long id);//사용자에 맞는 게시글 가져오기
 	
     @Query("SELECT c FROM CommunityEntity c LEFT JOIN c.likesList l WHERE c.animal = :animal AND c.category = :category GROUP BY c ORDER BY COUNT(l) DESC")
-	List<CommunityEntity> findAllOrderByLikesCountDesc(@Param("animal") String animal, @Param("category") String category);
+    Slice<CommunityEntity> findAllOrderByLikesCountDesc(@Param("animal") String animal, @Param("category") String category , Pageable pageable);
     
     @Query("SELECT c FROM CommunityEntity c LEFT JOIN c.likesList l WHERE c.animal = :animal GROUP BY c ORDER BY COUNT(l) DESC")
     List<CommunityEntity> findAnimalOrderByLikesCountDesc(@Param("animal") String animal);

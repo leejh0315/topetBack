@@ -30,5 +30,5 @@ public interface  CommunityService {
 	
 	public List<CommunityResponseDTO> getCommunityListByAnimalAndLike(String animal);
 	
-	List<CommunityResponseDTO> getCommunityListByAnimalAndCategoryAndLike(String animal , String category);
+	List<CommunityResponseDTO> getCommunityListByAnimalAndCategoryAndLike(String animal , String category , int page , int size);
 }

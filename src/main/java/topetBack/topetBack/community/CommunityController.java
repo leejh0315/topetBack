@@ -3,6 +3,7 @@ package topetBack.topetBack.community;
 import java.util.List;
 
 import org.apache.ibatis.javassist.NotFoundException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -32,7 +33,6 @@ public class CommunityController {
 	private final CommunityService communityService;
 	private final SessionManager sessionManager;
 	
-	@Transactional
     @PostMapping("/post")
     public 
     String communityPost(@ModelAttribute CommunityRequestDTO communityRequestDTO, 
@@ -47,31 +47,33 @@ public class CommunityController {
 	}
 
 	// 게시판 리스트
-    @GetMapping("/{animal}/{category}")
-    public Object[] boardList(Model model, @PathVariable("animal") String animal, 
-                              @PathVariable("category") String category,
-                              @RequestParam(name = "page") int page, 
-                              @RequestParam(name = "size") int size) {
+	 @GetMapping("/{animal}/{category}")
+	    public ResponseEntity<List<CommunityResponseDTO>> boardList(Model model, 
+	                                        @PathVariable("animal") String animal, 
+	                                        @PathVariable("category") String category,
+	                                        @RequestParam(name = "page") int page, 
+	                                        @RequestParam(name = "size") int size) {
 
-        if ("freedomAndDaily".equals(category)) {
-            category = "자유/일상";
-        } else if ("curious".equals(category)) {
-            category = "궁금해요";
-        } else {
-            category = "정보공유";
-        }
-        
-        System.out.println("페이지 : " + page + "사이즈 : "+ size);
-        return communityService.getCommunityListByAnimalAndCategory(animal, category, page, size).toArray();
-    }
+	        if ("freedomAndDaily".equals(category)) {
+	            category = "자유/일상";
+	        } else if ("curious".equals(category)) {
+	            category = "궁금해요";
+	        } else {
+	            category = "정보공유";
+	        }
+
+	        System.out.println("페이지 : " + page + "사이즈 : " + size);
+
+	        List<CommunityResponseDTO> communityList = communityService.getCommunityListByAnimalAndCategory(animal, category, page, size);
+
+	        return new ResponseEntity<>(communityList, HttpStatus.OK);
+	    }
 
     //게시판 디테일
     @GetMapping("/detail/{id}")
-    public CommunityResponseDTO communityDetail(Model model ,  @PathVariable("id") int id)
-    {        
-
-    	return communityService.getCommunityById(id);
-
+    public ResponseEntity<CommunityResponseDTO> communityDetail(Model model, @PathVariable("id") int id) {        
+        CommunityResponseDTO communityDetail = communityService.getCommunityById(id);
+        return new ResponseEntity<>(communityDetail, HttpStatus.OK);
     }
 
     //게시물 삭제
@@ -92,32 +94,37 @@ public class CommunityController {
     
     //사용자에 맞는 게시글 가져오기
     @GetMapping("/myCommunity/{id}")
-    public List<CommunityResponseDTO> getMyCommunity(@PathVariable("id") Long id){
-    	return communityService.findByAuthorId(id);
+    public ResponseEntity<List<CommunityResponseDTO>> getMyCommunity(@PathVariable("id") Long id){
+    	List<CommunityResponseDTO> communityList = communityService.findByAuthorId(id);
+    	return new ResponseEntity<>(communityList, HttpStatus.OK);
     }
     
     
     //인기순
     @GetMapping("/{animal}/{category}/sortLike")
-    public Object[] boardLikeList(Model model, @PathVariable("animal")String animal, @PathVariable("category")String category){
-    	
-    	if ("freedomAndDaily".equals(category)) {
+    public ResponseEntity<List<CommunityResponseDTO>> boardLikeList(Model model, 
+                                            @PathVariable("animal") String animal, 
+                                            @PathVariable("category") String category,
+                                            @RequestParam(name = "page") int page, 
+	                                        @RequestParam(name = "size") int size) {
+        
+        if ("freedomAndDaily".equals(category)) {
             category = "자유/일상";
         } else if ("curious".equals(category)) {
             category = "궁금해요";
-        } else {	
+        } else {
             category = "정보공유";
         }
-    	
-		return communityService.getCommunityListByAnimalAndCategoryAndLike(animal, category).toArray();
-    	
+
+        List<CommunityResponseDTO> communityList = communityService.getCommunityListByAnimalAndCategoryAndLike(animal, category , page , size);
+
+        return new ResponseEntity<>(communityList, HttpStatus.OK);
     }
     
   //동물통합 인기순
     @GetMapping("/{animal}/sortLike")
-    public Object[] boardLikeAnimalList(Model model, @PathVariable("animal")String animal){
-    	
-		return communityService.getCommunityListByAnimalAndLike(animal).toArray();
-    	
+    public ResponseEntity<List<CommunityResponseDTO>> boardLikeAnimalList(Model model, @PathVariable("animal") String animal) {
+        List<CommunityResponseDTO> communityList = communityService.getCommunityListByAnimalAndLike(animal);
+        return new ResponseEntity<>(communityList, HttpStatus.OK);
     }
 }

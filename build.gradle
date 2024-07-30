@@ -85,3 +85,7 @@ tasks.named('compileQuerydsl').configure {
     enabled = false
 }
 
+tasks.named('compileJava') {
+    dependsOn tasks.named('compileQuerydsl')
+}
+
