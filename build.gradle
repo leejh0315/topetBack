@@ -1,6 +1,6 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '3.3.1'
+    id 'org.springframework.boot' version '3.3.2'
     id 'io.spring.dependency-management' version '1.1.5'
     id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
 }
@@ -17,6 +17,7 @@ configurations {
     compileOnly {
         extendsFrom annotationProcessor
     }
+
 }
 
 repositories {
@@ -83,3 +84,4 @@ compileQuerydsl.doFirst {
 tasks.named('compileQuerydsl').configure {
     enabled = false
 }
+

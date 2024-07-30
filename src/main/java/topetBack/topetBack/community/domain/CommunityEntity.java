@@ -83,7 +83,8 @@ public class CommunityEntity {
     @JoinColumn(name = "file_group_id")
     private FileGroupEntity fileGroupEntity;
 
-    //likesList 내가 = true // 없으면 = false
+    @OneToMany(mappedBy = "community", cascade = CascadeType.REMOVE)
+    private List<Like> likesList = new ArrayList<>();
     
     public CommunityResponseDTO toResponseDTO() {
 
@@ -102,6 +103,7 @@ public class CommunityEntity {
                 .category(this.category)
                 .animal(this.animal)
                 .images(this.fileGroupEntity.getFileResponseDTOList())
+                .likesList(this.likesList)
                 .build();
     }
     
