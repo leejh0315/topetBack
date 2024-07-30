@@ -99,7 +99,9 @@ public class ScheduleEntity {
     @Comment("업데이트 시간")
     private LocalDateTime updatedTime;
 
-
+	@Column(nullable = true)
+	@Comment("사진경로")
+	private String profileSrc;
     
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "file_group_id")
@@ -122,6 +124,8 @@ public class ScheduleEntity {
                 .updateAuthor(this.updateAuthor)
                 .createdTime(this.createdTime)
                 .updatedTime(this.updatedTime)
+                .profileSrc(this.profileSrc)
+                
                 .images(this.fileGroupEntity.getFileResponseDTOList())
                 .build();
     }

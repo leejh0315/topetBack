@@ -95,7 +95,7 @@ public class ScheduleController {
         ScheduleResponseDTO scheduleResponseDTO = scheduleService.createSchedule(scheduleRequestDTO);
         
 //        return "success"; 
-        		return ResponseEntity.ok(scheduleResponseDTO);
+		return ResponseEntity.ok(scheduleResponseDTO);
     }
 
     @GetMapping("/home")

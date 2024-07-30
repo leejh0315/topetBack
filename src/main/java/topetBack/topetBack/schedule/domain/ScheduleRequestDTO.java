@@ -4,8 +4,10 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.annotations.Comment;
 import org.springframework.web.multipart.MultipartFile;
 
+import jakarta.persistence.Column;
 import lombok.Data;
 import topetBack.topetBack.file.domain.FileGroupEntity;
 import topetBack.topetBack.member.domain.Member;
@@ -24,7 +26,8 @@ public class ScheduleRequestDTO {
     private PetEntity animal;
     private LocalDateTime createdTime;
     private List<MultipartFile> images = new ArrayList<>();
-
+	private String profileSrc;
+	
     public ScheduleEntity toScheduleEntity() {
         FileGroupEntity fileGroupEntity = new FileGroupEntity();
 
@@ -40,6 +43,7 @@ public class ScheduleRequestDTO {
                 .animal(this.animal)
                 .createdTime(this.createdTime)
                 .fileGroupEntity(fileGroupEntity)
+                .profileSrc(this.profileSrc)
                 .build();
     }
 }
