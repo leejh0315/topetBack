@@ -81,7 +81,7 @@ public class ScheduleEntity {
 //    @Comment("작성자")
 //    private Member author;
     
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne//(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "animal_id")
     @Comment("동물")
     private PetEntity animal;

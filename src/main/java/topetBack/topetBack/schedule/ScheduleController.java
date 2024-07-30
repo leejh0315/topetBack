@@ -13,12 +13,11 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -36,6 +35,7 @@ import topetBack.topetBack.config.SessionManager;
 import topetBack.topetBack.member.domain.Member;
 import topetBack.topetBack.pet.domain.PetEntity;
 import topetBack.topetBack.schedule.application.ScheduleService;
+import topetBack.topetBack.schedule.domain.ScheduleEntity;
 import topetBack.topetBack.schedule.domain.ScheduleRequestDTO;
 import topetBack.topetBack.schedule.domain.ScheduleResponseDTO;
 import topetBack.topetBack.schedule.validation.ScheduleValidator;
@@ -51,10 +51,10 @@ public class ScheduleController {
     private final ScheduleValidator scheduleValidator;
     private final SessionManager sessionManager;
 
-    @InitBinder
-    public void init(WebDataBinder webDataBinder) {
-        webDataBinder.addValidators(scheduleValidator);
-    }
+//    @InitBinder
+//    public void init(WebDataBinder webDataBinder) {
+//        webDataBinder.addValidators(scheduleValidator);
+//    }
 //
 //    @GetMapping("/schedule")
 //    public ResponseEntity<ScheduleEntity> getCalendar() {
@@ -63,16 +63,16 @@ public class ScheduleController {
 //        return ResponseEntity.ok(scheduleEntity);
 //    }
 
-    @PostMapping("/post/{id}")
+    @PostMapping("/post")
     public ResponseEntity<Object> schedulePost(@ModelAttribute ScheduleRequestDTO scheduleRequestDTO, 
     							@RequestParam(value="photo", required=false) MultipartFile image,
-    							 @PathVariable("id")Long id,
+    							@RequestParam(value="animal", required=true) PetEntity pet,
+//    							 @PathVariable("id")Long id,
     							BindingResult bindingResult, HttpServletRequest req) throws IOException{
     	
     	Member sessionMember = sessionManager.getSessionObject(req).toMember();
     	scheduleRequestDTO.setAuthor(sessionMember);
-    	
-    	
+    	scheduleRequestDTO.setAnimal(pet);   	
     	
     	if(image!=null) {
     		List<MultipartFile> images = new ArrayList<>();
@@ -119,8 +119,16 @@ public class ScheduleController {
     }
 
     @GetMapping("/get/{id}")	
-    public List<ScheduleResponseDTO> getMySchedule(@PathVariable("id")Long id){
-    	return scheduleService.findByAuthorId(id); 
+    public List<ScheduleResponseDTO> getPetSchedule(@PathVariable("id")Long id){
+    	return scheduleService.findByAnimalId(id); 
+    }
+    
+    @PostMapping("/post/status/{id}")
+    public String updateStatusById(@PathVariable("id")Long id,  @RequestBody ScheduleRequestDTO scheduleRequestDTO){
+    	System.out.println("scheduleEntity :"+scheduleRequestDTO);
+    	scheduleService.updateSchedule(scheduleRequestDTO);
+    	
+    	return "";
     }
     
     
