@@ -12,7 +12,7 @@ import topetBack.topetBack.schedule.domain.ScheduleResponseDTO;
 @Repository
 public interface ScheduleRepository  extends JpaRepository<ScheduleEntity, Long>{
 	ScheduleEntity save(ScheduleEntity scheduleEntity);
-	List<ScheduleEntity> findByAuthor(Member author);
-	
 	List<ScheduleEntity> findByAuthorId(Long authorId);
+	
+	List<ScheduleEntity> findByAnimalId(Long animalId);
 }

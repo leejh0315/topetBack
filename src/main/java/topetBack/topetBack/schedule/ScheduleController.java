@@ -63,16 +63,16 @@ public class ScheduleController {
 //        return ResponseEntity.ok(scheduleEntity);
 //    }
 
-    @PostMapping("/post/{id}")
+    @PostMapping("/post")
     public ResponseEntity<Object> schedulePost(@ModelAttribute ScheduleRequestDTO scheduleRequestDTO, 
     							@RequestParam(value="photo", required=false) MultipartFile image,
-    							 @PathVariable("id")Long id,
+    							@RequestParam(value="animal", required=true) PetEntity pet,
+//    							 @PathVariable("id")Long id,
     							BindingResult bindingResult, HttpServletRequest req) throws IOException{
     	
     	Member sessionMember = sessionManager.getSessionObject(req).toMember();
     	scheduleRequestDTO.setAuthor(sessionMember);
-    	
-    	
+    	scheduleRequestDTO.setAnimal(pet);   	
     	
     	if(image!=null) {
     		List<MultipartFile> images = new ArrayList<>();
@@ -119,8 +119,8 @@ public class ScheduleController {
     }
 
     @GetMapping("/get/{id}")	
-    public List<ScheduleResponseDTO> getMySchedule(@PathVariable("id")Long id){
-    	return scheduleService.findByAuthorId(id); 
+    public List<ScheduleResponseDTO> getPetSchedule(@PathVariable("id")Long id){
+    	return scheduleService.findByAnimalId(id); 
     }
     
     

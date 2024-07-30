@@ -44,8 +44,8 @@ public class ScheduleServiceImpl implements ScheduleService{
     }
 
 	@Override
-	public List<ScheduleResponseDTO> findByAuthor(Member author) {
-		List<ScheduleEntity> scheduleList = scheduleRepository.findByAuthor(author);
+	public List<ScheduleResponseDTO> findByAuthorId(Long authorId) {
+		List<ScheduleEntity> scheduleList = scheduleRepository.findByAuthorId(authorId);
 		return scheduleList.stream()
                 .map(ScheduleEntity::toResponseDTO)
                 .collect(Collectors.toList());
@@ -53,8 +53,8 @@ public class ScheduleServiceImpl implements ScheduleService{
 	}
 
 	@Override
-	public List<ScheduleResponseDTO> findByAuthorId(Long authorId) {
-		List<ScheduleEntity> scheduleList = scheduleRepository.findByAuthorId(authorId);
+	public List<ScheduleResponseDTO> findByAnimalId(Long animalId) {
+		List<ScheduleEntity> scheduleList = scheduleRepository.findByAnimalId(animalId);
 		return scheduleList.stream()
                 .map(ScheduleEntity::toResponseDTO)
                 .collect(Collectors.toList());

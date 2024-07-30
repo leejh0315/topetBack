@@ -85,6 +85,7 @@ public class PetEntity {
 				.allergy(this.allergy)
 				.health(this.health)
 				.profileSrc(this.profileSrc)
+				.uid(this.UID)
 				.build();
 	}
 

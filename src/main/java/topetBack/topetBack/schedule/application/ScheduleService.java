@@ -14,7 +14,7 @@ import topetBack.topetBack.schedule.domain.ScheduleResponseDTO;
 public interface ScheduleService {
 
 	ScheduleResponseDTO createSchedule(ScheduleRequestDTO scheduleRequestDTO)throws IOException;
-	List<ScheduleResponseDTO> findByAuthor(Member author);
 	List<ScheduleResponseDTO> findByAuthorId(Long authorId);
+	List<ScheduleResponseDTO> findByAnimalId(Long animalId);
 
 }
