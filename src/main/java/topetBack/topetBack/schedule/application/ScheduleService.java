@@ -16,5 +16,6 @@ public interface ScheduleService {
 	ScheduleResponseDTO createSchedule(ScheduleRequestDTO scheduleRequestDTO)throws IOException;
 	List<ScheduleResponseDTO> findByAuthorId(Long authorId);
 	List<ScheduleResponseDTO> findByAnimalId(Long animalId);
+	void updateSchedule(ScheduleRequestDTO scheduleRequestDTO);
 
 }
