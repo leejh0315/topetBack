@@ -6,6 +6,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.apache.ibatis.javassist.NotFoundException;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -57,14 +59,12 @@ public class CommunityServiceImpl implements CommunityService {
                 .collect(Collectors.toList());
     }
 
-    @Override
-    public List<CommunityResponseDTO> getCommunityListByAnimalAndCategory(String animal , String category) {
-        List<CommunityEntity> communityEntityList = communityRepository.findByAnimalAndCategory(animal , category);
-        return communityEntityList.stream()
+    public List<CommunityResponseDTO> getCommunityListByAnimalAndCategory(String animal, String category, int page, int size) {
+        PageRequest pageable = PageRequest.of(page, size);
+        Slice<CommunityEntity> communityEntitySlice = communityRepository.findByAnimalAndCategoryOrderByCreatedTimeDesc(animal, category, pageable);
+        return communityEntitySlice.stream()
                 .map(CommunityEntity::toResponseDTO)
                 .collect(Collectors.toList());
-
-
     }
 
     @Override
@@ -83,7 +83,6 @@ public class CommunityServiceImpl implements CommunityService {
         String title = Optional.ofNullable(communityRequestDTO.getTitle()).orElse(communityEntity.getTitle());
         String content = Optional.ofNullable(communityRequestDTO.getContent()).orElse(communityEntity.getContent());
         communityEntity.updateCommunity(title, content);
-        System.out.println("테스트: " + title + content);
 
         CommunityEntity updatedCommunity = communityRepository.save(communityEntity);
 
@@ -97,7 +96,22 @@ public class CommunityServiceImpl implements CommunityService {
                 .map(CommunityEntity::toResponseDTO)
                 .collect(Collectors.toList());
 	}
-
+	
+	@Transactional
+	public List<CommunityResponseDTO> getCommunityListByAnimalAndCategoryAndLike(String animal , String category){
+		List<CommunityEntity> communityEntityList = communityRepository.findAllOrderByLikesCountDesc(animal , category);
+        return communityEntityList.stream()
+                .map(CommunityEntity::toResponseDTO)
+                .collect(Collectors.toList());
+	}
+	
+	@Transactional
+	public List<CommunityResponseDTO> getCommunityListByAnimalAndLike(String animal){
+		List<CommunityEntity> communityEntityList = communityRepository.findAnimalOrderByLikesCountDesc(animal);
+        return communityEntityList.stream()
+                .map(CommunityEntity::toResponseDTO)
+                .collect(Collectors.toList());
+	}
 
 
 }

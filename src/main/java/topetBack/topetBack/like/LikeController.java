@@ -33,14 +33,12 @@ public class LikeController {
 	@PostMapping("/{id}")
     public ResponseEntity<CommunityResponseDTO> likePost(@PathVariable("id") Long id, HttpServletRequest req) throws JsonMappingException, JsonProcessingException {
 		SessionMember member = sessionManager.getSessionObject(req);
-		System.out.println("멤버 어디감" + member.toMember());
         return likeService.likePost(id, member.toMember());
     }
 	
 	@GetMapping("/get")
 	 public List<LikeResponseDTO> getPost(HttpServletRequest request) throws JsonMappingException, JsonProcessingException {
 		Member member = sessionManager.getSessionObject(request).toMember();
-
        return likeService.findByAuthor(member);
    }
 	
@@ -48,7 +46,6 @@ public class LikeController {
 	public boolean detailGetPost(@PathVariable("id") Long id, HttpServletRequest request) throws JsonMappingException, JsonProcessingException {
 		Member member = sessionManager.getSessionObject(request).toMember();
 	    boolean likedByCurrentUser = likeService.getDetailLike(id, member);
-	    System.out.println("좋아요 여부 확인 : " + " : " + likedByCurrentUser);
        return likedByCurrentUser;
    }
 	

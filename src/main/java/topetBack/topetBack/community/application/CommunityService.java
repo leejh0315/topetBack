@@ -20,12 +20,15 @@ public interface  CommunityService {
 
 	CommunityResponseDTO getCommunityById(long communityId);
 
-	void deleteCommunity(Long id) throws NotFoundException;
-
-	List<CommunityResponseDTO> getCommunityListByAnimalAndCategory(String animal, String category);
+	public List<CommunityResponseDTO> getCommunityListByAnimalAndCategory(String animal, String category, int page, int size);
 	
 	public CommunityResponseDTO updateCommunity(Long id, CommunityRequestDTO communityRequestDTO) throws NotFoundException;
 	
 	List<CommunityResponseDTO> findByAuthorId (Long id);	//사용자에맞는게시글가져오기
 	
+	void deleteCommunity(Long id) throws NotFoundException;
+	
+	public List<CommunityResponseDTO> getCommunityListByAnimalAndLike(String animal);
+	
+	List<CommunityResponseDTO> getCommunityListByAnimalAndCategoryAndLike(String animal , String category);
 }

@@ -5,6 +5,8 @@ import java.util.stream.Collectors;
 
 import org.hibernate.annotations.Comment;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -37,6 +39,7 @@ public class Like {
 	
 	@ManyToOne
     @JoinColumn(name = "community_id", nullable = false)
+    @JsonIgnore
     private CommunityEntity community;
 	
 	@Column(nullable = false)
