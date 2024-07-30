@@ -34,8 +34,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import topetBack.topetBack.config.SessionManager;
 import topetBack.topetBack.member.domain.Member;
+import topetBack.topetBack.pet.domain.PetEntity;
 import topetBack.topetBack.schedule.application.ScheduleService;
-import topetBack.topetBack.schedule.domain.ScheduleEntity;
 import topetBack.topetBack.schedule.domain.ScheduleRequestDTO;
 import topetBack.topetBack.schedule.domain.ScheduleResponseDTO;
 import topetBack.topetBack.schedule.validation.ScheduleValidator;
@@ -63,21 +63,22 @@ public class ScheduleController {
 //        return ResponseEntity.ok(scheduleEntity);
 //    }
 
-    @PostMapping("/post")
+    @PostMapping("/post/{id}")
     public ResponseEntity<Object> schedulePost(@ModelAttribute ScheduleRequestDTO scheduleRequestDTO, 
     							@RequestParam(value="photo", required=false) MultipartFile image,
+    							 @PathVariable("id")Long id,
     							BindingResult bindingResult, HttpServletRequest req) throws IOException{
     	
     	Member sessionMember = sessionManager.getSessionObject(req).toMember();
     	scheduleRequestDTO.setAuthor(sessionMember);
+    	
+    	
     	
     	if(image!=null) {
     		List<MultipartFile> images = new ArrayList<>();
         	images.add(image);
         	scheduleRequestDTO.setImages(images);
     	}
-    	
-    	
     	System.out.println("schedulePost요청왔음");
     	
     	System.out.println("scheduleRequestDTO :  "+ scheduleRequestDTO);
@@ -117,7 +118,7 @@ public class ScheduleController {
         return date.isEqual(startDate) || date.isEqual(endDate) || (date.isAfter(startDate) && date.isBefore(endDate));
     }
 
-    @GetMapping("/get/{id}")
+    @GetMapping("/get/{id}")	
     public List<ScheduleResponseDTO> getMySchedule(@PathVariable("id")Long id){
     	return scheduleService.findByAuthorId(id); 
     }
