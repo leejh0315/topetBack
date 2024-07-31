@@ -2,6 +2,7 @@ package topetBack.topetBack.comment;
 
 import java.util.List;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -50,7 +51,15 @@ public class CommentController {
 	 public ResponseEntity<List<CommentResponseDTO>> getCommentsByCommunityId(Model model, @PathVariable("id") Long id) {
 		    List<CommentResponseDTO> comments = commentService.getCommentsByCommunityId(id);
 		    return new ResponseEntity<>(comments, HttpStatus.OK);
-		}
+	 }
+
+	 @GetMapping("/myComment")
+	 public ResponseEntity<List<CommentResponseDTO>> getMyComments(HttpServletRequest request) throws JsonProcessingException {
+		 SessionMember member = sessionManager.getSessionObject(request);
+		 List<CommentResponseDTO> comments = commentService.getCommentsByAuthorId(member.getId());
+
+		 return ResponseEntity.ok(comments);
+	 }
 	 
 	 @PostMapping("/update")
 	    public ResponseEntity<CommentResponseDTO> updateComment(@ModelAttribute CommentRequestDTO commentUpdateRequestDTO) throws Exception {

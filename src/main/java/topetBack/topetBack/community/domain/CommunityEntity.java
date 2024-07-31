@@ -90,7 +90,7 @@ public class CommunityEntity {
 
 
         List<FileResponseDTO> fileResponseDTOList = this.fileGroupEntity.getFileList()
-                .stream().map(FileInfoEntity::toResponseDTO).collect(Collectors.toList());       
+                .stream().map(FileInfoEntity::toResponseDTO).toList();
 
         return CommunityResponseDTO.builder()
                 .id(this.id)
@@ -105,6 +105,10 @@ public class CommunityEntity {
                 .images(this.fileGroupEntity.getFileResponseDTOList())
                 .likesList(this.likesList)
                 .build();
+    }
+
+    public CommunityResponseDTO getSummary(){
+        return CommunityResponseDTO.builder().id(this.id).title(this.title).build();
     }
     
     public void updateCommunity(String title, String content) {

@@ -10,6 +10,8 @@ public interface CommentRepositoryCustom {
 
 	List<CommentResponseDTO> findByCommunityId(Long community);
 
+	List<CommentEntity> findByAuthorId(Long authorId);
+
 	void updateComment(CommentEntity comment);
 
 

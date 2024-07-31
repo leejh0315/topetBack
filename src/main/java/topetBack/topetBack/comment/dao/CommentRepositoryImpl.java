@@ -52,6 +52,15 @@ public class CommentRepositoryImpl implements CommentRepositoryCustom {
                 .filter(dto -> dto.getParentId() == null)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<CommentEntity> findByAuthorId(Long id) {
+        return queryFactory.selectFrom(commentEntity)
+                .where(commentEntity.author.id.eq(id)
+                        .and(commentEntity.deleted.isFalse()))
+                .orderBy(commentEntity.createdTime.asc())
+                .fetch();
+    }
     
     @Override
     public void updateComment(CommentEntity comment) {

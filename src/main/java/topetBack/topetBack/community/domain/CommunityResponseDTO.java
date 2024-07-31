@@ -5,11 +5,13 @@ import java.util.List;
 
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import topetBack.topetBack.comment.domain.CommentResponseDTO;
 import topetBack.topetBack.file.domain.FileResponseDTO;
 import topetBack.topetBack.like.domain.Like;
 import topetBack.topetBack.like.domain.LikeResponseDTO;
 import topetBack.topetBack.member.domain.Member;
+
 
 @Data
 @Builder
@@ -17,8 +19,8 @@ public class CommunityResponseDTO {
 	private Long id;
 	private LocalDateTime createdTime;
 	private LocalDateTime updatedTime;
-	private Member author;
 	private String title;
+	private Member author;
 	private String content;
 	private String hashtag;
 	private String category;
