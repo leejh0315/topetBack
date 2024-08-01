@@ -4,8 +4,10 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import topetBack.topetBack.community.domain.CommunityEntity;
 import topetBack.topetBack.community.domain.CommunitySummaryResponseDTO;
 import topetBack.topetBack.member.domain.Member;
@@ -13,6 +15,8 @@ import topetBack.topetBack.member.domain.MemberSummaryResponseDTO;
 
 @Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class CommentResponseDTO {
 
     private Long id;

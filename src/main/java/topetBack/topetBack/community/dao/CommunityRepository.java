@@ -33,6 +33,7 @@ public interface CommunityRepository extends JpaRepository<CommunityEntity, Long
     
     @Query("SELECT c FROM CommunityEntity c LEFT JOIN c.likesList l WHERE c.animal = :animal GROUP BY c ORDER BY COUNT(l) DESC")
     List<CommunityEntity> findAnimalOrderByLikesCountDesc(@Param("animal") String animal);
-
-
+    
+    Slice<CommunityEntity> findByTitleAndContent(String title, String content , Pageable pageable);
+    
 }

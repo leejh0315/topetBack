@@ -67,7 +67,7 @@ public class CommunityController {
 	        List<CommunityResponseDTO> communityList = communityService.getCommunityListByAnimalAndCategory(animal, category, page, size);
 
 	        return new ResponseEntity<>(communityList, HttpStatus.OK);
-	    }
+	    }		
 
     //게시판 디테일
     @GetMapping("/detail/{id}")
@@ -126,5 +126,16 @@ public class CommunityController {
     public ResponseEntity<List<CommunityResponseDTO>> boardLikeAnimalList(Model model, @PathVariable("animal") String animal) {
         List<CommunityResponseDTO> communityList = communityService.getCommunityListByAnimalAndLike(animal);
         return new ResponseEntity<>(communityList, HttpStatus.OK);
+    }	
+    
+    //검색
+    @GetMapping("/search")
+    public ResponseEntity<List<CommunityResponseDTO>> communitySearch(@PathVariable("title") String title , 
+    																  @PathVariable("content") String contnet,
+    																  @PathVariable(name = "page") int page,
+    																  @PathVariable(name = "size") int size){
+    	
+    	List<CommunityResponseDTO> communityList = communityService.searchCommunityTitleAndContent(title, contnet, page, size);
+    	return new ResponseEntity<>(communityList , HttpStatus.OK);
     }
 }

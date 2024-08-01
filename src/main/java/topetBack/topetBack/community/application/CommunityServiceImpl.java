@@ -114,6 +114,15 @@ public class CommunityServiceImpl implements CommunityService {
                 .collect(Collectors.toList());
 	}
 	
+	@Transactional
+	public List<CommunityResponseDTO> searchCommunityTitleAndContent(String title , String content , int page , int size){
+		PageRequest pageable = PageRequest.of(page, size);
+		Slice<CommunityEntity> communityEntityList = communityRepository.findByTitleAndContent(title , content , pageable);
+		return communityEntityList.stream()
+                .map(CommunityEntity::toResponseDTO)
+                .collect(Collectors.toList());
+	}
+	
 	
 
 
