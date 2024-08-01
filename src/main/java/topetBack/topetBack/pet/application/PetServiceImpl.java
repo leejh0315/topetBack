@@ -88,6 +88,7 @@ public class PetServiceImpl implements PetService{
     }
 
     @Override
+    @Transactional
     public PetResponseDTO findById(Long id) {
     	Optional<PetEntity> pet = petRepository.findById(id);
     	
@@ -107,6 +108,7 @@ public class PetServiceImpl implements PetService{
     }
 
 	@Override
+	@Transactional
 	public PetResponseDTO findByUid(String uid) {
 		Optional<PetEntity> pet = petRepository.findByUid(uid);
 		System.out.println("petServiceIMPL pet : " + pet);
@@ -120,6 +122,7 @@ public class PetServiceImpl implements PetService{
 	}
 
 	@Override
+	@Transactional
 	public PetEntity findEntityByUid(String uid) {
 		return petRepository.getByUid(uid);
 	}

@@ -148,6 +148,27 @@ public class ScheduleController {
     	return "";
     }
     
+    @PostMapping("/update/{id}")
+    public ResponseEntity<ScheduleResponseDTO> updateScheduleById(@PathVariable("id")Long id, HttpServletRequest req,
+    															@ModelAttribute ScheduleRequestDTO scheduleRequestDTO, 
+    															@RequestParam(value="photo", required=false) MultipartFile image,
+    															@RequestParam(value="author", required=false)Long authorId) throws IOException{
+    	
+    	
+    	System.out.println(scheduleRequestDTO);
+    	
+    	
+    	Member sessionMember = sessionManager.getSessionObject(req).toMember();
+    	
+    	
+    	scheduleRequestDTO.setUpdateAuthor(sessionMember);
+    	
+    	
+    	ScheduleResponseDTO scheduleResponseDTO = scheduleService.createSchedule(scheduleRequestDTO);
+    	
+    	
+    	return ResponseEntity.ok(scheduleResponseDTO);
+    }
     
     @PostMapping(value = "/api/schedule/postPhoto", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public String schedulePostPhoto(@RequestPart(value = "photo", required = true) MultipartFile photo) {

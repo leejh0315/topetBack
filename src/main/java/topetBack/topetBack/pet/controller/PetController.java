@@ -3,11 +3,11 @@ package topetBack.topetBack.pet.controller;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -50,7 +50,7 @@ public class PetController {
 	private final PetRepository petRepository;
 	private final MemberService memberService;
 
-	@Transactional
+	
 	@PostMapping("/post")
 	public ResponseEntity<PetResponseDTO> petRegistPost(@RequestParam(value="photo", required=false) MultipartFile image,
 								@ModelAttribute PetRequestDTO petRequestDTO,
@@ -97,16 +97,35 @@ public class PetController {
 		return ResponseEntity.ok(pet);
 	}
 	
+//	@PostMapping("/postAddPet")
+//	public String addPet(@RequestBody String uid, HttpServletRequest req,
+//			HttpServletResponse resp) throws JsonMappingException, JsonProcessingException{
+//		
+//		Member sessionMember = sessionManager.getSessionObject(req).toMember();
+//		
+//		
+//		PetResponseDTO pet = petService.findByUid(uid.toString());
+//		if(pet == null) {
+//			return "null";
+//		}else {
+//			PetEntity petEntity =petService.findEntityByUid(pet.getUid());
+//			memberService.saveMemberPet(sessionMember, petEntity);
+//			sessionManager.refreshPetAdd(pet, resp, req);
+//			return "done";
+//		}
+//		
+//	}
 	@PostMapping("/postAddPet")
-	public ResponseEntity<PetResponseDTO> addPet(@RequestBody String uid, HttpServletRequest req,
+	public ResponseEntity<PetResponseDTO> addPet(@RequestBody Map<String, String> uid, HttpServletRequest req,
 			HttpServletResponse resp) throws JsonMappingException, JsonProcessingException{
 		
 		Member sessionMember = sessionManager.getSessionObject(req).toMember();
 		
 		
-		PetResponseDTO pet = petService.findByUid(uid.toString());
+		
+		PetResponseDTO pet = petService.findByUid(uid.get("uid"));
 		if(pet != null) {
-			PetEntity petEntity =petService.findEntityByUid(pet.getUid());
+			PetEntity petEntity =petService.findEntityByUid(uid.get("uid"));
 			memberService.saveMemberPet(sessionMember, petEntity);
 		}
 		

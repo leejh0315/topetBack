@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import jakarta.persistence.EntityManager;
 import topetBack.topetBack.file.application.FileService;
@@ -28,7 +29,7 @@ public class ScheduleServiceImpl implements ScheduleService{
         this.fileService = fileService;
         this.entityManager = entityManager;
     }
-	    
+    @Transactional
     public ScheduleResponseDTO createSchedule(ScheduleRequestDTO scheduleRequestDTO) throws IOException{
     	System.out.println("scheduleRequestDTO.getImages().size() : " +  scheduleRequestDTO.getImages().size() );
     	System.out.println(scheduleRequestDTO.getImages());
@@ -43,6 +44,7 @@ public class ScheduleServiceImpl implements ScheduleService{
     }
 
 	@Override
+	@Transactional
 	public List<ScheduleResponseDTO> findByAuthorId(Long authorId) {
 		List<ScheduleEntity> scheduleList = scheduleRepository.findByAuthorId(authorId);
 		return scheduleList.stream()
@@ -52,6 +54,7 @@ public class ScheduleServiceImpl implements ScheduleService{
 	}
 
 	@Override
+	@Transactional
 	public List<ScheduleResponseDTO> findByAnimalId(Long animalId) {
 		List<ScheduleEntity> scheduleList = scheduleRepository.findByAnimalId(animalId);
 		return scheduleList.stream()
@@ -61,6 +64,7 @@ public class ScheduleServiceImpl implements ScheduleService{
 	}
 
 	@Override
+	@Transactional
 	public void updateSchedule(ScheduleRequestDTO scheduleRequestDTO) {
 		scheduleRequestDTO.setIsComplete(!(scheduleRequestDTO.getIsComplete()));
 		scheduleRepository.save(scheduleRequestDTO.toScheduleEntity());
