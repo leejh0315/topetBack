@@ -55,7 +55,6 @@ public class SessionManager {
 			System.out.println("sessionManager에서 쿠키를 통해 찾은 sessionId : " + sessionId);
 			SessionMember sessionData = (SessionMember) redisTemplate.opsForValue().get(sessionId);
 			sessionData.getPets().add(petResponseDTO);
-			
 			redisTemplate.opsForValue().set(sessionCookie.getValue(), sessionData);
 			redisTemplate.expire(sessionCookie.getValue(), 30, TimeUnit.MINUTES); // 예시: 세션 만료 시간 설정 (30분)
 		}
@@ -66,7 +65,6 @@ public class SessionManager {
 	public SessionMember getSessionObject(HttpServletRequest req) throws JsonMappingException, JsonProcessingException {
 		log.info("session getSessionObject");
 		Cookie sessionCookie = findCookie(req, SESSION_COOKIE_NAME);
-		
 		System.out.println("getSessionObject sessionCookie : " + sessionCookie.getValue()) ;
 		if (sessionCookie != null) {
 			String sessionId = sessionCookie.getValue();

@@ -95,7 +95,6 @@ public class MemberController {
 				pets.add(petService.findById(memberPet.get(i).getPet().getId()));
 			}
 			String sessionId = sessionManager.create(newMember, pets, resp);
-			
 			redirectView.setUrl(frontAddress + "/home");
 		} else {
 			redirectView.setUrl(frontAddress + "/");

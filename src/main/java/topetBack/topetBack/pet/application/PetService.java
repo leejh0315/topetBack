@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import org.springframework.stereotype.Service;
 
+import topetBack.topetBack.pet.domain.PetEntity;
 import topetBack.topetBack.pet.domain.PetRequestDTO;
 import topetBack.topetBack.pet.domain.PetResponseDTO;
 
@@ -13,5 +14,7 @@ public interface PetService {
 
 	PetResponseDTO createPet(PetRequestDTO petRequestDTO) throws IOException;
 	PetResponseDTO findById(Long petId);
+	PetResponseDTO findByUid(String uid);
 	
+	PetEntity findEntityByUid(String uid);
 }

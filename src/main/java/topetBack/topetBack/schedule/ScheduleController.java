@@ -3,6 +3,7 @@ package topetBack.topetBack.schedule;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -98,25 +99,37 @@ public class ScheduleController {
 		return ResponseEntity.ok(scheduleResponseDTO);
     }
 
-    @GetMapping("/home")
-    public List<ScheduleResponseDTO> getHomeSchedule(HttpServletRequest req) throws JsonMappingException, JsonProcessingException {
+    @GetMapping("/home/{id}")
+    public List<ScheduleResponseDTO> getHomeSchedule(HttpServletRequest req, @PathVariable("id")Long id) throws JsonMappingException, JsonProcessingException {
     	Member sessionMember = sessionManager.getSessionObject(req).toMember();
     	
-    	List<ScheduleResponseDTO> scheduleResponseDTO = scheduleService.findByAuthorId(sessionMember.getId()); 
+    	List<ScheduleResponseDTO> scheduleResponseDTO = scheduleService.findByAnimalId(id);
+    	
+    	System.out.println("scheduleResponseDTO : " + scheduleResponseDTO);
     			//scheduleService.findByAuthor(sessionMember);
     	List<ScheduleResponseDTO> homeSchedule = new ArrayList<ScheduleResponseDTO>();
+    	LocalDate today = LocalDate.now();
     	
-    	LocalDateTime today = LocalDateTime.now();
+    	
+    	 
+    	
+    	
     	for(ScheduleResponseDTO scheduleRespDTO : scheduleResponseDTO) {
-    		if(isDateInRange(today, scheduleRespDTO.getStartDate(), scheduleRespDTO.getEndDate())) {
+    		LocalDate startDate = scheduleRespDTO.getStartDate().toLocalDate();
+    		LocalDate endDate = scheduleRespDTO.getEndDate().toLocalDate();
+    		
+    		
+    		if(isDateInRange(today, startDate, endDate)) {
     			homeSchedule.add(scheduleRespDTO);
     		}
     	}
     	return homeSchedule;
     }
-    public static boolean isDateInRange(LocalDateTime date, LocalDateTime startDate, LocalDateTime endDate) {
-        return date.isEqual(startDate) || date.isEqual(endDate) || (date.isAfter(startDate) && date.isBefore(endDate));
+    public static boolean isDateInRange(LocalDate date, LocalDate startDate, LocalDate endDate) {
+        // Check if the date is within the inclusive range
+        return !date.isBefore(startDate) && !date.isAfter(endDate);
     }
+
 
     @GetMapping("/get/{id}")	
     public List<ScheduleResponseDTO> getPetSchedule(@PathVariable("id")Long id){
@@ -126,6 +139,10 @@ public class ScheduleController {
     @PostMapping("/post/status/{id}")
     public String updateStatusById(@PathVariable("id")Long id,  @RequestBody ScheduleRequestDTO scheduleRequestDTO){
     	System.out.println("scheduleEntity :"+scheduleRequestDTO);
+    	System.out.println("-----------------------------------");
+    	System.out.println("업데이트");
+    	System.out.println("-----------------------------------");
+    	
     	scheduleService.updateSchedule(scheduleRequestDTO);
     	
     	return "";

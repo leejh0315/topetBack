@@ -10,12 +10,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import lombok.RequiredArgsConstructor;
 import topetBack.topetBack.member.dao.MemberPetRepository;
 import topetBack.topetBack.member.dao.MemberRepository;
 import topetBack.topetBack.member.domain.Member;
 import topetBack.topetBack.member.domain.MemberPet;
-import topetBack.topetBack.pet.dao.PetRepository;
 import topetBack.topetBack.pet.domain.PetEntity;
 
 @Service
@@ -52,6 +50,9 @@ public class MemberService {
     	return memberPetRepository.findByMember(member);
     }
     
-
+    public void saveMemberPet(Member member, PetEntity petEntity) {
+    	MemberPet memberPet = new MemberPet(member, petEntity);
+    	memberPetRepository.save(memberPet);
+    }
     
 }

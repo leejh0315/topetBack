@@ -60,9 +60,9 @@ public class PetEntity {
 	@Comment("건강상태")
 	private String health;
 
-	@Column(nullable = false)
+	@Column(nullable = false, unique = true)
 	@Comment("고유코드")
-	private String UID;
+	private String uid;
 
 	@Column(nullable = true)
 	@Comment("사진경로")
@@ -85,7 +85,7 @@ public class PetEntity {
 				.allergy(this.allergy)
 				.health(this.health)
 				.profileSrc(this.profileSrc)
-				.uid(this.UID)
+				.uid(this.uid)
 				.build();
 	}
 
