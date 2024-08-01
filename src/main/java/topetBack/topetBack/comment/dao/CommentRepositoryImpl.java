@@ -5,6 +5,12 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.stream.Collectors;
 
+import com.querydsl.core.QueryResults;
+import com.querydsl.core.types.Projections;
+import com.querydsl.jpa.impl.JPAQuery;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.SliceImpl;
 import org.springframework.stereotype.Repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -13,6 +19,15 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import topetBack.topetBack.comment.domain.CommentEntity;
 import topetBack.topetBack.comment.domain.CommentResponseDTO;
+import topetBack.topetBack.comment.domain.QCommentEntity;
+import topetBack.topetBack.community.domain.CommunityEntity;
+import topetBack.topetBack.community.domain.CommunityResponseDTO;
+import topetBack.topetBack.community.domain.CommunitySummaryResponseDTO;
+import topetBack.topetBack.community.domain.QCommunityEntity;
+import topetBack.topetBack.member.domain.Member;
+import topetBack.topetBack.member.domain.MemberResponseDTO;
+import topetBack.topetBack.member.domain.MemberSummaryResponseDTO;
+import topetBack.topetBack.member.domain.QMember;
 
 import static topetBack.topetBack.comment.domain.QCommentEntity.commentEntity;
 
@@ -59,7 +74,45 @@ public class CommentRepositoryImpl implements CommentRepositoryCustom {
                 .filter(dto -> dto.getParentId() == null) // 부모 댓글이 없는 최상위 댓글만 반환
                 .collect(Collectors.toList());
     }
+    @Override
+    public Slice<CommentResponseDTO> findByAuthorId(Long id, Pageable pageable) {
+        QCommentEntity c = QCommentEntity.commentEntity;
+        QMember m = QMember.member;
+        QCommunityEntity p = QCommunityEntity.communityEntity;
+        JPAQuery<CommentResponseDTO> query = queryFactory.select(
+                        Projections.bean(CommentResponseDTO.class,
+                                c.id,
+                                c.content,
+                                c.createdTime,
+                                c.updatedTime,
+                                c.parent.id.as("parentId"),
+                                Projections.bean(MemberSummaryResponseDTO.class,
+                                        m.id,
+                                        m.name,
+                                        m.email).as("author"),
+                                Projections.bean(CommunitySummaryResponseDTO.class,
+                                        p.id,
+                                        p.title).as("community")
+                        ))
+                .from(c)
+                .leftJoin(c.author, m)
+                .leftJoin(c.community, p)
+                .where(c.author.id.eq(id)
+                        .and(c.deleted.isFalse()))
+                .orderBy(c.createdTime.desc());
 
+                // 페이지네이션 적용
+                QueryResults<CommentResponseDTO> queryResults = query
+                        .offset(pageable.getOffset())
+                        .limit(pageable.getPageSize())
+                        .fetchResults();
+
+                // 결과를 Slice 형태로 변환
+                List<CommentResponseDTO> content = queryResults.getResults();
+                boolean hasNext = queryResults.getTotal() > pageable.getOffset() + pageable.getPageSize();
+
+                return new SliceImpl<>(content, pageable, hasNext);
+    }
     
     @Override
     public void updateComment(CommentEntity comment) {

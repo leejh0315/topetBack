@@ -26,5 +26,6 @@ public class ScheduleResponseDTO {
 	private LocalDateTime createdTime;
 	private LocalDateTime updatedTime;
 	private List<FileResponseDTO> images;
+	private String profileSrc;
 	
 }

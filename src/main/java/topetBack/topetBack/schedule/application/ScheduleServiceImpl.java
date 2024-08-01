@@ -34,6 +34,7 @@ public class ScheduleServiceImpl implements ScheduleService{
     	System.out.println(scheduleRequestDTO.getImages());
     	if(scheduleRequestDTO.getImages().size()>0) {
     		FileGroupEntity fileGroupEntity = fileService.uploadPhoto(scheduleRequestDTO.getImages(), scheduleRequestDTO.toScheduleEntity().getFileGroupEntity(), FileCategory.SCHEDULE.getPath());
+    		scheduleRequestDTO.setProfileSrc(fileGroupEntity.getFileList().get(0).getFilePath());
     	}
     	
     	ScheduleEntity scheduleEntity = scheduleRequestDTO.toScheduleEntity();

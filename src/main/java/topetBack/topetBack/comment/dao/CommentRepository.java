@@ -11,11 +11,10 @@ import topetBack.topetBack.community.domain.CommunityEntity;
 
 
 @Repository
-public interface CommentRepository extends JpaRepository<CommentEntity, Long>{
+public interface CommentRepository extends JpaRepository<CommentEntity, Long>, CommentRepositoryCustom {
 
 	CommentEntity save(CommunityEntity communityEntity);
-	
-	
+
 	@Transactional
     void deleteByCommunityId(Long communityId);
 	

@@ -93,9 +93,8 @@ public class CommunityEntity {
     
     public CommunityResponseDTO toResponseDTO() {
 
-
         List<FileResponseDTO> fileResponseDTOList = this.fileGroupEntity.getFileList()
-                .stream().map(FileInfoEntity::toResponseDTO).collect(Collectors.toList());       
+                .stream().map(FileInfoEntity::toResponseDTO).toList();
 
         return CommunityResponseDTO.builder()
                 .id(this.id)
@@ -112,6 +111,15 @@ public class CommunityEntity {
                 .commentCount(this.commentCount)
                 .build();
     }
+
+    public CommunitySummaryResponseDTO toSummaryResponseDTO() {
+        return CommunitySummaryResponseDTO.builder()
+                .id(this.id)
+                .title(this.title)
+                .build();
+    }
+
+
     
     public void updateCommunity(String title, String content) {
         this.title = title;

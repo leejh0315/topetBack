@@ -29,6 +29,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import topetBack.topetBack.community.domain.CommunityEntity;
+import topetBack.topetBack.community.domain.CommunityResponseDTO;
 import topetBack.topetBack.member.domain.Member;
 
 @Builder
@@ -103,12 +104,13 @@ public class CommentEntity {
                     .build());
         }
 
+
         return CommentResponseDTO.builder()
                 .id(this.id)
                 .createdTime(this.createdTime)
                 .updatedTime(this.updatedTime)
-                .author(this.author)
-                .community(this.community)
+                .author(this.author.toSummaryResponseDTO())
+                .community(this.community.toSummaryResponseDTO())
                 .content(this.content)
                 .deleted(this.deleted)
                 .children(childrenDTOs)
