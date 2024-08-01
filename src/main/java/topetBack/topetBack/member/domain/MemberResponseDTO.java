@@ -6,13 +6,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@Builder 
-@NoArgsConstructor
+@Builder
 @AllArgsConstructor
+@NoArgsConstructor
 public class MemberResponseDTO {
 	private Long id;
 	private String socialId;
 	private String name;
 	private String email;
-	private String src; //TODO
 }

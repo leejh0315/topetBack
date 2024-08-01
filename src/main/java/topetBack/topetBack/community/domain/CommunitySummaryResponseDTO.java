@@ -1,32 +1,23 @@
 package topetBack.topetBack.community.domain;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import topetBack.topetBack.comment.domain.CommentResponseDTO;
 import topetBack.topetBack.file.domain.FileResponseDTO;
 import topetBack.topetBack.like.domain.Like;
-import topetBack.topetBack.like.domain.LikeResponseDTO;
 import topetBack.topetBack.member.domain.Member;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CommunityResponseDTO {
+public class CommunitySummaryResponseDTO {
 	private Long id;
-	private LocalDateTime createdTime;
-	private LocalDateTime updatedTime;
 	private String title;
-	private Member author;
-	private String content;
-	private String hashtag;
-	private String category;
-	private String animal;
-    private List<FileResponseDTO> images;
-    private List<CommentResponseDTO> comments;
-    private List<Like> likesList;
-
 }

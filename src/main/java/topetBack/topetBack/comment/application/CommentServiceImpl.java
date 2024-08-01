@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.apache.ibatis.javassist.NotFoundException;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
@@ -64,9 +66,10 @@ public class CommentServiceImpl implements CommentService{
 		return commentRepository.findByCommunityId(communityId);
 	 }
 
-	public List<CommentResponseDTO> getCommentsByAuthorId(Long authorId) {
-		 List<CommentEntity> commentEntities = commentRepository.findByAuthorId(authorId);
-		return commentEntities.stream().map(CommentEntity::toResponseDTO).collect(Collectors.toList());
+	public List<CommentResponseDTO> getCommentsByAuthorId(Long authorId, int page, int size) {
+		PageRequest pageable = PageRequest.of(page, size);
+		Slice<CommentResponseDTO> commentResponseDTOSlice = commentRepository.findByAuthorId(authorId, pageable);
+        return commentResponseDTOSlice.stream().collect(Collectors.toList());
 	}
 
 	 @Transactional
