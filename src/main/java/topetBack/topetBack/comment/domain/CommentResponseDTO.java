@@ -7,7 +7,9 @@ import java.util.List;
 import lombok.Builder;
 import lombok.Data;
 import topetBack.topetBack.community.domain.CommunityEntity;
+import topetBack.topetBack.community.domain.CommunitySummaryResponseDTO;
 import topetBack.topetBack.member.domain.Member;
+import topetBack.topetBack.member.domain.MemberSummaryResponseDTO;
 
 @Data
 @Builder
@@ -16,8 +18,8 @@ public class CommentResponseDTO {
     private Long id;
     private LocalDateTime createdTime;
     private LocalDateTime updatedTime;
-    private Member author;
-    private CommunityEntity community;
+    private MemberSummaryResponseDTO author;
+    private CommunitySummaryResponseDTO community;
     private String content;
     private List<CommentResponseDTO> children = new ArrayList<>();
     private boolean deleted;

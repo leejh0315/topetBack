@@ -57,6 +57,14 @@ public class Member implements Serializable {
 				
 		
 	}
+
+	public MemberSummaryResponseDTO toSummaryResponseDTO() {
+		return MemberSummaryResponseDTO.builder()
+				.id(this.id)
+				.name(this.name)
+				.src(this.profileSrc)
+				.build();
+	}
 	
 
 }

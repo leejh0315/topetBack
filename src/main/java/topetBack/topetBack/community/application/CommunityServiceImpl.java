@@ -113,6 +113,8 @@ public class CommunityServiceImpl implements CommunityService {
                 .map(CommunityEntity::toResponseDTO)
                 .collect(Collectors.toList());
 	}
+	
+	
 
 
 }

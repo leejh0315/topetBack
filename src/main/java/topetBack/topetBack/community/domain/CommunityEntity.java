@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.DialectOverride.Formula;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import jakarta.persistence.CascadeType;
@@ -86,11 +87,14 @@ public class CommunityEntity {
     @OneToMany(mappedBy = "community", cascade = CascadeType.REMOVE)
     private List<Like> likesList = new ArrayList<>();
     
+    //댓글 개수
+    @org.hibernate.annotations.Formula("(SELECT count(1) FROM comments r WHERE r.community_id = id)")
+    private int commentCount;
+    
     public CommunityResponseDTO toResponseDTO() {
 
-
         List<FileResponseDTO> fileResponseDTOList = this.fileGroupEntity.getFileList()
-                .stream().map(FileInfoEntity::toResponseDTO).collect(Collectors.toList());       
+                .stream().map(FileInfoEntity::toResponseDTO).toList();
 
         return CommunityResponseDTO.builder()
                 .id(this.id)
@@ -104,8 +108,18 @@ public class CommunityEntity {
                 .animal(this.animal)
                 .images(this.fileGroupEntity.getFileResponseDTOList())
                 .likesList(this.likesList)
+                .commentCount(this.commentCount)
                 .build();
     }
+
+    public CommunitySummaryResponseDTO toSummaryResponseDTO() {
+        return CommunitySummaryResponseDTO.builder()
+                .id(this.id)
+                .title(this.title)
+                .build();
+    }
+
+
     
     public void updateCommunity(String title, String content) {
         this.title = title;

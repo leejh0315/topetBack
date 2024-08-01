@@ -29,6 +29,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import topetBack.topetBack.community.domain.CommunityEntity;
+import topetBack.topetBack.community.domain.CommunityResponseDTO;
 import topetBack.topetBack.member.domain.Member;
 
 @Builder
@@ -88,14 +89,14 @@ public class CommentEntity {
     }
 
     public CommentResponseDTO toResponseDTO() {
-        List<CommentResponseDTO> childrenDTOs = new ArrayList<>();
+    	List<CommentResponseDTO> childrenDTOs = new ArrayList<>();
         for (CommentEntity child : children) {
             childrenDTOs.add(CommentResponseDTO.builder()
                     .id(child.id)
                     .createdTime(child.createdTime)
                     .updatedTime(child.updatedTime)
-                    .author(child.author)
-                    .community(null) // 자식 댓글은 community를 가지지 않도록 설정
+                    .author(child.author.toSummaryResponseDTO())
+                    .community(child.community.toSummaryResponseDTO()) // 자식 댓글은 community를 가지지 않도록 설정
                     .content(child.content)
                     .deleted(child.deleted)
                     .children(new ArrayList<>())
@@ -103,12 +104,13 @@ public class CommentEntity {
                     .build());
         }
 
+
         return CommentResponseDTO.builder()
                 .id(this.id)
                 .createdTime(this.createdTime)
                 .updatedTime(this.updatedTime)
-                .author(this.author)
-                .community(this.community)
+                .author(this.author.toSummaryResponseDTO())
+                .community(this.community.toSummaryResponseDTO())
                 .content(this.content)
                 .deleted(this.deleted)
                 .children(childrenDTOs)
