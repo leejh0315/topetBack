@@ -18,6 +18,8 @@ public interface CommentRepository extends JpaRepository<CommentEntity, Long>, C
 	@Transactional
     void deleteByCommunityId(Long communityId);
 	
+	long findByCommunityId(Long communityId);
+	
 	
 
 }

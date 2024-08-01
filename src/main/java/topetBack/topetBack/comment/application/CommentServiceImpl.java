@@ -48,10 +48,9 @@ public class CommentServiceImpl implements CommentService{
 	         CommentEntity parentComment = commentRepository.findById(commentRequestDTO.getParentId())
 	                 .orElseThrow(() -> new NotFoundException("해당 댓글을 찾을수 없습니다 : " + commentRequestDTO.getParentId()));
 	         commentEntity.updateParent(parentComment);
-	         commentEntity.updateCommunity(null); // 부모 댓글이 있는 경우 community를 null로 설정
-	     } else {
-	         commentEntity.updateCommunity(communityEntity);
 	     }
+	         commentEntity.updateCommunity(communityEntity);
+	   
 
 	     commentEntity.updateAuthor(member);
 

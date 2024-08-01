@@ -32,7 +32,6 @@ import static topetBack.topetBack.comment.domain.QCommentEntity.commentEntity;
 public class CommentRepositoryImpl implements CommentRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
-
     @Override
     public List<CommentResponseDTO> findByCommunityId(Long id) {
         List<CommentEntity> commentEntities = queryFactory.selectFrom(commentEntity)
@@ -49,20 +48,27 @@ public class CommentRepositoryImpl implements CommentRepositoryCustom {
             commentMap.put(dto.getId(), dto);
         }
 
+        // 자식 댓글을 부모 댓글의 children 리스트에 추가
         for (CommentEntity entity : commentEntities) {
             CommentResponseDTO dto = commentMap.get(entity.getId());
             if (dto.getParentId() != null && commentMap.containsKey(dto.getParentId())) {
                 CommentResponseDTO parentDto = commentMap.get(dto.getParentId());
-                parentDto.getChildren().add(dto);
+
+                // 중복 추가 방지: 자식 댓글이 이미 추가되어 있는지 확인
+                boolean alreadyExists = parentDto.getChildren().stream()
+                    .anyMatch(child -> child.getId().equals(dto.getId()));
+
+                if (!alreadyExists) {
+                    parentDto.getChildren().add(dto);
+                }
             }
         }
 
-        // 최상위 댓글만 반환
+        // 최상위 댓글만 반환, 중복 카운트 방지
         return commentMap.values().stream()
-                .filter(dto -> dto.getParentId() == null)
+                .filter(dto -> dto.getParentId() == null) // 부모 댓글이 없는 최상위 댓글만 반환
                 .collect(Collectors.toList());
     }
-
     @Override
     public Slice<CommentResponseDTO> findByAuthorId(Long id, Pageable pageable) {
         QCommentEntity c = QCommentEntity.commentEntity;
