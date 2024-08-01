@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import jakarta.transaction.Transactional;
 import topetBack.topetBack.comment.domain.CommentEntity;
+import topetBack.topetBack.comment.domain.CommentResponseDTO;
 import topetBack.topetBack.community.domain.CommunityEntity;
 
 
@@ -17,9 +18,6 @@ public interface CommentRepository extends JpaRepository<CommentEntity, Long>, C
 
 	@Transactional
     void deleteByCommunityId(Long communityId);
-	
-	long findByCommunityId(Long communityId);
-	
-	
+
 
 }
