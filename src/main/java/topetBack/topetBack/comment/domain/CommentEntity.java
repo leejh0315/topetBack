@@ -89,14 +89,14 @@ public class CommentEntity {
     }
 
     public CommentResponseDTO toResponseDTO() {
-        List<CommentResponseDTO> childrenDTOs = new ArrayList<>();
+    	List<CommentResponseDTO> childrenDTOs = new ArrayList<>();
         for (CommentEntity child : children) {
             childrenDTOs.add(CommentResponseDTO.builder()
                     .id(child.id)
                     .createdTime(child.createdTime)
                     .updatedTime(child.updatedTime)
-                    .author(child.author)
-                    .community(child.community) // 자식 댓글은 community를 가지지 않도록 설정
+                    .author(child.author.toSummaryResponseDTO())
+                    .community(child.community.toSummaryResponseDTO()) // 자식 댓글은 community를 가지지 않도록 설정
                     .content(child.content)
                     .deleted(child.deleted)
                     .children(new ArrayList<>())
