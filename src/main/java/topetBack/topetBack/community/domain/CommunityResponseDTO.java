@@ -26,5 +26,6 @@ public class CommunityResponseDTO {
     private List<FileResponseDTO> images;
     private List<CommentResponseDTO> comments;
     private List<Like> likesList;
+    private int commentCount;
 
 }

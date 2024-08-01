@@ -60,7 +60,7 @@ public class CommunityController {
 	            category = "궁금해요";
 	        } else {
 	            category = "정보공유";
-	        }
+	        }	
 
 	        System.out.println("페이지 : " + page + "사이즈 : " + size);
 

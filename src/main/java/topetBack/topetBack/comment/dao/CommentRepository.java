@@ -19,6 +19,8 @@ public interface CommentRepository extends JpaRepository<CommentEntity, Long>{
 	@Transactional
     void deleteByCommunityId(Long communityId);
 	
+	long findByCommunityId(Long communityId);
+	
 	
 
 }
