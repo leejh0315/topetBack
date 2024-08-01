@@ -35,7 +35,7 @@ public class CommentController {
 			CommentResponseDTO commentEntity = commentService.insert(id, commentRequestDTO);
 			
 	        return ResponseEntity.ok(commentEntity);
-		}
+	 }
 	 
 	 @GetMapping("/get/{id}")
 	 public ResponseEntity<List<CommentResponseDTO>> getCommentsByCommunityId(Model model, @PathVariable("id") Long id) {
