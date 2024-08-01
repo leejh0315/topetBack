@@ -23,6 +23,7 @@ public class ScheduleRequestDTO {
     private Boolean isComplete;
     private String color;
     private Member author;
+    private Member updateAuthor;
     private PetEntity animal;
     private LocalDateTime createdTime;
     private List<MultipartFile> images = new ArrayList<>();
@@ -42,6 +43,7 @@ public class ScheduleRequestDTO {
                 .author(this.author)
                 .animal(this.animal)
                 .createdTime(this.createdTime)
+                .updateAuthor(this.updateAuthor)
                 .fileGroupEntity(fileGroupEntity)
                 .profileSrc(this.profileSrc)
                 .build();

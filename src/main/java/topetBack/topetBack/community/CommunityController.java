@@ -60,8 +60,7 @@ public class CommunityController {
 	            category = "궁금해요";
 	        } else {
 	            category = "정보공유";
-	        }	
-
+	        }
 	        System.out.println("페이지 : " + page + "사이즈 : " + size);
 
 	        List<CommunityResponseDTO> communityList = communityService.getCommunityListByAnimalAndCategory(animal, category, page, size);
@@ -95,6 +94,7 @@ public class CommunityController {
     //사용자에 맞는 게시글 가져오기
     @GetMapping("/myCommunity/{id}")
     public ResponseEntity<List<CommunityResponseDTO>> getMyCommunity(@PathVariable("id") Long id){
+    	System.out.println("내게시글내놓거라");
     	List<CommunityResponseDTO> communityList = communityService.findByAuthorId(id);
     	return new ResponseEntity<>(communityList, HttpStatus.OK);
     }

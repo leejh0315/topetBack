@@ -10,5 +10,6 @@ import java.util.Optional;
 
 public interface MemberPetRepository extends JpaRepository<MemberPet, Long>, MemberPetRepositoryCustom{
 	List<MemberPet> findByMember(Member member);
+	
 }
 

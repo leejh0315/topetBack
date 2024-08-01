@@ -32,8 +32,9 @@ public class PetRequestDTO {
 	private String allergy;
 	private String health;
 	
-	private String UID;
+	private String uid;
 	private String profileSrc;
+	private String neutered;
 	
 	private List<MultipartFile> image;
 	
@@ -50,7 +51,8 @@ public class PetRequestDTO {
                 .weight(this.weight)
                 .allergy(this.allergy)
                 .health(this.health)
-                .UID(this.UID)
+                .uid(this.uid)
+                .neutered(this.neutered)
                 .fileGroupEntity(fileGroupEntity)
                 .profileSrc(this.profileSrc)
                 .build();

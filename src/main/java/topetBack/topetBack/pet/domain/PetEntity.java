@@ -39,6 +39,10 @@ public class PetEntity {
 	@Column(nullable = false)
 	@Comment("반려동물 성별")
 	private String gender;
+	
+	@Column(nullable = true)
+	@Comment("반려동물 중성화")
+	private String neutered;
 
 	@Column(nullable = false)
 	@Comment("반려동물 이름")
@@ -60,9 +64,9 @@ public class PetEntity {
 	@Comment("건강상태")
 	private String health;
 
-	@Column(nullable = false)
+	@Column(nullable = false, unique = true)
 	@Comment("고유코드")
-	private String UID;
+	private String uid;
 
 	@Column(nullable = true)
 	@Comment("사진경로")
@@ -84,8 +88,9 @@ public class PetEntity {
 				.weight(this.weight)
 				.allergy(this.allergy)
 				.health(this.health)
+				.neutered(this.neutered)
 				.profileSrc(this.profileSrc)
-				.uid(this.UID)
+				.uid(this.uid)
 				.build();
 	}
 

@@ -34,6 +34,7 @@ public class FileServiceImpl implements FileService {
 		List<FileInfoEntity> fileInfoEntityList = new ArrayList<>();
 
 		String baseDir = fileBasePath + middlePath;
+		
 		if (photos != null) {
 			for (MultipartFile photo : photos) {
 				try {

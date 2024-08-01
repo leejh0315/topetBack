@@ -23,6 +23,7 @@ public class ScheduleResponseDTO {
 	private Member author;
 	private PetEntity animal;
 	private Member updateAuthor;
+	
 	private LocalDateTime createdTime;
 	private LocalDateTime updatedTime;
 	private List<FileResponseDTO> images;
