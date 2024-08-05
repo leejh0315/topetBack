@@ -6,6 +6,8 @@ import java.util.List;
 import org.apache.ibatis.javassist.NotFoundException;
 import org.springframework.stereotype.Service;
 
+import com.querydsl.core.types.Predicate;
+
 import topetBack.topetBack.community.domain.CommunityRequestDTO;
 import topetBack.topetBack.community.domain.CommunityResponseDTO;
 import topetBack.topetBack.member.domain.Member;
@@ -20,7 +22,7 @@ public interface  CommunityService {
 
 	CommunityResponseDTO getCommunityById(long communityId);
 
-	List<CommunityResponseDTO> getCommunityListByAnimalAndCategory(String animal, String category, int page, int size);
+	public List<CommunityResponseDTO> getCommunityListByAnimalAndCategory(String animal, String category, int page, int size , Predicate predicate);
 	
 	CommunityResponseDTO updateCommunity(Long id, CommunityRequestDTO communityRequestDTO) throws NotFoundException;
 	
@@ -32,6 +34,5 @@ public interface  CommunityService {
 	
 	List<CommunityResponseDTO> getCommunityListByAnimalAndCategoryAndLike(String animal , String category , int page , int size);
 	
-	List<CommunityResponseDTO> searchCommunityTitleAndContent(String title , String content , int page , int size);
 	
 }

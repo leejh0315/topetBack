@@ -3,6 +3,7 @@ package topetBack.topetBack.community;
 import java.util.List;
 
 import org.apache.ibatis.javassist.NotFoundException;
+import org.springframework.data.querydsl.binding.QuerydslPredicate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,9 +17,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.querydsl.core.types.Predicate;
+
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import topetBack.topetBack.community.application.CommunityService;
+import topetBack.topetBack.community.domain.CommunityEntity;
 import topetBack.topetBack.community.domain.CommunityRequestDTO;
 import topetBack.topetBack.community.domain.CommunityResponseDTO;
 import topetBack.topetBack.config.SessionManager;
@@ -48,11 +52,12 @@ public class CommunityController {
 
 	// 게시판 리스트
 	 @GetMapping("/{animal}/{category}")
-	    public ResponseEntity<List<CommunityResponseDTO>> boardList(Model model, 
+	    public ResponseEntity<List<CommunityResponseDTO>> boardList(@QuerydslPredicate(root = CommunityEntity.class) Predicate predicate,
 	                                        @PathVariable("animal") String animal, 
 	                                        @PathVariable("category") String category,
 	                                        @RequestParam(name = "page") int page, 
-	                                        @RequestParam(name = "size") int size) {
+	                                        @RequestParam(name = "size") int size
+	                                        ) {
 
 	        if ("freedomAndDaily".equals(category)) {
 	            category = "자유/일상";
@@ -61,9 +66,8 @@ public class CommunityController {
 	        } else {
 	            category = "정보공유";
 	        }
-	        System.out.println("페이지 : " + page + "사이즈 : " + size);
 
-	        List<CommunityResponseDTO> communityList = communityService.getCommunityListByAnimalAndCategory(animal, category, page, size);
+	        List<CommunityResponseDTO> communityList = communityService.getCommunityListByAnimalAndCategory(animal, category, page, size , predicate);
 
 	        return new ResponseEntity<>(communityList, HttpStatus.OK);
 	    }		
@@ -128,14 +132,4 @@ public class CommunityController {
         return new ResponseEntity<>(communityList, HttpStatus.OK);
     }	
     
-    //검색
-    @GetMapping("/search")
-    public ResponseEntity<List<CommunityResponseDTO>> communitySearch(@PathVariable("title") String title , 
-    																  @PathVariable("content") String contnet,
-    																  @PathVariable(name = "page") int page,
-    																  @PathVariable(name = "size") int size){
-    	
-    	List<CommunityResponseDTO> communityList = communityService.searchCommunityTitleAndContent(title, contnet, page, size);
-    	return new ResponseEntity<>(communityList , HttpStatus.OK);
-    }
 }

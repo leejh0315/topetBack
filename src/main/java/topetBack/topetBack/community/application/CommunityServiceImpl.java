@@ -8,8 +8,12 @@ import java.util.stream.Collectors;
 import org.apache.ibatis.javassist.NotFoundException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.querydsl.core.types.Predicate;
+import com.querydsl.core.types.dsl.BooleanExpression;
 
 import topetBack.topetBack.comment.dao.CommentRepository;
 import topetBack.topetBack.comment.domain.CommentRequestDTO;
@@ -17,8 +21,10 @@ import topetBack.topetBack.community.dao.CommunityRepository;
 import topetBack.topetBack.community.domain.CommunityEntity;
 import topetBack.topetBack.community.domain.CommunityRequestDTO;
 import topetBack.topetBack.community.domain.CommunityResponseDTO;
+import topetBack.topetBack.community.domain.QCommunityEntity;
 import topetBack.topetBack.file.application.FileService;
 import topetBack.topetBack.file.domain.FileCategory;
+import topetBack.topetBack.file.domain.FileGroupEntity;
 
 @Service
 public class CommunityServiceImpl implements CommunityService {
@@ -37,8 +43,16 @@ public class CommunityServiceImpl implements CommunityService {
     @Transactional
     public CommunityResponseDTO createCommunity(CommunityRequestDTO communityRequestDTO) throws IOException {
         CommunityEntity communityEntity = communityRequestDTO.toCommunityEntity();
+        
+        if (communityRequestDTO.getImages() != null && !communityRequestDTO.getImages().isEmpty()) {
+            FileGroupEntity fileGroupEntity = fileService.uploadPhoto(
+                communityRequestDTO.getImages(),
+                communityEntity.getFileGroupEntity(),
+                FileCategory.COMMUNITY.getPath()
+            );
 
-        fileService.uploadPhoto(communityRequestDTO.getImages(), communityEntity.getFileGroupEntity(), FileCategory.COMMUNITY.getPath());
+        }
+        
 
         CommunityEntity result = communityRepository.save(communityEntity);
 
@@ -59,9 +73,18 @@ public class CommunityServiceImpl implements CommunityService {
                 .collect(Collectors.toList());
     }
 
-    public List<CommunityResponseDTO> getCommunityListByAnimalAndCategory(String animal, String category, int page, int size) {
-        PageRequest pageable = PageRequest.of(page, size);
-        Slice<CommunityEntity> communityEntitySlice = communityRepository.findByAnimalAndCategoryOrderByCreatedTimeDesc(animal, category, pageable);
+    public List<CommunityResponseDTO> getCommunityListByAnimalAndCategory(String animal, String category, int page, int size , Predicate predicate) {
+        PageRequest pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdTime"));
+        // 기본 필터링 추가
+        BooleanExpression baseFilter = QCommunityEntity.communityEntity.animal.eq(animal)
+                .and(QCommunityEntity.communityEntity.category.eq(category));
+
+        // baseFilter와 전달된 predicate를 결합
+        Predicate combinedPredicate = baseFilter.and(predicate);
+        
+        System.out.println("검색어 확인" + combinedPredicate);
+        // 동적 쿼리와 페이징을 함께 사용
+        Slice<CommunityEntity> communityEntitySlice = communityRepository.findAll(combinedPredicate, pageable);
         return communityEntitySlice.stream()
                 .map(CommunityEntity::toResponseDTO)
                 .collect(Collectors.toList());
@@ -114,14 +137,7 @@ public class CommunityServiceImpl implements CommunityService {
                 .collect(Collectors.toList());
 	}
 	
-	@Transactional
-	public List<CommunityResponseDTO> searchCommunityTitleAndContent(String title , String content , int page , int size){
-		PageRequest pageable = PageRequest.of(page, size);
-		Slice<CommunityEntity> communityEntityList = communityRepository.findByTitleAndContent(title , content , pageable);
-		return communityEntityList.stream()
-                .map(CommunityEntity::toResponseDTO)
-                .collect(Collectors.toList());
-	}
+	
 	
 	
 

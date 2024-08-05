@@ -31,7 +31,7 @@ public class LikeController {
     private final SessionManager sessionManager;
 	
 	@PostMapping("/{id}")
-    public ResponseEntity<CommunityResponseDTO> likePost(@PathVariable("id") Long id, HttpServletRequest req) throws JsonMappingException, JsonProcessingException {
+    public	 ResponseEntity<CommunityResponseDTO> likePost(@PathVariable("id") Long id, HttpServletRequest req) throws JsonMappingException, JsonProcessingException {
 		SessionMember member = sessionManager.getSessionObject(req);
         return likeService.likePost(id, member.toMember());
     }

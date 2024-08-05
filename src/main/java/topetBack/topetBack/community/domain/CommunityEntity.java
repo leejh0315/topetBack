@@ -64,7 +64,6 @@ public class CommunityEntity {
     private String title;
 
 	@Column(nullable = false)
-    @Lob
     @Comment("내용")
     private String content;
 
