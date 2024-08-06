@@ -36,11 +36,9 @@ public class PetRequestDTO {
 	private String profileSrc;
 	private String neutered;
 	
-	private List<MultipartFile> image;
 	
 	
 	public PetEntity toPetEntity() {
-		FileGroupEntity fileGroupEntity = new FileGroupEntity();
 		
 		return PetEntity.builder()
                 .type(this.type)
@@ -53,7 +51,6 @@ public class PetRequestDTO {
                 .health(this.health)
                 .uid(this.uid)
                 .neutered(this.neutered)
-                .fileGroupEntity(fileGroupEntity)
                 .profileSrc(this.profileSrc)
                 .build();
 	}

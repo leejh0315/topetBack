@@ -101,16 +101,10 @@ public class ScheduleEntity {
 
 	@Column(nullable = true)
 	@Comment("사진경로")
-	private String profileSrc;
-    
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "file_group_id")
-    private FileGroupEntity fileGroupEntity;
+	private String photoSrc;
     
     public ScheduleResponseDTO toResponseDTO() {
-        List<FileResponseDTO> fileResponseDTOList = this.fileGroupEntity.getFileList()
-                .stream().map(FileInfoEntity::toResponseDTO).collect(Collectors.toList());
-        
+
         return ScheduleResponseDTO.builder()
                 .id(this.id)
                 .startDate(this.startDate)
@@ -124,9 +118,7 @@ public class ScheduleEntity {
                 .updateAuthor(this.updateAuthor)
                 .createdTime(this.createdTime)
                 .updatedTime(this.updatedTime)
-                .profileSrc(this.profileSrc)
-                
-                .images(this.fileGroupEntity.getFileResponseDTOList())
+                .photoSrc(this.photoSrc)
                 .build();
     }
 }

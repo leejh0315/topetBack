@@ -26,8 +26,7 @@ public class ScheduleRequestDTO {
     private Member updateAuthor;
     private PetEntity animal;
     private LocalDateTime createdTime;
-    private List<MultipartFile> images = new ArrayList<>();
-	private String profileSrc;
+	private String photoSrc;
 	
     public ScheduleEntity toScheduleEntity() {
         FileGroupEntity fileGroupEntity = new FileGroupEntity();
@@ -44,8 +43,7 @@ public class ScheduleRequestDTO {
                 .animal(this.animal)
                 .createdTime(this.createdTime)
                 .updateAuthor(this.updateAuthor)
-                .fileGroupEntity(fileGroupEntity)
-                .profileSrc(this.profileSrc)
+                .photoSrc(this.photoSrc)
                 .build();
     }
 }

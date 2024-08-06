@@ -1,5 +1,6 @@
 package topetBack.topetBack.config;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -19,6 +20,7 @@ import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import topetBack.topetBack.member.domain.Member;
 import topetBack.topetBack.member.domain.SessionMember;
+import topetBack.topetBack.pet.domain.PetEntity;
 import topetBack.topetBack.pet.domain.PetResponseDTO;
 
 @Component
@@ -54,12 +56,29 @@ public class SessionManager {
 			String sessionId = sessionCookie.getValue();
 			System.out.println("sessionManager에서 쿠키를 통해 찾은 sessionId : " + sessionId);
 			SessionMember sessionData = (SessionMember) redisTemplate.opsForValue().get(sessionId);
-			sessionData.getPets().add(petResponseDTO);
+			if(sessionData.getPets() != null) {
+				sessionData.getPets().add(petResponseDTO);
+			}else{
+				List<PetResponseDTO> petList = new ArrayList<PetResponseDTO>();
+				petList.add(petResponseDTO);
+				sessionData.setPets(petList);
+			}
 			redisTemplate.opsForValue().set(sessionCookie.getValue(), sessionData);
 			redisTemplate.expire(sessionCookie.getValue(), 30, TimeUnit.MINUTES); // 예시: 세션 만료 시간 설정 (30분)
 		}
 	}
 	
+	@Transactional
+	public void refreshMember(Member member, HttpServletResponse resp, HttpServletRequest req) {
+		log.info("session refresh");
+		Cookie sessionCookie = findCookie(req, SESSION_COOKIE_NAME);
+		if(sessionCookie != null) {
+			String sessionId = sessionCookie.getValue();
+			SessionMember sessionMember = member.toSessionMember();
+			redisTemplate.opsForValue().set(sessionCookie.getValue(), sessionMember);
+			redisTemplate.expire(sessionCookie.getValue(), 30, TimeUnit.MINUTES); 
+		}
+	}
 
 	@Transactional
 	public SessionMember getSessionObject(HttpServletRequest req) throws JsonMappingException, JsonProcessingException {

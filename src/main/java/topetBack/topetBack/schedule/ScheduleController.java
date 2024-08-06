@@ -75,11 +75,7 @@ public class ScheduleController {
     	scheduleRequestDTO.setAuthor(sessionMember);
     	scheduleRequestDTO.setAnimal(pet);   	
     	
-    	if(image!=null) {
-    		List<MultipartFile> images = new ArrayList<>();
-        	images.add(image);
-        	scheduleRequestDTO.setImages(images);
-    	}
+    	
     	System.out.println("schedulePost요청왔음");
     	
     	System.out.println("scheduleRequestDTO :  "+ scheduleRequestDTO);
@@ -93,7 +89,7 @@ public class ScheduleController {
         log.info("/api/schedule/post 진입");
         log.info("입력한 내용은 {}", scheduleRequestDTO);
         
-        ScheduleResponseDTO scheduleResponseDTO = scheduleService.createSchedule(scheduleRequestDTO);
+        ScheduleResponseDTO scheduleResponseDTO = scheduleService.createSchedule(scheduleRequestDTO , image);
         
 //        return "success"; 
 		return ResponseEntity.ok(scheduleResponseDTO);
@@ -164,7 +160,7 @@ public class ScheduleController {
     	scheduleRequestDTO.setUpdateAuthor(sessionMember);
     	
     	
-    	ScheduleResponseDTO scheduleResponseDTO = scheduleService.createSchedule(scheduleRequestDTO);
+    	ScheduleResponseDTO scheduleResponseDTO = scheduleService.createSchedule(scheduleRequestDTO, image);
     	
     	
     	return ResponseEntity.ok(scheduleResponseDTO);

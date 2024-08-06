@@ -2,11 +2,11 @@ package topetBack.topetBack.schedule.application;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.persistence.EntityManager;
 import topetBack.topetBack.file.application.FileService;
@@ -30,12 +30,11 @@ public class ScheduleServiceImpl implements ScheduleService{
         this.entityManager = entityManager;
     }
     @Transactional
-    public ScheduleResponseDTO createSchedule(ScheduleRequestDTO scheduleRequestDTO) throws IOException{
-    	System.out.println("scheduleRequestDTO.getImages().size() : " +  scheduleRequestDTO.getImages().size() );
-    	System.out.println(scheduleRequestDTO.getImages());
-    	if(scheduleRequestDTO.getImages().size()>0) {
-    		FileGroupEntity fileGroupEntity = fileService.uploadPhoto(scheduleRequestDTO.getImages(), scheduleRequestDTO.toScheduleEntity().getFileGroupEntity(), FileCategory.SCHEDULE.getPath());
-    		scheduleRequestDTO.setProfileSrc(fileGroupEntity.getFileList().get(0).getFilePath());
+    public ScheduleResponseDTO createSchedule(ScheduleRequestDTO scheduleRequestDTO, MultipartFile image) throws IOException{
+    	
+    	if(image != null) {
+    		String photoSrc = fileService.uploadOnePhoto(image, FileCategory.SCHEDULE.getPath());
+    		scheduleRequestDTO.setPhotoSrc(photoSrc);
     	}
     	
     	ScheduleEntity scheduleEntity = scheduleRequestDTO.toScheduleEntity();

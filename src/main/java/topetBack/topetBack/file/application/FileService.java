@@ -12,5 +12,5 @@ import java.util.List;
 public interface FileService {
 
 	FileGroupEntity uploadPhoto(List<MultipartFile> photos, FileGroupEntity fileGroupEntity, String middlePath) throws IOException;
-	
+	String uploadOnePhoto(MultipartFile image , String middlePath) throws IOException ;
 }

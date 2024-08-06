@@ -41,6 +41,7 @@ dependencies {
     implementation 'org.springframework.session:spring-session-data-redis'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
+	implementation 'commons-fileupload:commons-fileupload:1.4' //파일업로드
     // Querydsl 추가
     implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
     implementation "com.querydsl:querydsl-codegen:5.0.0" // QueryDSL 코드 생성

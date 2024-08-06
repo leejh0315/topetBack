@@ -8,11 +8,11 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import lombok.extern.slf4j.Slf4j;
 import topetBack.topetBack.file.application.FileService;
 import topetBack.topetBack.file.domain.FileCategory;
-import topetBack.topetBack.file.domain.FileGroupEntity;
 import topetBack.topetBack.member.dao.MemberPetRepository;
 import topetBack.topetBack.member.domain.Member;
 import topetBack.topetBack.member.domain.MemberPet;
@@ -39,16 +39,15 @@ public class PetServiceImpl implements PetService{
 	
     @Override
     @Transactional
-    public PetResponseDTO createPet(PetRequestDTO petRequestDTO) throws IOException {
+    public PetResponseDTO createPet(PetRequestDTO petRequestDTO, MultipartFile image) throws IOException {
 
     	String uid = createKey();
     	petRequestDTO.setUid(uid);
     	
-        if(petRequestDTO.getImage() != null) {
-        	FileGroupEntity fileGroupEntity = fileService.uploadPhoto(petRequestDTO.getImage(), petRequestDTO.toPetEntity().getFileGroupEntity(), FileCategory.PET.getPath());
-        	petRequestDTO.setProfileSrc(fileGroupEntity.getFileList().get(0).getFilePath());
+        if(image != null) {
+        	String profileSrc = fileService.uploadOnePhoto(image, FileCategory.PET.getPath());
+        	petRequestDTO.setProfileSrc(profileSrc);
         }
-        
         PetEntity result = petRepository.save(petRequestDTO.toPetEntity());
         if(petRequestDTO.getMember() != null){
             MemberPet memberPet = new MemberPet(petRequestDTO.getMember(), result);
@@ -56,7 +55,6 @@ public class PetServiceImpl implements PetService{
         }
         log.info("petEntity : " + result.toString());
         return result.toResponseDTO();
-        
     }
     
 
