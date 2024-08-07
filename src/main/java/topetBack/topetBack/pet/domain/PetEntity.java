@@ -12,8 +12,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import topetBack.topetBack.file.domain.FileGroupEntity;
-import topetBack.topetBack.member.domain.MemberPet;
-import topetBack.topetBack.member.domain.MemberResponseDTO;
+
 
 @Getter
 @Builder

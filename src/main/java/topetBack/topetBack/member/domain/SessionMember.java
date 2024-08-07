@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import topetBack.topetBack.pet.domain.PetRequestDTO;
 import topetBack.topetBack.pet.domain.PetResponseDTO;
 
 @Data

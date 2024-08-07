@@ -1,15 +1,13 @@
 package topetBack.topetBack.member.domain;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+
 
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import topetBack.topetBack.pet.domain.PetEntity;
-import topetBack.topetBack.pet.domain.PetResponseDTO;
+
 
 @Getter
 @Entity // Member 라는 객체와 DB 테이블을 매핑합니다. JPA가 관리합니다.

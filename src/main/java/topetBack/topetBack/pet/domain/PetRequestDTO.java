@@ -11,7 +11,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import topetBack.topetBack.file.domain.FileGroupEntity;
 import topetBack.topetBack.member.domain.Member;
-import topetBack.topetBack.member.domain.MemberPet;
 
 
 @AllArgsConstructor

@@ -28,8 +28,6 @@ public class QCommunityEntity extends EntityPathBase<CommunityEntity> {
 
     public final StringPath category = createString("category");
 
-    public final NumberPath<Integer> commentCount = createNumber("commentCount", Integer.class);
-
     public final StringPath content = createString("content");
 
     public final DateTimePath<java.time.LocalDateTime> createdTime = createDateTime("createdTime", java.time.LocalDateTime.class);
@@ -39,8 +37,6 @@ public class QCommunityEntity extends EntityPathBase<CommunityEntity> {
     public final StringPath hashtag = createString("hashtag");
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
-
-    public final ListPath<topetBack.topetBack.like.domain.Like, topetBack.topetBack.like.domain.QLike> likesList = this.<topetBack.topetBack.like.domain.Like, topetBack.topetBack.like.domain.QLike>createList("likesList", topetBack.topetBack.like.domain.Like.class, topetBack.topetBack.like.domain.QLike.class, PathInits.DIRECT2);
 
     public final StringPath title = createString("title");
 

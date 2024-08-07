@@ -21,7 +21,7 @@ import topetBack.topetBack.community.domain.QCommunityEntity;
 import topetBack.topetBack.member.domain.Member;
 
 @Repository
-public interface CommunityRepository extends JpaRepository<CommunityEntity, Long> , QuerydslPredicateExecutor<CommunityEntity> ,QuerydslBinderCustomizer<QCommunityEntity>{
+public interface CommunityRepository extends JpaRepository<CommunityEntity, Long> , QuerydslPredicateExecutor<CommunityEntity> ,QuerydslBinderCustomizer<QCommunityEntity> , CommunityRepositoryCustom{
 
 
 	List<CommunityEntity> findByAnimalAndCategory(String animal, String category);
@@ -53,6 +53,7 @@ public interface CommunityRepository extends JpaRepository<CommunityEntity, Long
         bindings.bind(root.title).first(StringExpression::containsIgnoreCase); // like '%%'
         // % 넣는 것을 수동으로 정하고 싶을 때에는 like를 사용하고, 그렇지 않을 경우에는 contains를 사용
         bindings.bind(root.content).first(StringExpression::containsIgnoreCase);
+        bindings.bind(root.hashtag).first(StringExpression::containsIgnoreCase);
 
     }
 }

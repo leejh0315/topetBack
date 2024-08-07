@@ -2,10 +2,8 @@ package topetBack.topetBack.member.dao;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import topetBack.topetBack.member.domain.Member;
-import topetBack.topetBack.member.domain.MemberPet;
 import topetBack.topetBack.member.domain.QMember;
 import topetBack.topetBack.member.domain.QMemberPet;
-import topetBack.topetBack.pet.domain.PetEntity;
 
 import java.util.List;
 

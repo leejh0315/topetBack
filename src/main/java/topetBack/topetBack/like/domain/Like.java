@@ -19,10 +19,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import topetBack.topetBack.community.domain.CommunityEntity;
-import topetBack.topetBack.file.domain.FileInfoEntity;
-import topetBack.topetBack.file.domain.FileResponseDTO;
 import topetBack.topetBack.member.domain.Member;
-import topetBack.topetBack.schedule.domain.ScheduleResponseDTO;
 
 @Getter
 @Entity // Member 라는 객체와 DB 테이블을 매핑합니다. JPA가 관리합니다.
