@@ -1,19 +1,5 @@
 package topetBack.topetBack.file.application;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
-import com.google.gson.JsonObject;
-
-import topetBack.topetBack.file.dao.FileRepository;
-import topetBack.topetBack.file.domain.FileInfoEntity;
-import topetBack.topetBack.shorts.domain.ShortsRequestDTO;
-import topetBack.topetBack.file.domain.FileCategory;
-import topetBack.topetBack.file.domain.FileGroupEntity;
-import topetBack.topetBack.file.domain.FileInfoEntity;
-
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -23,16 +9,39 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.PutObjectRequest;
+
+import topetBack.topetBack.file.dao.FileRepository;
+import topetBack.topetBack.file.domain.FileCategory;
+import topetBack.topetBack.file.domain.FileGroupEntity;
+import topetBack.topetBack.file.domain.FileInfoEntity;
+import topetBack.topetBack.shorts.domain.ShortsRequestDTO;
+
 @Service
 public class FileServiceImpl implements FileService {
 
 	private final FileRepository fileRepository;
+	private final AmazonS3Client amazonS3Client;
 
 	@Value("${toPet.fileStorePath}")
 	private String fileBasePath;
+	
+    @Value("${spring.s3.bucket}")
+    private String bucketName;
+    
+    @Value("${spring.s3.accessKey}")
+    private String keyName;
 
-	public FileServiceImpl(FileRepository fileRepository) {
+	public FileServiceImpl(FileRepository fileRepository, AmazonS3Client amazonS3Client) {
 		this.fileRepository = fileRepository;
+		this.amazonS3Client = amazonS3Client;
 	}
 
 	@Override
@@ -108,16 +117,26 @@ public class FileServiceImpl implements FileService {
 			String extension = fileName.substring(fileName.lastIndexOf("."));
 			String newFileName = UUID.randomUUID() + extension;
 			Path filePath = Paths.get(baseDir, newFileName);
+			 String  uploadFileUrl = "";
 			try {
-				Files.createDirectories(filePath.getParent());
-				Files.copy(multipartFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING); // 업로드된 파일의
-																											// InputStream
-																											// 얻기
+//				Files.createDirectories(filePath.getParent());
+//				Files.copy(multipartFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING); // 업로드된 파일의
+//																	
+				// InputStream
+			       ObjectMetadata objectMetadata = new ObjectMetadata();
+		            objectMetadata.setContentLength(multipartFile.getSize());
+		            objectMetadata.setContentType(multipartFile.getContentType());
+
+				 amazonS3Client.putObject(
+	                        new PutObjectRequest(bucketName, keyName, multipartFile.getInputStream(), objectMetadata)
+	                                .withCannedAcl(CannedAccessControlList.PublicRead));
+
+	              uploadFileUrl = amazonS3Client.getUrl(bucketName, keyName).toString(); // S3에서 파일 URL을 가져옴// 얻기
 			} catch (IOException e) {
 				throw new IOException();
 			}
 
-			return filePath.toString();
+			return uploadFileUrl.toString();
 		} else {
 			return null;
 		}

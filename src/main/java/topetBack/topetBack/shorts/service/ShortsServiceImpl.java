@@ -2,6 +2,7 @@ package topetBack.topetBack.shorts.service;
 
 import java.io.IOException;
 
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
@@ -29,5 +30,7 @@ public class ShortsServiceImpl implements ShortsService{
 		
 		return shortsEntity.toResponseDTO();	
 	}
+	
+	
 
 }

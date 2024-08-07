@@ -1,8 +1,10 @@
 package topetBack.topetBack.shorts;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,8 +12,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import ch.qos.logback.core.model.Model;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import topetBack.topetBack.community.domain.CommunityResponseDTO;
 import topetBack.topetBack.config.SessionManager;
 import topetBack.topetBack.member.domain.Member;
 import topetBack.topetBack.shorts.domain.ShortsRequestDTO;
@@ -36,5 +40,7 @@ public class ShortsController {
 		ShortsResponseDTO shortsResponseDTO =  shortsService.shortsSave(shortsRequestDTO);
 		return ResponseEntity.ok(shortsResponseDTO);
 	}
+	
+	
 	
 }

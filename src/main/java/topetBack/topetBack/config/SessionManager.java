@@ -140,8 +140,5 @@ public class SessionManager {
 		}
 		return null;
 	}
-	public SessionMember updateMember(Member updatedMember, Cookie cookie) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	
 }
