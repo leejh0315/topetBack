@@ -1,6 +1,5 @@
 package topetBack.topetBack.file.application;
 
-import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -40,7 +39,7 @@ public class FileServiceImpl implements FileService {
 
 		List<FileInfoEntity> fileInfoEntityList = new ArrayList<>();
 		String baseDir = fileBasePath + middlePath;
-		
+
 		if (photos != null) {
 			for (MultipartFile photo : photos) {
 				try {
@@ -101,24 +100,26 @@ public class FileServiceImpl implements FileService {
 
 	@Override
 	public String uploadPhoto(MultipartFile multipartFile, String middlePath) throws IOException {
-        if(multipartFile != null) {
-        String baseDir = fileBasePath + middlePath;
-        String fileName = multipartFile.getOriginalFilename();
-        String extension = fileName.substring(fileName.lastIndexOf("."));
-        String newFileName = UUID.randomUUID() + extension;
-        Path filePath = Paths.get(baseDir, newFileName);
-        try {
-        	Files.createDirectories(filePath.getParent());
-    		Files.copy(multipartFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);    // 업로드된 파일의 InputStream 얻기
-        } catch (IOException e) {
-            throw new IOException();
-        }
-        
-		return filePath.toString();
-        }else {
-        	return null;
-        }
-        
+		if (multipartFile != null) {
+			String baseDir = fileBasePath + middlePath;
+			String fileName = multipartFile.getOriginalFilename();
+			String extension = fileName.substring(fileName.lastIndexOf("."));
+			String newFileName = UUID.randomUUID() + extension;
+			Path filePath = Paths.get(baseDir, newFileName);
+			try {
+				Files.createDirectories(filePath.getParent());
+				Files.copy(multipartFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING); // 업로드된 파일의
+																											// InputStream
+																											// 얻기
+			} catch (IOException e) {
+				throw new IOException();
+			}
+
+			return filePath.toString();
+		} else {
+			return null;
+		}
+
 	}
 
 }
