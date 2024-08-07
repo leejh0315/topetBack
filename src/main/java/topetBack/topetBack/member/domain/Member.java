@@ -1,8 +1,7 @@
 package topetBack.topetBack.member.domain;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+
 
 import jakarta.persistence.*;
 import lombok.Builder;

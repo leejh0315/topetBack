@@ -110,7 +110,9 @@ public class CommunityServiceImpl implements CommunityService {
 
         String title = Optional.ofNullable(communityRequestDTO.getTitle()).orElse(communityEntity.getTitle());
         String content = Optional.ofNullable(communityRequestDTO.getContent()).orElse(communityEntity.getContent());
-        communityEntity.updateCommunity(title, content);
+        String hashtag = Optional.ofNullable(communityRequestDTO.getHashtag()).orElse(communityEntity.getHashtag());
+
+        communityEntity.updateCommunity(title, content , hashtag);
 
         CommunityEntity updatedCommunity = communityRepository.save(communityEntity);
 
@@ -126,16 +128,18 @@ public class CommunityServiceImpl implements CommunityService {
 	}
 	
 	@Transactional
-	public List<CommunityResponseDTO> getCommunityListByAnimalAndCategoryAndLike(String animal , String category , int page , int size){
+	public List<CommunityResponseDTO> getCommunityListByAnimalAndCategoryAndLike(String animal, String category, int page, int size, Predicate predicate) {
         PageRequest pageable = PageRequest.of(page, size);
-        Slice<CommunityEntity> communityEntityList = communityRepository.findAllOrderByLikesCountDesc(animal , category , pageable);
+
+        List<CommunityEntity> communityEntityList = communityRepository.findAllByAnimalAndCategoryWithLikesSorted(animal, category, predicate, pageable);
+
         return communityEntityList.stream()
                 .map(CommunityEntity::toResponseDTO)
                 .collect(Collectors.toList());
-	}
-	
+    }
 	@Transactional
 	public List<CommunityResponseDTO> getCommunityListByAnimalAndLike(String animal){
+		
 		List<CommunityEntity> communityEntityList = communityRepository.findAnimalOrderByLikesCountDesc(animal);
         return communityEntityList.stream()
                 .map(CommunityEntity::toResponseDTO)

@@ -106,7 +106,7 @@ public class CommunityController {
     
     //인기순
     @GetMapping("/{animal}/{category}/sortLike")
-    public ResponseEntity<List<CommunityResponseDTO>> boardLikeList(Model model, 
+    public ResponseEntity<List<CommunityResponseDTO>> boardLikeList(@QuerydslPredicate(root = CommunityEntity.class) Predicate predicate,
                                             @PathVariable("animal") String animal, 
                                             @PathVariable("category") String category,
                                             @RequestParam(name = "page") int page, 
@@ -120,7 +120,7 @@ public class CommunityController {
             category = "정보공유";
         }
 
-        List<CommunityResponseDTO> communityList = communityService.getCommunityListByAnimalAndCategoryAndLike(animal, category , page , size);
+        List<CommunityResponseDTO> communityList = communityService.getCommunityListByAnimalAndCategoryAndLike(animal, category , page , size , predicate);
 
         return new ResponseEntity<>(communityList, HttpStatus.OK);
     }
