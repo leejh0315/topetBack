@@ -7,6 +7,8 @@ import org.springframework.web.multipart.MultipartFile;
 import com.google.gson.JsonObject;
 
 import topetBack.topetBack.file.dao.FileRepository;
+import topetBack.topetBack.file.domain.FileInfoEntity;
+import topetBack.topetBack.shorts.domain.ShortsRequestDTO;
 import topetBack.topetBack.file.domain.FileCategory;
 import topetBack.topetBack.file.domain.FileGroupEntity;
 import topetBack.topetBack.file.domain.FileInfoEntity;
@@ -39,7 +41,7 @@ public class FileServiceImpl implements FileService {
 
 		List<FileInfoEntity> fileInfoEntityList = new ArrayList<>();
 		String baseDir = fileBasePath + middlePath;
-		
+
 		if (photos != null) {
 			for (MultipartFile photo : photos) {
 				try {
@@ -100,24 +102,68 @@ public class FileServiceImpl implements FileService {
 
 	@Override
 	public String uploadPhoto(MultipartFile multipartFile, String middlePath) throws IOException {
-        if(multipartFile != null) {
-        String baseDir = fileBasePath + middlePath;
-        String fileName = multipartFile.getOriginalFilename();
-        String extension = fileName.substring(fileName.lastIndexOf("."));
-        String newFileName = UUID.randomUUID() + extension;
-        Path filePath = Paths.get(baseDir, newFileName);
-        try {
-        	Files.createDirectories(filePath.getParent());
-    		Files.copy(multipartFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);    // 업로드된 파일의 InputStream 얻기
-        } catch (IOException e) {
-            throw new IOException();
-        }
-        
-		return filePath.toString();
-        }else {
-        	return null;
-        }
-        
+		if (multipartFile != null) {
+			String baseDir = fileBasePath + middlePath;
+			String fileName = multipartFile.getOriginalFilename();
+			String extension = fileName.substring(fileName.lastIndexOf("."));
+			String newFileName = UUID.randomUUID() + extension;
+			Path filePath = Paths.get(baseDir, newFileName);
+			try {
+				Files.createDirectories(filePath.getParent());
+				Files.copy(multipartFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING); // 업로드된 파일의
+																											// InputStream
+																											// 얻기
+			} catch (IOException e) {
+				throw new IOException();
+			}
+
+			return filePath.toString();
+		} else {
+			return null;
+		}
+
 	}
+
+	public String[] uploadShorts(ShortsRequestDTO shortsRequestDTO, String middlePath) throws IOException {
+	    String baseDir = fileBasePath + middlePath;
+
+	    String fileName = shortsRequestDTO.getThumbnailPhoto().getOriginalFilename();
+	    String extension = fileName.substring(fileName.lastIndexOf("."));
+	    String newFileName = UUID.randomUUID() + extension;
+	    Path filePath = Paths.get(baseDir, newFileName);
+
+	    String videoBaseDir = baseDir + "/video/";
+	    String videoFileName = shortsRequestDTO.getVideo().getOriginalFilename();
+	    String videoExtension = videoFileName.substring(videoFileName.lastIndexOf("."));
+	    String newVideoFileName = UUID.randomUUID() + videoExtension;
+	    Path videoFilePath = Paths.get(videoBaseDir, newVideoFileName);
+
+	    try {
+	        // Create directories for thumbnail
+	        Files.createDirectories(filePath.getParent());
+	        Files.copy(shortsRequestDTO.getThumbnailPhoto().getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+
+	        // Create directories for video
+	        Files.createDirectories(videoFilePath.getParent());
+	        Files.copy(shortsRequestDTO.getVideo().getInputStream(), videoFilePath, StandardCopyOption.REPLACE_EXISTING); // 수정된 부분
+
+	    } catch (IOException e) {
+	        // 예외 발생 시 로그를 남기고, 예외 메시지를 추가하여 더 유용한 정보를 제공합니다.
+	        throw new IOException("파일 업로드 중 오류 발생: " + e.getMessage(), e);
+	    }
+
+	    String[] filePaths = {filePath.toString(), videoFilePath.toString()};
+	    return filePaths;
+	}
+
+	@Override
+	public FileGroupEntity uploadPhoto(List<MultipartFile> photos, FileGroupEntity fileGroupEntity, String middlePath)
+			throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	
+
 
 }
