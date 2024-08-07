@@ -1,6 +1,9 @@
 package topetBack.topetBack.shorts.service;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -28,6 +31,33 @@ public class ShortsServiceImpl implements ShortsService{
 		ShortsEntity shortsEntity = shortsRepository.save(shortsRequestDTO.toShortsEntity());
 		
 		return shortsEntity.toResponseDTO();	
+	}
+
+	@Override
+	public List<ShortsResponseDTO> getAll() {
+		List<ShortsEntity> allShorts = shortsRepository.findAll();
+		return allShorts.stream()
+                .map(ShortsEntity::toResponseDTO)
+                .collect(Collectors.toList());
+		
+	}
+
+	@Override
+	public ShortsResponseDTO getShortsDetail(Long id) {
+		Optional<ShortsEntity> shortsEntity = shortsRepository.findById(id);
+		if(shortsEntity.isEmpty()) {
+			return null;
+		}else {
+			return shortsEntity.get().toResponseDTO();
+		}
+		
+	}
+
+	@Override
+	public Long getRandomShorts() {
+		Long randomShorts = shortsRepository.findRandomShort();
+		
+		return randomShorts;
 	}
 
 }
