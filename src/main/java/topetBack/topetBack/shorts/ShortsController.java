@@ -13,8 +13,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import ch.qos.logback.core.model.Model;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import topetBack.topetBack.community.domain.CommunityResponseDTO;
 import topetBack.topetBack.config.SessionManager;
 import topetBack.topetBack.member.domain.Member;
 import topetBack.topetBack.shorts.domain.ShortsRequestDTO;
@@ -57,5 +59,6 @@ public class ShortsController {
 		Long shortsResponseDTO = shortsService.getRandomShorts();
 		return ResponseEntity.ok(shortsResponseDTO);
 	}
+	
 	
 }
