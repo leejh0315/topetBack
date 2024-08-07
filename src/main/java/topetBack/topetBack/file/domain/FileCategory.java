@@ -6,7 +6,8 @@ import lombok.Getter;
 public enum FileCategory {
     COMMUNITY("community/"),
     SCHEDULE("schedule/"),
-	PET("pet/");
+	PET("pet/"),
+	MEMBER("member/");
 	
     private final String path;
 

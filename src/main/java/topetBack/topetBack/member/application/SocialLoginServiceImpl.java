@@ -32,6 +32,9 @@ public class SocialLoginServiceImpl implements SocialLoginService{
 
 	@Value("${toPet.back.address}")
 	private String backAddress;
+
+	@Value("${toPet.kakao.clientId}")
+	private String kakaoClientId;
 	
 	@Override
 	public Map<String, Object> kakaoLogin(String code) throws Exception {
@@ -44,7 +47,7 @@ public class SocialLoginServiceImpl implements SocialLoginService{
 		headers.add("Content-Type", "application/x-www-form-urlencoded;charset=utf-8");
 		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 		params.add("grant_type", "authorization_code");
-		params.add("client_id", "3494afad7131fc9645ae9b08ed0dfda6");
+		params.add("client_id", kakaoClientId);
 		params.add("redirect_uri", backAddress+"api/member/kakaoLogin/OAuth");
 		params.add("code", code);
 		
@@ -88,7 +91,7 @@ public class SocialLoginServiceImpl implements SocialLoginService{
 		
 		MultiValueMap<String, String> paramsMemberInfo = new LinkedMultiValueMap<>();
 		paramsMemberInfo.add("grant_type", "authorization_code");
-		paramsMemberInfo.add("client_id", "3494afad7131fc9645ae9b08ed0dfda6");
+		paramsMemberInfo.add("client_id", kakaoClientId);
 		paramsMemberInfo.add("redirect_uri", backAddress+"api/member/kakaoLogin/OAuth");
 		paramsMemberInfo.add("code", code);
 		

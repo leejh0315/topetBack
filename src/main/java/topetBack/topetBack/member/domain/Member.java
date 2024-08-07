@@ -7,7 +7,9 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
+import topetBack.topetBack.file.domain.FileGroupEntity;
+import topetBack.topetBack.pet.domain.PetEntity;
+import topetBack.topetBack.pet.domain.PetResponseDTO;
 
 @Getter
 @Entity // Member 라는 객체와 DB 테이블을 매핑합니다. JPA가 관리합니다.
@@ -28,11 +30,12 @@ public class Member implements Serializable {
 
 
     @Builder
-    public Member(Long id, String socialId, String email, String nickname) {
+    public Member(Long id, String socialId, String email, String nickname, String profileSrc, FileGroupEntity fileGroupEntity) {
         this.id = id;
         this.socialId = socialId;
         this.email = email;
         this.name = nickname;
+        this.profileSrc = profileSrc;
     }
 	
 	public SessionMember toSessionMember() {
@@ -52,8 +55,6 @@ public class Member implements Serializable {
 				.email(this.email)
 				.name(this.name)
 				.build();
-				
-		
 	}
 
 	public MemberSummaryResponseDTO toSummaryResponseDTO() {
@@ -63,6 +64,13 @@ public class Member implements Serializable {
 				.src(this.profileSrc)
 				.build();
 	}
-	
+
+	public void updateMember(MemberRequestDTO memberRequestDTO){
+		if(memberRequestDTO.getName() != null){
+			this.name = memberRequestDTO.getName();
+		}
+	}
+
+
 
 }

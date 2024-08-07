@@ -71,10 +71,6 @@ public class PetEntity {
 	@Comment("사진경로")
 	private String profileSrc;
 
-	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "file_group_id")
-	private FileGroupEntity fileGroupEntity;
-
 
 	public PetResponseDTO toResponseDTO() {
 		return PetResponseDTO.builder()
