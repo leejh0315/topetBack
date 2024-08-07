@@ -34,11 +34,11 @@ public class QScheduleEntity extends EntityPathBase<ScheduleEntity> {
 
     public final DateTimePath<java.time.LocalDateTime> endDate = createDateTime("endDate", java.time.LocalDateTime.class);
 
+    public final topetBack.topetBack.file.domain.QFileGroupEntity fileGroupEntity;
+
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public final BooleanPath isComplete = createBoolean("isComplete");
-
-    public final StringPath photoSrc = createString("photoSrc");
 
     public final DateTimePath<java.time.LocalDateTime> startDate = createDateTime("startDate", java.time.LocalDateTime.class);
 
@@ -66,8 +66,9 @@ public class QScheduleEntity extends EntityPathBase<ScheduleEntity> {
 
     public QScheduleEntity(Class<? extends ScheduleEntity> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.animal = inits.isInitialized("animal") ? new topetBack.topetBack.pet.domain.QPetEntity(forProperty("animal")) : null;
+        this.animal = inits.isInitialized("animal") ? new topetBack.topetBack.pet.domain.QPetEntity(forProperty("animal"), inits.get("animal")) : null;
         this.author = inits.isInitialized("author") ? new topetBack.topetBack.member.domain.QMember(forProperty("author")) : null;
+        this.fileGroupEntity = inits.isInitialized("fileGroupEntity") ? new topetBack.topetBack.file.domain.QFileGroupEntity(forProperty("fileGroupEntity")) : null;
         this.updateAuthor = inits.isInitialized("updateAuthor") ? new topetBack.topetBack.member.domain.QMember(forProperty("updateAuthor")) : null;
     }
 

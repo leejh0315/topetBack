@@ -1,5 +1,6 @@
-package topetBack.topetBack.community.domain;
+package topetBack.topetBack.member.domain;
 
+import jakarta.servlet.http.Cookie;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,7 +10,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CommunitySummaryResponseDTO {
+public class MemberRequestDTO {
 	private Long id;
-	private String title;
+	private String name;
+
+	Cookie cookie;
 }

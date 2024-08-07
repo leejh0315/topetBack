@@ -6,14 +6,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import jakarta.servlet.http.Cookie;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -24,13 +21,12 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import topetBack.topetBack.config.CookieUtils;
 import topetBack.topetBack.config.SessionManager;
 import topetBack.topetBack.file.domain.FileGroupEntity;
 import topetBack.topetBack.member.application.MemberService;
 import topetBack.topetBack.member.application.SocialLoginService;
-import topetBack.topetBack.member.domain.Member;
-import topetBack.topetBack.member.domain.MemberPet;
-import topetBack.topetBack.member.domain.SessionMember;
+import topetBack.topetBack.member.domain.*;
 import topetBack.topetBack.pet.application.PetService;
 import topetBack.topetBack.pet.domain.PetResponseDTO;
 import topetBack.topetBack.schedule.application.ScheduleService;
@@ -110,6 +106,17 @@ public class MemberController {
 		Member newMember = memberService.userInfoRegister(member, profileName, image);
 		sessionManager.refreshMember(newMember, resp, req);
 		return ResponseEntity.ok(member);
+	}
+
+	@PatchMapping("/update")
+	public ResponseEntity<SessionMember> updateMember(HttpServletRequest req, MemberRequestDTO memberRequestDTO) throws JsonMappingException, JsonProcessingException {
+
+		Cookie cookie = CookieUtils.findCookieFromRequest(req);
+		memberRequestDTO.setCookie(cookie);
+
+		SessionMember updatedSessionMember = memberService.updateMember(memberRequestDTO);
+
+		return ResponseEntity.ok(updatedSessionMember);
 	}
 
 	@GetMapping("/home")

@@ -45,7 +45,7 @@ public class PetServiceImpl implements PetService{
     	petRequestDTO.setUid(uid);
     	
         if(image != null) {
-        	String profileSrc = fileService.uploadOnePhoto(image, FileCategory.PET.getPath());
+        	String profileSrc = fileService.uploadPhoto(image, FileCategory.PET.getPath());
         	petRequestDTO.setProfileSrc(profileSrc);
         }
         PetEntity result = petRepository.save(petRequestDTO.toPetEntity());

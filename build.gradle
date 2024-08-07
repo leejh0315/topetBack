@@ -40,6 +40,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     implementation 'org.springframework.session:spring-session-data-redis'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'com.squareup.okhttp3:okhttp:4.9.1' // 추가된 의존성
 
 	implementation 'commons-fileupload:commons-fileupload:1.4' //파일업로드
     // Querydsl 추가
@@ -84,9 +85,5 @@ compileQuerydsl.doFirst {
 }
 tasks.named('compileQuerydsl').configure {
     enabled = false
-}
-
-tasks.named('compileJava') {
-    dependsOn tasks.named('compileQuerydsl')
 }
 

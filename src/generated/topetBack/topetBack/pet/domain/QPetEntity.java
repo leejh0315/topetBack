@@ -7,6 +7,7 @@ import com.querydsl.core.types.dsl.*;
 import com.querydsl.core.types.PathMetadata;
 import javax.annotation.processing.Generated;
 import com.querydsl.core.types.Path;
+import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
@@ -17,11 +18,15 @@ public class QPetEntity extends EntityPathBase<PetEntity> {
 
     private static final long serialVersionUID = -445351219L;
 
+    private static final PathInits INITS = PathInits.DIRECT2;
+
     public static final QPetEntity petEntity = new QPetEntity("petEntity");
 
     public final StringPath allergy = createString("allergy");
 
     public final StringPath birth = createString("birth");
+
+    public final topetBack.topetBack.file.domain.QFileGroupEntity fileGroupEntity;
 
     public final StringPath gender = createString("gender");
 
@@ -33,26 +38,33 @@ public class QPetEntity extends EntityPathBase<PetEntity> {
 
     public final StringPath name = createString("name");
 
-    public final StringPath neutered = createString("neutered");
-
     public final StringPath profileSrc = createString("profileSrc");
 
     public final StringPath type = createString("type");
 
-    public final StringPath uid = createString("uid");
+    public final StringPath UID = createString("UID");
 
     public final StringPath weight = createString("weight");
 
     public QPetEntity(String variable) {
-        super(PetEntity.class, forVariable(variable));
+        this(PetEntity.class, forVariable(variable), INITS);
     }
 
     public QPetEntity(Path<? extends PetEntity> path) {
-        super(path.getType(), path.getMetadata());
+        this(path.getType(), path.getMetadata(), PathInits.getFor(path.getMetadata(), INITS));
     }
 
     public QPetEntity(PathMetadata metadata) {
-        super(PetEntity.class, metadata);
+        this(metadata, PathInits.getFor(metadata, INITS));
+    }
+
+    public QPetEntity(PathMetadata metadata, PathInits inits) {
+        this(PetEntity.class, metadata, inits);
+    }
+
+    public QPetEntity(Class<? extends PetEntity> type, PathMetadata metadata, PathInits inits) {
+        super(type, metadata, inits);
+        this.fileGroupEntity = inits.isInitialized("fileGroupEntity") ? new topetBack.topetBack.file.domain.QFileGroupEntity(forProperty("fileGroupEntity")) : null;
     }
 
 }

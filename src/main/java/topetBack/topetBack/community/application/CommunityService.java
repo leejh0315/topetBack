@@ -32,7 +32,7 @@ public interface  CommunityService {
 	
 	List<CommunityResponseDTO> getCommunityListByAnimalAndLike(String animal);
 	
-	List<CommunityResponseDTO> getCommunityListByAnimalAndCategoryAndLike(String animal , String category , int page , int size);
+	List<CommunityResponseDTO> getCommunityListByAnimalAndCategoryAndLike(String animal , String category , int page , int size ,Predicate predicate);
 	
 	
 }

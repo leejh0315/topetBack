@@ -1,8 +1,7 @@
 package topetBack.topetBack.member.domain;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+
 
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -65,6 +64,13 @@ public class Member implements Serializable {
 				.src(this.profileSrc)
 				.build();
 	}
-	
+
+	public void updateMember(MemberRequestDTO memberRequestDTO){
+		if(memberRequestDTO.getName() != null){
+			this.name = memberRequestDTO.getName();
+		}
+	}
+
+
 
 }

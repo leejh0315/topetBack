@@ -1,6 +1,7 @@
 package topetBack.topetBack.community.application;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -15,8 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
 
+import org.springframework.web.multipart.MultipartFile;
 import topetBack.topetBack.comment.dao.CommentRepository;
-import topetBack.topetBack.comment.domain.CommentRequestDTO;
 import topetBack.topetBack.community.dao.CommunityRepository;
 import topetBack.topetBack.community.domain.CommunityEntity;
 import topetBack.topetBack.community.domain.CommunityRequestDTO;
@@ -25,6 +26,7 @@ import topetBack.topetBack.community.domain.QCommunityEntity;
 import topetBack.topetBack.file.application.FileService;
 import topetBack.topetBack.file.domain.FileCategory;
 import topetBack.topetBack.file.domain.FileGroupEntity;
+import topetBack.topetBack.file.domain.FileInfoEntity;
 
 @Service
 public class CommunityServiceImpl implements CommunityService {
@@ -43,16 +45,19 @@ public class CommunityServiceImpl implements CommunityService {
     @Transactional
     public CommunityResponseDTO createCommunity(CommunityRequestDTO communityRequestDTO) throws IOException {
         CommunityEntity communityEntity = communityRequestDTO.toCommunityEntity();
-        
-        if (communityRequestDTO.getImages() != null && !communityRequestDTO.getImages().isEmpty()) {
-            FileGroupEntity fileGroupEntity = fileService.uploadPhoto(
-                communityRequestDTO.getImages(),
-                communityEntity.getFileGroupEntity(),
-                FileCategory.COMMUNITY.getPath()
-            );
 
+        if (communityRequestDTO.getImages() != null && !communityRequestDTO.getImages().isEmpty()) {
+            FileGroupEntity fileGroupEntity = communityEntity.getFileGroupEntity();
+            List<FileInfoEntity> fileInfoList = new ArrayList<>();
+
+            for (MultipartFile file : communityRequestDTO.getImages()) {
+                FileInfoEntity fileInfo = fileService.storeFile(file, FileCategory.COMMUNITY);
+                fileInfo.setFileGroupEntity(fileGroupEntity);
+                fileInfoList.add(fileInfo);
+            }
+
+            fileGroupEntity.setFileList(fileInfoList);
         }
-        
 
         CommunityEntity result = communityRepository.save(communityEntity);
 
@@ -105,7 +110,9 @@ public class CommunityServiceImpl implements CommunityService {
 
         String title = Optional.ofNullable(communityRequestDTO.getTitle()).orElse(communityEntity.getTitle());
         String content = Optional.ofNullable(communityRequestDTO.getContent()).orElse(communityEntity.getContent());
-        communityEntity.updateCommunity(title, content);
+        String hashtag = Optional.ofNullable(communityRequestDTO.getHashtag()).orElse(communityEntity.getHashtag());
+
+        communityEntity.updateCommunity(title, content , hashtag);
 
         CommunityEntity updatedCommunity = communityRepository.save(communityEntity);
 
@@ -121,16 +128,18 @@ public class CommunityServiceImpl implements CommunityService {
 	}
 	
 	@Transactional
-	public List<CommunityResponseDTO> getCommunityListByAnimalAndCategoryAndLike(String animal , String category , int page , int size){
+	public List<CommunityResponseDTO> getCommunityListByAnimalAndCategoryAndLike(String animal, String category, int page, int size, Predicate predicate) {
         PageRequest pageable = PageRequest.of(page, size);
-        Slice<CommunityEntity> communityEntityList = communityRepository.findAllOrderByLikesCountDesc(animal , category , pageable);
+
+        List<CommunityEntity> communityEntityList = communityRepository.findAllByAnimalAndCategoryWithLikesSorted(animal, category, predicate, pageable);
+
         return communityEntityList.stream()
                 .map(CommunityEntity::toResponseDTO)
                 .collect(Collectors.toList());
-	}
-	
+    }
 	@Transactional
 	public List<CommunityResponseDTO> getCommunityListByAnimalAndLike(String animal){
+		
 		List<CommunityEntity> communityEntityList = communityRepository.findAnimalOrderByLikesCountDesc(animal);
         return communityEntityList.stream()
                 .map(CommunityEntity::toResponseDTO)

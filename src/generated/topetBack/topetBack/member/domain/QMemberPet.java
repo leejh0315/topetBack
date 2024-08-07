@@ -47,7 +47,7 @@ public class QMemberPet extends EntityPathBase<MemberPet> {
     public QMemberPet(Class<? extends MemberPet> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.member = inits.isInitialized("member") ? new QMember(forProperty("member")) : null;
-        this.pet = inits.isInitialized("pet") ? new topetBack.topetBack.pet.domain.QPetEntity(forProperty("pet")) : null;
+        this.pet = inits.isInitialized("pet") ? new topetBack.topetBack.pet.domain.QPetEntity(forProperty("pet"), inits.get("pet")) : null;
     }
 
 }
