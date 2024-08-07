@@ -125,7 +125,7 @@ public class CommunityController {
         return new ResponseEntity<>(communityList, HttpStatus.OK);
     }
     
-  //동물통합 인기순
+    //동물통합 인기순
     @GetMapping("/{animal}/sortLike")
     public ResponseEntity<List<CommunityResponseDTO>> boardLikeAnimalList(Model model, @PathVariable("animal") String animal) {
         List<CommunityResponseDTO> communityList = communityService.getCommunityListByAnimalAndLike(animal);
