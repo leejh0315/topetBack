@@ -156,5 +156,14 @@ public class FileServiceImpl implements FileService {
 	    return filePaths;
 	}
 
+	@Override
+	public FileGroupEntity uploadPhoto(List<MultipartFile> photos, FileGroupEntity fileGroupEntity, String middlePath)
+			throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	
+
 
 }

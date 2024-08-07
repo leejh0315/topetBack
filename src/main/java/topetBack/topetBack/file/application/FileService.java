@@ -20,10 +20,10 @@ import topetBack.topetBack.shorts.domain.ShortsRequestDTO;
 public interface FileService {
 
 	FileGroupEntity uploadPhoto(List<MultipartFile> photos, FileGroupEntity fileGroupEntity, String middlePath) throws IOException;
-	String uploadOnePhoto(MultipartFile image , String middlePath) throws IOException ;
+	FileGroupEntity uploadPhotos(List<MultipartFile> photos, FileGroupEntity fileGroupEntity, String middlePath) throws IOException;
+	
 	String[] uploadShorts(ShortsRequestDTO shortsRequestDTO, String middlePath) throws IOException;
 	
-	FileGroupEntity uploadPhotos(List<MultipartFile> photos, FileGroupEntity fileGroupEntity, String middlePath) throws IOException;
 	FileInfoEntity storeFile(MultipartFile file, FileCategory fileCategory) throws IOException;
 	String uploadPhoto(MultipartFile image , String middlePath) throws IOException ;
 }

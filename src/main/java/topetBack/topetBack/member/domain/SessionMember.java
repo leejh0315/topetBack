@@ -22,7 +22,7 @@ public class SessionMember {
 	private String name;
 	private String email;
 	private String profileSrc;
-	private List<MultipartFile> images;
+	
 	private List<PetResponseDTO> pets = new ArrayList<>();
 	
     public Member toMember() {
