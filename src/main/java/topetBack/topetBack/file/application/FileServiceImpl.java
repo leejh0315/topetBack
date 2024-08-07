@@ -8,8 +8,9 @@ import org.springframework.web.multipart.MultipartFile;
 import com.google.gson.JsonObject;
 
 import topetBack.topetBack.file.dao.FileRepository;
-import topetBack.topetBack.file.domain.FileInfoEntity;
+import topetBack.topetBack.file.domain.FileCategory;
 import topetBack.topetBack.file.domain.FileGroupEntity;
+import topetBack.topetBack.file.domain.FileInfoEntity;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,7 +35,7 @@ public class FileServiceImpl implements FileService {
 	}
 
 	@Override
-	public FileGroupEntity uploadPhoto(List<MultipartFile> photos, FileGroupEntity fileGroupEntity, String middlePath)
+	public FileGroupEntity uploadPhotos(List<MultipartFile> photos, FileGroupEntity fileGroupEntity, String middlePath)
 			throws IOException {
 
 		List<FileInfoEntity> fileInfoEntityList = new ArrayList<>();
@@ -74,7 +75,32 @@ public class FileServiceImpl implements FileService {
 	}
 
 	@Override
-	public String uploadOnePhoto(MultipartFile multipartFile, String middlePath) throws IOException {
+	public FileInfoEntity storeFile(MultipartFile file, FileCategory fileCategory) throws IOException {
+
+		String baseDir = fileBasePath + fileCategory.getPath();
+		String fileName = file.getOriginalFilename();
+		String extension = fileName.substring(fileName.lastIndexOf("."));
+		String newFileName = UUID.randomUUID() + extension;
+		Path filePath = Paths.get(baseDir, newFileName);
+		try {
+			Files.createDirectories(filePath.getParent());
+			Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+		} catch (IOException e) {
+			throw new IOException();
+		}
+
+		FileInfoEntity fileInfoEntity = new FileInfoEntity();
+		fileInfoEntity.setOrigFileName(fileName);
+		fileInfoEntity.setFilePath(filePath.toString());
+		fileInfoEntity.setFileSize(file.getSize());
+		fileInfoEntity.setNewFileName(newFileName);
+
+		return fileInfoEntity;
+
+	}
+
+	@Override
+	public String uploadPhoto(MultipartFile multipartFile, String middlePath) throws IOException {
         if(multipartFile != null) {
         String baseDir = fileBasePath + middlePath;
         String fileName = multipartFile.getOriginalFilename();

@@ -65,6 +65,13 @@ public class Member implements Serializable {
 				.src(this.profileSrc)
 				.build();
 	}
-	
+
+	public void updateMember(MemberRequestDTO memberRequestDTO){
+		if(memberRequestDTO.getName() != null){
+			this.name = memberRequestDTO.getName();
+		}
+	}
+
+
 
 }

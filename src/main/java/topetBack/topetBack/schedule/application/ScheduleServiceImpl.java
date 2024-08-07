@@ -11,7 +11,6 @@ import org.springframework.web.multipart.MultipartFile;
 import jakarta.persistence.EntityManager;
 import topetBack.topetBack.file.application.FileService;
 import topetBack.topetBack.file.domain.FileCategory;
-import topetBack.topetBack.file.domain.FileGroupEntity;
 import topetBack.topetBack.schedule.dao.ScheduleRepository;
 import topetBack.topetBack.schedule.domain.ScheduleEntity;
 import topetBack.topetBack.schedule.domain.ScheduleRequestDTO;
@@ -33,7 +32,7 @@ public class ScheduleServiceImpl implements ScheduleService{
     public ScheduleResponseDTO createSchedule(ScheduleRequestDTO scheduleRequestDTO, MultipartFile image) throws IOException{
     	
     	if(image != null) {
-    		String photoSrc = fileService.uploadOnePhoto(image, FileCategory.SCHEDULE.getPath());
+    		String photoSrc = fileService.uploadPhoto(image, FileCategory.SCHEDULE.getPath());
     		scheduleRequestDTO.setPhotoSrc(photoSrc);
     	}
     	
