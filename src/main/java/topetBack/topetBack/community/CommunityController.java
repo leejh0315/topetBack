@@ -3,6 +3,7 @@ package topetBack.topetBack.community;
 import java.util.List;
 
 import org.apache.ibatis.javassist.NotFoundException;
+import org.hibernate.internal.build.AllowSysOut;
 import org.springframework.data.querydsl.binding.QuerydslPredicate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -58,7 +59,9 @@ public class CommunityController {
 	                                        @RequestParam(name = "page") int page, 
 	                                        @RequestParam(name = "size") int size
 	                                        ) {
-
+		 	System.out.println("***************************************************************************************************************");
+		 	System.out.println("getMappin 실행 시작 ");
+		 	System.out.println("***************************************************************************************************************");
 	        if ("freedomAndDaily".equals(category)) {
 	            category = "자유/일상";
 	        } else if ("curious".equals(category)) {
@@ -69,6 +72,11 @@ public class CommunityController {
 
 	        List<CommunityResponseDTO> communityList = communityService.getCommunityListByAnimalAndCategory(animal, category, page, size , predicate);
 
+		 	System.out.println("***************************************************************************************************************");
+		 	System.out.println("getMappin 실행 종료 ");
+		 	System.out.println("***************************************************************************************************************");
+	        
+	        
 	        return new ResponseEntity<>(communityList, HttpStatus.OK);
 	    }		
 
