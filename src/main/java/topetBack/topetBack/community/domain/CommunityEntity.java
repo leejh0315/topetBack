@@ -4,21 +4,11 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.persistence.*;
 import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -28,6 +18,7 @@ import topetBack.topetBack.file.domain.FileGroupEntity;
 import topetBack.topetBack.file.domain.FileInfoEntity;
 import topetBack.topetBack.file.domain.FileResponseDTO;
 import topetBack.topetBack.like.domain.Like;
+import topetBack.topetBack.like.domain.LikeResponseDTO;
 import topetBack.topetBack.member.domain.Member;
 
 @Getter
@@ -52,7 +43,7 @@ public class CommunityEntity {
     private LocalDateTime updatedTime;
 
     @Comment("작성자")
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Member author;
 
 	@Column(nullable = false)
@@ -75,11 +66,11 @@ public class CommunityEntity {
     @Comment("반려 동물")
     private String animal;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "file_group_id")
     private FileGroupEntity fileGroupEntity;
 
-    @OneToMany(mappedBy = "community", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "community", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     private List<Like> likesList = new ArrayList<>();
     
     //댓글 개수
@@ -88,21 +79,21 @@ public class CommunityEntity {
     
     public CommunityResponseDTO toResponseDTO() {
 
-        List<FileResponseDTO> fileResponseDTOList = this.fileGroupEntity.getFileList()
-                .stream().map(FileInfoEntity::toResponseDTO).toList();
+//        List<FileResponseDTO> fileResponseDTOList = this.fileGroupEntity.getFileList()
+//                .stream().map(FileInfoEntity::toResponseDTO).toList();
+
 
         return CommunityResponseDTO.builder()
                 .id(this.id)
                 .createdTime(this.createdTime)
                 .updatedTime(this.updatedTime)
-                .author(this.author)
+                .author(this.author.toSummaryResponseDTO())
                 .title(this.title)
                 .content(this.content)
                 .hashtag(this.hashtag)
                 .category(this.category)
                 .animal(this.animal)
                 .images(this.fileGroupEntity.getFileResponseDTOList())
-                .likesList(this.likesList)
                 .commentCount(this.commentCount)
                 .build();
     }

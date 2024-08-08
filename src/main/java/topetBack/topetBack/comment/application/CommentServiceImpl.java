@@ -13,6 +13,7 @@ import topetBack.topetBack.comment.dao.CommentRepository;
 import topetBack.topetBack.comment.domain.CommentEntity;
 import topetBack.topetBack.comment.domain.CommentRequestDTO;
 import topetBack.topetBack.comment.domain.CommentResponseDTO;
+import topetBack.topetBack.comment.domain.MyCommentResponseDTO;
 import topetBack.topetBack.community.dao.CommunityRepository;
 import topetBack.topetBack.community.domain.CommunityEntity;
 import topetBack.topetBack.member.dao.MemberRepository;
@@ -61,14 +62,14 @@ public class CommentServiceImpl implements CommentService{
 
 	public List<CommentResponseDTO> getCommentsByCommunityId(Long communityId, int page, int size) {
 		PageRequest pageable = PageRequest.of(page, size);
-		Slice<CommentResponseDTO> comments = commentRepository.findByCommunityId(communityId, pageable);
-		return comments.stream().collect(Collectors.toList());
+		Slice<CommentEntity> comments = commentRepository.findByCommunityId(communityId, pageable);
+		return comments.stream().map(CommentEntity::toResponseDTO).collect(Collectors.toList());
 	 }
 
-	public List<CommentResponseDTO> getCommentsByAuthorId(Long authorId, int page, int size) {
+	public List<MyCommentResponseDTO> getCommentsByAuthorId(Long authorId, int page, int size) {
 		PageRequest pageable = PageRequest.of(page, size);
-		Slice<CommentResponseDTO> commentResponseDTOSlice = commentRepository.findByAuthorId(authorId, pageable);
-        return commentResponseDTOSlice.stream().collect(Collectors.toList());
+		Slice<CommentEntity> commentResponseDTOSlice = commentRepository.findByAuthorId(authorId, pageable);
+		return commentResponseDTOSlice.stream().map(CommentEntity::toMyCommentResponseDTO).collect(Collectors.toList());
 	}
 
 	@Transactional

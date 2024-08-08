@@ -58,11 +58,11 @@ public class CommentEntity {
     private boolean deleted;
 
     @Comment("작성자")
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Member author;
 
     @Comment("게시판")
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private CommunityEntity community;
 
     @Column(nullable = false)
@@ -76,7 +76,7 @@ public class CommentEntity {
     @JsonBackReference
     private CommentEntity parent;
 
-    @OneToMany(mappedBy = "parent", orphanRemoval = true)
+    @OneToMany(mappedBy = "parent", orphanRemoval = true, fetch = FetchType.LAZY)
     @JsonManagedReference
     private List<CommentEntity> children = new ArrayList<>();
     
@@ -96,22 +96,29 @@ public class CommentEntity {
                     .createdTime(child.createdTime)
                     .updatedTime(child.updatedTime)
                     .author(child.author.toSummaryResponseDTO())
-                    .community(child.community.toSummaryResponseDTO()) // 자식 댓글은 community를 가지지 않도록 설정
                     .content(child.content)
-                    .children(new ArrayList<>())
                     .parentId(this.id)
                     .build());
         }
-
 
         return CommentResponseDTO.builder()
                 .id(this.id)
                 .createdTime(this.createdTime)
                 .updatedTime(this.updatedTime)
                 .author(this.author.toSummaryResponseDTO())
-                .community(this.community.toSummaryResponseDTO())
                 .content(this.content)
                 .children(childrenDTOs)
+                .parentId(this.parent != null ? this.parent.getId() : null)
+                .build();
+    }
+
+    public MyCommentResponseDTO toMyCommentResponseDTO() {
+        return MyCommentResponseDTO.builder()
+                .id(this.id)
+                .createdTime(this.createdTime)
+                .updatedTime(this.updatedTime)
+                .community(this.community.toSummaryResponseDTO())
+                .content(this.content)
                 .parentId(this.parent != null ? this.parent.getId() : null)
                 .build();
     }

@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import topetBack.topetBack.comment.application.CommentService;
 import topetBack.topetBack.comment.domain.CommentRequestDTO;
 import topetBack.topetBack.comment.domain.CommentResponseDTO;
+import topetBack.topetBack.comment.domain.MyCommentResponseDTO;
 import topetBack.topetBack.config.SessionManager;
 import topetBack.topetBack.member.domain.SessionMember;
 
@@ -47,21 +48,21 @@ public class CommentController {
 	 }
 
 	 @GetMapping("/myComment")
-	 public ResponseEntity<List<CommentResponseDTO>> getCommentsByAuthorId(HttpServletRequest request,
+	 public ResponseEntity<List<MyCommentResponseDTO>> getCommentsByAuthorId(HttpServletRequest request,
 																		   @RequestParam(name = "page") int page,
 																		   @RequestParam(name = "size") int size) throws JsonProcessingException {
 		 SessionMember member = sessionManager.getSessionObject(request);
-		 List<CommentResponseDTO> comments = commentService.getCommentsByAuthorId(member.getId(), page, size);
+		 List<MyCommentResponseDTO> comments = commentService.getCommentsByAuthorId(member.getId(), page, size);
 
 		 return ResponseEntity.ok(comments);
 	 }
 
 	@GetMapping("/author/{id}")
-	public ResponseEntity<List<CommentResponseDTO>> getCommentsByAuthorId(@PathVariable("id") Long id,
-																		  @RequestParam(name = "page") int page,
-																		  @RequestParam(name = "size") int size)  {
+	public ResponseEntity<List<MyCommentResponseDTO>> getCommentsByAuthorId(@PathVariable("id") Long id,
+																			@RequestParam(name = "page") int page,
+																			@RequestParam(name = "size") int size)  {
 
-		List<CommentResponseDTO> comments = commentService.getCommentsByAuthorId(id, page, size);
+		List<MyCommentResponseDTO> comments = commentService.getCommentsByAuthorId(id, page, size);
 		return ResponseEntity.ok(comments);
 	}
 	 

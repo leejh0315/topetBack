@@ -9,6 +9,7 @@ import topetBack.topetBack.file.domain.FileResponseDTO;
 import topetBack.topetBack.like.domain.Like;
 import topetBack.topetBack.like.domain.LikeResponseDTO;
 import topetBack.topetBack.member.domain.Member;
+import topetBack.topetBack.member.domain.MemberSummaryResponseDTO;
 
 
 @Data
@@ -20,14 +21,14 @@ public class CommunityResponseDTO {
 	private LocalDateTime createdTime;
 	private LocalDateTime updatedTime;
 	private String title;
-	private Member author;
+	private MemberSummaryResponseDTO author;
 	private String content;
 	private String hashtag;
 	private String category;
 	private String animal;
     private List<FileResponseDTO> images;
     private List<CommentResponseDTO> comments;
-    private List<Like> likesList;
+    private List<LikeResponseDTO> likesList;
     private int commentCount;
 
 }

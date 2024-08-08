@@ -3,18 +3,11 @@ package topetBack.topetBack.like.domain;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import jakarta.persistence.*;
 import org.hibernate.annotations.Comment;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,11 +23,11 @@ public class Like {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author_id", nullable = false)
     private Member author;
 	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "community_id", nullable = false)
     @JsonIgnore
     private CommunityEntity community;
@@ -62,11 +55,9 @@ public class Like {
     }
 	
 	public LikeResponseDTO toResponseDTO() {
-      
-        
         return LikeResponseDTO.builder()
                 .id(this.id)
-                .author(this.author)
+//                .author(this.author.toSummaryResponseDTO())
                 .build();
                 
                 
