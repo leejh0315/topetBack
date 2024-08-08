@@ -8,7 +8,8 @@ public enum FileCategory {
     SCHEDULE("schedule/"),
 	PET("pet/"),
 	MEMBER("member/"),
-	SHORTS("shorts/");
+	SHORTS("shorts/"),
+	SHORTSTUMBNAIL("thumbnail/");
 	
     private final String path;
 

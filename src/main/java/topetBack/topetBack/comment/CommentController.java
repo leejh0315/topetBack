@@ -39,7 +39,11 @@ public class CommentController {
 	 
 	 @GetMapping("/get/{id}")
 	 public ResponseEntity<List<CommentResponseDTO>> getCommentsByCommunityId(Model model, @PathVariable("id") Long id) {
-		    List<CommentResponseDTO> comments = commentService.getCommentsByCommunityId(id);
+		    
+		 
+		 List<CommentResponseDTO> comments = commentService.getCommentsByCommunityId(id);
+		 
+		 
 		    return new ResponseEntity<>(comments, HttpStatus.OK);
 	 }
 
