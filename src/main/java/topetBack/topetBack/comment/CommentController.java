@@ -40,16 +40,16 @@ public class CommentController {
 	 @GetMapping("/get/{id}")
 	 public ResponseEntity<List<CommentResponseDTO>> getCommentsByCommunityId(Model model,
 																			  @PathVariable("id") Long id,
-																			  @RequestParam(name = "page", defaultValue = "0") int page,
-																			  @RequestParam(name = "size", defaultValue = "20") int size) {
+																			  @RequestParam(name = "page") int page,
+																			  @RequestParam(name = "size") int size) {
 		    List<CommentResponseDTO> comments = commentService.getCommentsByCommunityId(id, page, size);
 		    return new ResponseEntity<>(comments, HttpStatus.OK);
 	 }
 
 	 @GetMapping("/myComment")
 	 public ResponseEntity<List<CommentResponseDTO>> getCommentsByAuthorId(HttpServletRequest request,
-																		   @RequestParam(name = "page", defaultValue = "0") int page,
-																		   @RequestParam(name = "size", defaultValue = "20") int size) throws JsonProcessingException {
+																		   @RequestParam(name = "page") int page,
+																		   @RequestParam(name = "size") int size) throws JsonProcessingException {
 		 SessionMember member = sessionManager.getSessionObject(request);
 		 List<CommentResponseDTO> comments = commentService.getCommentsByAuthorId(member.getId(), page, size);
 

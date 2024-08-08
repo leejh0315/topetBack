@@ -1,6 +1,7 @@
 package topetBack.topetBack.comment.dao;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -44,6 +45,7 @@ public class CommentRepositoryImpl implements CommentRepositoryCustom {
         List<Long> ids = queryFactory
                 .select(comment.id).from(comment)
                 .where(comment.community.id.eq(id).and(comment.deleted.isFalse()).and(comment.parent.isNull()))
+                .orderBy(comment.createdTime.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -69,6 +71,7 @@ public class CommentRepositoryImpl implements CommentRepositoryCustom {
                 .from(comment)
                 .leftJoin(comment.author, member)
                 .where(comment.id.in(ids))
+                .orderBy(comment.createdTime.desc())
                 .fetch();
 
         List<CommentResponseDTO> child = queryFactory.select(
@@ -89,9 +92,13 @@ public class CommentRepositoryImpl implements CommentRepositoryCustom {
                 .where(comment.parent.id.in(ids))
                 .orderBy(comment.createdTime.asc()).fetch();
 
-        // 최신순을 원한다면 수정 필요
         Map<Long, CommentResponseDTO> parentMap = parent.stream()
-                .collect(Collectors.toMap(CommentResponseDTO::getId, Function.identity()));
+                .collect(Collectors.toMap(
+                        CommentResponseDTO::getId,
+                        Function.identity(),
+                        (existing, replacement) -> existing,
+                        LinkedHashMap::new
+                ));
 
         for (CommentResponseDTO childComment : child) {
             Long parentId = childComment.getParentId();
