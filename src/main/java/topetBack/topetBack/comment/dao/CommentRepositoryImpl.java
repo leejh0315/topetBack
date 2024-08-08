@@ -1,12 +1,12 @@
 package topetBack.topetBack.comment.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import com.querydsl.core.types.Projections;
-import com.querydsl.jpa.impl.JPAQuery;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
@@ -31,87 +31,122 @@ import static topetBack.topetBack.comment.domain.QCommentEntity.commentEntity;
 @Repository
 public class CommentRepositoryImpl implements CommentRepositoryCustom {
 
+    private static final QCommentEntity comment = commentEntity;
+    private static final QMember member = QMember.member;
+    private static final QCommunityEntity community = QCommunityEntity.communityEntity;
+
     private final JPAQueryFactory queryFactory;
+
     @Override
-    public List<CommentResponseDTO> findByCommunityId(Long id) {
-        List<CommentEntity> commentEntities = queryFactory.selectFrom(commentEntity)
-                .leftJoin(commentEntity.parent).fetchJoin()
-                .where(commentEntity.community.id.eq(id)
-                        .and(commentEntity.deleted.isFalse()))
-                .orderBy(commentEntity.parent.id.asc().nullsFirst(), commentEntity.createdTime.asc())
+    public Slice<CommentResponseDTO> findByCommunityId(Long id, Pageable pageable) {
+
+        // 빠른 페이징을 위해 id만 따로 SELECT
+        List<Long> ids = queryFactory
+                .select(comment.id).from(comment)
+                .where(comment.community.id.eq(id).and(comment.deleted.isFalse()).and(comment.parent.isNull()))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
                 .fetch();
 
-        // 트리구조로 변환
-        Map<Long, CommentResponseDTO> commentMap = new HashMap<>();
-        for (CommentEntity entity : commentEntities) {
-            CommentResponseDTO dto = entity.toResponseDTO();
-            commentMap.put(dto.getId(), dto);
+        boolean hasNext = ids.size() == pageable.getPageSize();
+
+        if(ids.isEmpty()){
+            return new SliceImpl<>(new ArrayList<>(), pageable, hasNext);
         }
 
-        // 자식 댓글을 부모 댓글의 children 리스트에 추가
-        for (CommentEntity entity : commentEntities) {
-            CommentResponseDTO dto = commentMap.get(entity.getId());
-            if (dto.getParentId() != null && commentMap.containsKey(dto.getParentId())) {
-                CommentResponseDTO parentDto = commentMap.get(dto.getParentId());
+        List<CommentResponseDTO> parent = queryFactory.select(
+                Projections.fields(CommentResponseDTO.class,
+                        comment.id,
+                        comment.content,
+                        comment.createdTime,
+                        comment.updatedTime,
+                        Projections.fields(MemberSummaryResponseDTO.class,
+                                member.id,
+                                member.name,
+                                member.email).as("author")
+                    )
+                )
+                .from(comment)
+                .leftJoin(comment.author, member)
+                .where(comment.id.in(ids))
+                .fetch();
 
-                // 중복 추가 방지: 자식 댓글이 이미 추가되어 있는지 확인
-                boolean alreadyExists = parentDto.getChildren().stream()
-                    .anyMatch(child -> child.getId().equals(dto.getId()));
+        List<CommentResponseDTO> child = queryFactory.select(
+                Projections.fields(CommentResponseDTO.class,
+                        comment.id,
+                        comment.content,
+                        comment.createdTime,
+                        comment.updatedTime,
+                        comment.parent.id.as("parentId"),
+                        Projections.fields(MemberSummaryResponseDTO.class,
+                                member.id,
+                                member.name,
+                                member.email).as("author")
+                    )
+                )
+                .from(comment)
+                .leftJoin(comment.author, member)
+                .where(comment.parent.id.in(ids))
+                .orderBy(comment.createdTime.asc()).fetch();
 
-                if (!alreadyExists) {
-                    parentDto.getChildren().add(dto);
-                }
+        // 최신순을 원한다면 수정 필요
+        Map<Long, CommentResponseDTO> parentMap = parent.stream()
+                .collect(Collectors.toMap(CommentResponseDTO::getId, Function.identity()));
+
+        for (CommentResponseDTO childComment : child) {
+            Long parentId = childComment.getParentId();
+            if (parentMap.containsKey(parentId)) {
+                CommentResponseDTO parentComment = parentMap.get(parentId);
+                parentComment.getChildren().add(childComment); // 부모 댓글에 자식 댓글 추가
             }
         }
 
-        // 최상위 댓글만 반환, 중복 카운트 방지
-        return commentMap.values().stream()
-                .filter(dto -> dto.getParentId() == null) // 부모 댓글이 없는 최상위 댓글만 반환
-                .collect(Collectors.toList());
+        List<CommentResponseDTO> content = new ArrayList<>(parentMap.values());
+
+        return new SliceImpl<>(content, pageable, hasNext);
     }
+
     @Override
     public Slice<CommentResponseDTO> findByAuthorId(Long id, Pageable pageable) {
-        QCommentEntity c = QCommentEntity.commentEntity;
-        QMember m = QMember.member;
-        QCommunityEntity p = QCommunityEntity.communityEntity;
-        JPAQuery<CommentResponseDTO> query = queryFactory
-                .select(
-                        Projections.bean(CommentResponseDTO.class,
-                                c.id,
-                                c.content,
-                                c.createdTime,
-                                c.updatedTime,
-                                c.parent.id.as("parentId"),
-                                Projections.bean(MemberSummaryResponseDTO.class,
-                                        m.id,
-                                        m.name,
-                                        m.email).as("author"),
-                                Projections.bean(CommunitySummaryResponseDTO.class,
-                                        p.id,
-                                        p.title).as("community")
-                        ))
-                .from(c)
-                .leftJoin(c.author, m)
-                .leftJoin(c.community, p)
-                .where(c.author.id.eq(id).and(c.deleted.isFalse()))
-                .orderBy(c.createdTime.desc());
 
-                // 페이지네이션 적용
-                List<CommentResponseDTO> content = query
-                        .offset(pageable.getOffset())
-                        .limit(pageable.getPageSize())
-                        .fetch();
+        // 빠른 페이징을 위해 id만 따로 SELECT
+        List<Long> ids = queryFactory
+                .select(comment.id).from(comment)
+                .where(comment.author.id.eq(id).and(comment.deleted.isFalse()))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
 
-                // 총 개수 가져오기(댓글 테이블만 보면 되기에 따로 leftJoin 하지 않음)
-                Long count = queryFactory
-                        .select(c.count())
-                        .from(c)
-                        .where(c.author.id.eq(id).and(c.deleted.isFalse()))
-                        .fetchOne();
+        boolean hasNext = ids.size() == pageable.getPageSize();
 
-                boolean hasNext = count > pageable.getOffset() + pageable.getPageSize();
+        if(ids.isEmpty()){
+            return new SliceImpl<>(new ArrayList<>(), pageable, hasNext);
+        }
 
-                return new SliceImpl<>(content, pageable, hasNext);
+        List<CommentResponseDTO> content = queryFactory.select(
+                Projections.fields(
+                        CommentResponseDTO.class,
+                        comment.id,
+                        comment.content,
+                        comment.createdTime,
+                        comment.updatedTime,
+                        comment.parent.id.as("parentId"),
+                        Projections.fields(MemberSummaryResponseDTO.class,
+                                member.id,
+                                member.name,
+                                member.email).as("author"),
+                        Projections.fields(CommunitySummaryResponseDTO.class,
+                                community.id,
+                                community.title).as("community")
+                    )
+                )
+                .from(comment)
+                .leftJoin(comment.author, member)
+                .leftJoin(comment.community, community)
+                .where(comment.id.in(ids))
+                .orderBy(comment.createdTime.desc()).fetch();
+
+        return new SliceImpl<>(content, pageable, hasNext);
     }
 
     
@@ -122,5 +157,6 @@ public class CommentRepositoryImpl implements CommentRepositoryCustom {
                 .set(commentEntity.content, comment.getContent()) // 댓글 내용 업데이트
                 .execute();
     }
+
     
 }

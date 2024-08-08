@@ -14,7 +14,7 @@ import topetBack.topetBack.comment.domain.CommentResponseDTO;
 @Service
 public interface CommentService {
 	CommentResponseDTO insert(Long CommunityId , CommentRequestDTO commentRequestDTO) throws NotFoundException;
-	List<CommentResponseDTO> getCommentsByCommunityId(Long communityId);
+	List<CommentResponseDTO> getCommentsByCommunityId(Long communityId, int page, int size);
 	List<CommentResponseDTO> getCommentsByAuthorId(Long authorId, int page, int size);
 	CommentResponseDTO updateComment(CommentRequestDTO commentUpdateRequestDTO) throws NotFoundException;
 	void delete(Long id);

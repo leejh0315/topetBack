@@ -24,6 +24,5 @@ public class CommentResponseDTO {
     private CommunitySummaryResponseDTO community;
     private String content;
     private List<CommentResponseDTO> children = new ArrayList<>();
-    private boolean deleted;
     private Long parentId; // 부모 댓글 ID 추가
 }
