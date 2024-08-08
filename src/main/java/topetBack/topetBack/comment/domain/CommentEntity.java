@@ -98,7 +98,6 @@ public class CommentEntity {
                     .author(child.author.toSummaryResponseDTO())
                     .community(child.community.toSummaryResponseDTO()) // 자식 댓글은 community를 가지지 않도록 설정
                     .content(child.content)
-                    .deleted(child.deleted)
                     .children(new ArrayList<>())
                     .parentId(this.id)
                     .build());
@@ -112,7 +111,6 @@ public class CommentEntity {
                 .author(this.author.toSummaryResponseDTO())
                 .community(this.community.toSummaryResponseDTO())
                 .content(this.content)
-                .deleted(this.deleted)
                 .children(childrenDTOs)
                 .parentId(this.parent != null ? this.parent.getId() : null)
                 .build();

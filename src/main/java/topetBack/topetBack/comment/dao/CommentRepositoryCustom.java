@@ -13,7 +13,7 @@ import org.springframework.data.domain.Pageable;
 @Repository
 public interface CommentRepositoryCustom {
 
-	List<CommentResponseDTO> findByCommunityId(Long community);
+	Slice<CommentResponseDTO> findByCommunityId(Long community, Pageable pageable);
 
 	Slice<CommentResponseDTO> findByAuthorId(Long authorId, Pageable pageable);
 

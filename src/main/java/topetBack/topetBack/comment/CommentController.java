@@ -38,8 +38,11 @@ public class CommentController {
 	 }
 	 
 	 @GetMapping("/get/{id}")
-	 public ResponseEntity<List<CommentResponseDTO>> getCommentsByCommunityId(Model model, @PathVariable("id") Long id) {
-		    List<CommentResponseDTO> comments = commentService.getCommentsByCommunityId(id);
+	 public ResponseEntity<List<CommentResponseDTO>> getCommentsByCommunityId(Model model,
+																			  @PathVariable("id") Long id,
+																			  @RequestParam(name = "page", defaultValue = "0") int page,
+																			  @RequestParam(name = "size", defaultValue = "20") int size) {
+		    List<CommentResponseDTO> comments = commentService.getCommentsByCommunityId(id, page, size);
 		    return new ResponseEntity<>(comments, HttpStatus.OK);
 	 }
 

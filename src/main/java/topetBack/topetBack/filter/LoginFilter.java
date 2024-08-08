@@ -22,8 +22,9 @@ import topetBack.topetBack.member.domain.Member;
 @Slf4j
 public class LoginFilter implements Filter {
 
-	private static final String[] whiteList ={"/api/member/**", "/api/community/**"};
-	
+	private static final String[] whiteList ={"/api/member/**", "/api/community/**", "/api/comment/**"};
+
+
     private final SessionManager sessionManager;
 
     public LoginFilter(SessionManager sessionManager) {
