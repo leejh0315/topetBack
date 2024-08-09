@@ -7,6 +7,7 @@ import java.util.List;
 import jakarta.persistence.*;
 import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import lombok.AllArgsConstructor;
@@ -15,10 +16,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import topetBack.topetBack.file.domain.FileGroupEntity;
-import topetBack.topetBack.file.domain.FileInfoEntity;
-import topetBack.topetBack.file.domain.FileResponseDTO;
-import topetBack.topetBack.like.domain.Like;
-import topetBack.topetBack.like.domain.LikeResponseDTO;
+import topetBack.topetBack.likes.domain.Likes;
 import topetBack.topetBack.member.domain.Member;
 
 @Getter
@@ -71,17 +69,17 @@ public class CommunityEntity {
     private FileGroupEntity fileGroupEntity;
 
     @OneToMany(mappedBy = "community", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
-    private List<Like> likesList = new ArrayList<>();
+    private List<Likes> likesList = new ArrayList<>();
     
     //댓글 개수
-    @org.hibernate.annotations.Formula("(SELECT count(1) FROM comments r WHERE r.community_id = id)")
+    @Formula("(SELECT count(1) FROM comments r WHERE r.community_id = id)")
     private int commentCount;
+
+    //좋아요 개수
+    @Formula("(SELECT count(1) FROM likes l WHERE l.community_id = id)")
+    private int likeCount;
     
     public CommunityResponseDTO toResponseDTO() {
-
-//        List<FileResponseDTO> fileResponseDTOList = this.fileGroupEntity.getFileList()
-//                .stream().map(FileInfoEntity::toResponseDTO).toList();
-
 
         return CommunityResponseDTO.builder()
                 .id(this.id)
@@ -95,6 +93,7 @@ public class CommunityEntity {
                 .animal(this.animal)
                 .images(this.fileGroupEntity.getFileResponseDTOList())
                 .commentCount(this.commentCount)
+                .likeCount(this.likeCount)
                 .build();
     }
 

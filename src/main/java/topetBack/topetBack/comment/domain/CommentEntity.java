@@ -3,6 +3,7 @@ package topetBack.topetBack.comment.domain;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.CreationTimestamp;
@@ -108,7 +109,7 @@ public class CommentEntity {
                 .author(this.author.toSummaryResponseDTO())
                 .content(this.content)
                 .children(childrenDTOs)
-                .parentId(this.parent != null ? this.parent.getId() : null)
+                .parentId(Optional.ofNullable(this.parent).map(CommentEntity::getId).orElse(null))
                 .build();
     }
 
@@ -119,7 +120,7 @@ public class CommentEntity {
                 .updatedTime(this.updatedTime)
                 .community(this.community.toSummaryResponseDTO())
                 .content(this.content)
-                .parentId(this.parent != null ? this.parent.getId() : null)
+                .parentId(Optional.ofNullable(this.parent).map(CommentEntity::getId).orElse(null))
                 .build();
     }
 

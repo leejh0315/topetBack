@@ -18,7 +18,7 @@ public class FileGroupEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY) // 값이 없어도 자동으로 할당 합니다.
     private Long id;
 
-    @OneToMany(mappedBy = "fileGroupEntity", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "fileGroupEntity", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<FileInfoEntity> fileList = new ArrayList<>();
 
     public List<FileResponseDTO> getFileResponseDTOList() {

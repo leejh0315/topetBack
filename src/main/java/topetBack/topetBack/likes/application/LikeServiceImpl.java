@@ -1,4 +1,4 @@
-package topetBack.topetBack.like.application;
+package topetBack.topetBack.likes.application;
 
 import java.util.List;
 import java.util.Optional;
@@ -9,18 +9,13 @@ import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import topetBack.topetBack.comment.dao.CommentRepository;
-import topetBack.topetBack.comment.domain.CommentEntity;
-import topetBack.topetBack.community.application.CommunityServiceImpl;
 import topetBack.topetBack.community.dao.CommunityRepository;
 import topetBack.topetBack.community.domain.CommunityEntity;
 import topetBack.topetBack.community.domain.CommunityResponseDTO;
-import topetBack.topetBack.like.dao.LikeRepository;
-import topetBack.topetBack.like.domain.Like;
-import topetBack.topetBack.like.domain.LikeResponseDTO;
-import topetBack.topetBack.member.dao.MemberRepository;
+import topetBack.topetBack.likes.dao.LikeRepository;
+import topetBack.topetBack.likes.domain.Likes;
+import topetBack.topetBack.likes.domain.LikeResponseDTO;
 import topetBack.topetBack.member.domain.Member;
-import topetBack.topetBack.schedule.domain.ScheduleEntity;
 
 @Service
 @RequiredArgsConstructor
@@ -36,10 +31,10 @@ public class LikeServiceImpl  implements LikeService{
     		
     	}
     	
-    	Optional<Like> found = likeRepository.findByCommunityAndAuthor(community.get(), author);
+    	Optional<Likes> found = likeRepository.findByCommunityAndAuthor(community.get(), author);
     	if(found.isEmpty()) { //좋아요 X
-    		Like like = Like.of(community.get(), author);
-    		likeRepository.save(like);
+    		Likes likes = Likes.of(community.get(), author);
+    		likeRepository.save(likes);
     	} else {
     		likeRepository.delete(found.get());
     		likeRepository.flush();
@@ -51,16 +46,16 @@ public class LikeServiceImpl  implements LikeService{
 
 	@Override
 	public List<LikeResponseDTO> findByAuthor(Member member) {
-		List<Like> likes = likeRepository.findByAuthor(member);
+		List<Likes> likes = likeRepository.findByAuthor(member);
 		return likes.stream()
-                .map(Like::toResponseDTO)
+                .map(Likes::toResponseDTO)
                 .collect(Collectors.toList());
 	}
 	
 	
 	 @Transactional
 	 public boolean getDetailLike(Long id , Member member) {
-		 List<Like> like = likeRepository.findByAuthor(member);
+		 List<Likes> likes = likeRepository.findByAuthor(member);
 		 
 		 Optional<CommunityEntity> community = communityRepository.findById(id);
 		 if(community.isEmpty()) {

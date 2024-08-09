@@ -1,11 +1,7 @@
 package topetBack.topetBack.comment.dao;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQuery;
@@ -19,15 +15,11 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import topetBack.topetBack.comment.domain.CommentEntity;
-import topetBack.topetBack.comment.domain.CommentResponseDTO;
-import topetBack.topetBack.comment.domain.QCommentEntity;
 import topetBack.topetBack.community.domain.CommunityEntity;
 import topetBack.topetBack.community.domain.CommunitySummaryResponseDTO;
-import topetBack.topetBack.community.domain.QCommunityEntity;
-import topetBack.topetBack.member.domain.MemberSummaryResponseDTO;
-import topetBack.topetBack.member.domain.QMember;
 
 import static topetBack.topetBack.comment.domain.QCommentEntity.commentEntity;
+import static topetBack.topetBack.community.domain.QCommunityEntity.communityEntity;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -67,8 +59,23 @@ public class CommentRepositoryImpl implements CommentRepositoryCustom {
     @Override
     public Slice<CommentEntity> findByAuthorId(Long id, Pageable pageable) {
 
-        JPAQuery<CommentEntity> query = queryFactory.selectFrom(commentEntity)
-                .leftJoin(commentEntity.community).fetchJoin()
+        JPAQuery<CommentEntity> query = queryFactory
+                .select(
+                        Projections.fields(
+                                CommentEntity.class,
+                                commentEntity.id,
+                                commentEntity.content,
+                                commentEntity.createdTime,
+                                commentEntity.updatedTime,
+                                commentEntity.parent.id.as("parentId"),
+                                Projections.fields(CommunityEntity.class,
+                                        communityEntity.id,
+                                        communityEntity.title
+                                ).as("community")
+                        )
+                )
+                .from(commentEntity)
+                .leftJoin(commentEntity.community, communityEntity)
                 .where(commentEntity.author.id.eq(id).and(commentEntity.deleted.isFalse()))
                 .orderBy(commentEntity.createdTime.desc())
                 .offset(pageable.getOffset())
@@ -78,15 +85,6 @@ public class CommentRepositoryImpl implements CommentRepositoryCustom {
         boolean hasNext = content.size() == pageable.getPageSize();
 
         return new SliceImpl<>(content, pageable, hasNext);
-    }
-
-    
-    @Override
-    public void updateComment(CommentEntity comment) {
-        queryFactory.update(commentEntity)
-                .where(commentEntity.id.eq(comment.getId())) // 댓글 ID로 조건 설정
-                .set(commentEntity.content, comment.getContent()) // 댓글 내용 업데이트
-                .execute();
     }
 
     

@@ -17,13 +17,4 @@ public interface CommentRepositoryCustom {
 
 	Slice<CommentEntity> findByAuthorId(Long authorId, Pageable pageable);
 
-	void updateComment(CommentEntity comment);
-
-
-
-
-
-//	List<CommentResponseDTO> findByCommunityId(Long id);
-
-
 }

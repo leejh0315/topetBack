@@ -1,4 +1,4 @@
-package topetBack.topetBack.like.application;
+package topetBack.topetBack.likes.application;
 
 import java.util.List;
 
@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import topetBack.topetBack.community.domain.CommunityResponseDTO;
-import topetBack.topetBack.like.domain.LikeResponseDTO;
+import topetBack.topetBack.likes.domain.LikeResponseDTO;
 import topetBack.topetBack.member.domain.Member;
 
 @Service

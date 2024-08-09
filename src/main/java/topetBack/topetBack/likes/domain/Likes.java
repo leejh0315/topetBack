@@ -1,7 +1,4 @@
-package topetBack.topetBack.like.domain;
-
-import java.util.List;
-import java.util.stream.Collectors;
+package topetBack.topetBack.likes.domain;
 
 import jakarta.persistence.*;
 import org.hibernate.annotations.Comment;
@@ -18,7 +15,7 @@ import topetBack.topetBack.member.domain.Member;
 @Entity // Member 라는 객체와 DB 테이블을 매핑합니다. JPA가 관리합니다.
 @NoArgsConstructor
 @Table(name = "likes")
-public class Like {
+public class Likes {
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -41,13 +38,13 @@ public class Like {
     }
 	
 	@Builder
-	public Like(CommunityEntity community , Member author) {
+	public Likes(CommunityEntity community , Member author) {
 		this.community = community;
 		this.author = author;
 	}
 
-	public static Like of(CommunityEntity community , Member author) {
-		Like likes = Like.builder()
+	public static Likes of(CommunityEntity community , Member author) {
+		Likes likes = Likes.builder()
                 .community(community)
                 .author(author)
                 .build();
