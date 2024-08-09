@@ -13,6 +13,6 @@ import topetBack.topetBack.report.domain.ReportEntitiy;
 @Repository
 public interface ReportRepository extends JpaRepository<ReportEntitiy, Long>{
 
-	Optional<Like> findByCommunityAndAuthor(CommunityEntity communityEntity, Member author);
+	Optional<ReportEntitiy> findByCommunityAndAuthor(CommunityEntity communityEntity, Member author);
 
 }

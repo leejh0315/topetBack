@@ -29,7 +29,7 @@ public class ReportServiceImpl implements ReportService{
 	    		
 	    }
 	    	
-	    Optional<Like> found = reportRepository.findByCommunityAndAuthor(community.get(), author);
+	    Optional<ReportEntitiy> found = reportRepository.findByCommunityAndAuthor(community.get(), author);
 	    	ReportEntitiy report = ReportEntitiy.of(community.get(), author , reason);
 	    	reportRepository.save(report);
 	   
