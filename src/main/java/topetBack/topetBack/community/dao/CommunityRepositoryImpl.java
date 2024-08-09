@@ -1,7 +1,10 @@
 package topetBack.topetBack.community.dao;
 
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.SliceImpl;
 import org.springframework.stereotype.Repository;
 import topetBack.topetBack.community.domain.CommunityEntity;
 import topetBack.topetBack.community.domain.QCommunityEntity;
@@ -10,13 +13,21 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageRequest;
+import topetBack.topetBack.member.domain.QMember;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import static topetBack.topetBack.comment.domain.QCommentEntity.commentEntity;
 
 @Repository
 public class CommunityRepositoryImpl implements CommunityRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
+
+    private final static QCommunityEntity communityEntity = QCommunityEntity.communityEntity;
+    private final static QMember memberEntity = QMember.member;
+
 
     @Autowired
     public CommunityRepositoryImpl(JPAQueryFactory queryFactory) {
@@ -24,7 +35,7 @@ public class CommunityRepositoryImpl implements CommunityRepositoryCustom {
     }
 
     public List<CommunityEntity> findAllByAnimalAndCategoryWithLikesSorted(String animal, String category, Predicate predicate, Pageable pageable) {
-        QCommunityEntity communityEntity = QCommunityEntity.communityEntity;
+
 
         BooleanExpression baseFilter = communityEntity.animal.eq(animal)
                 .and(communityEntity.category.eq(category));
@@ -39,5 +50,35 @@ public class CommunityRepositoryImpl implements CommunityRepositoryCustom {
                 .offset(pageRequest.getOffset())
                 .limit(pageRequest.getPageSize())
                 .fetch();
+    }
+
+    @Override
+    public Slice<CommunityEntity> findAllWithPredicate(Predicate predicate, Pageable pageable){
+
+        List<Long> ids = queryFactory
+                .select(communityEntity.id).from(communityEntity)
+                .where(predicate)
+                .orderBy(communityEntity.createdTime.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        boolean hasNext = ids.size() == pageable.getPageSize();
+
+        if(ids.isEmpty()){
+            return new SliceImpl<>(new ArrayList<>(), pageable, hasNext);
+        }
+
+        JPAQuery<CommunityEntity> query = queryFactory
+                .select(communityEntity)
+                .from(communityEntity)
+                .leftJoin(communityEntity.author).fetchJoin()
+                .leftJoin(communityEntity.fileGroupEntity).fetchJoin()
+                .leftJoin(communityEntity.fileGroupEntity.fileList).fetchJoin()
+                .where(communityEntity.id.in(ids));
+
+        List<CommunityEntity> content = query.fetch();
+
+        return new SliceImpl<>(content, pageable, hasNext);
     }
 }

@@ -43,6 +43,7 @@ public class Member implements Serializable {
 				.id(this.id)
 				.socialId(this.socialId)
 				.name(this.name)
+				.profileSrc(this.profileSrc)
 				.email(this.email)
 				.build();
 	}

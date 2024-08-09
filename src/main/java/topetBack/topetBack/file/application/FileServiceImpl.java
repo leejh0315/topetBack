@@ -32,82 +32,98 @@ public class FileServiceImpl implements FileService {
 
 	@Value("${toPet.fileStorePath}")
 	private String fileBasePath;
-	
-    @Value("${spring.s3.bucket}")
-    private String bucketName;
-    
-    @Value("${spring.s3.accessKey}")
-    private String keyName;
+
+	@Value("${spring.s3.bucket}")
+	private String bucketName;
+
+	@Value("${spring.s3.accessKey}")
+	private String keyName;
 
 	public FileServiceImpl(FileRepository fileRepository, AmazonS3Client amazonS3Client) {
 		this.fileRepository = fileRepository;
 		this.amazonS3Client = amazonS3Client;
 	}
 
-	@Override
-	public FileGroupEntity uploadPhotos(List<MultipartFile> photos, FileGroupEntity fileGroupEntity, String middlePath)
-			throws IOException {
-
-		List<FileInfoEntity> fileInfoEntityList = new ArrayList<>();
-		String baseDir = fileBasePath + middlePath;
-
-		if (photos != null) {
-			for (MultipartFile photo : photos) {
-				try {
-					// 파일 저장 경로 생성
-					String fileName = photo.getOriginalFilename();
-					String extension = fileName.substring(fileName.lastIndexOf("."));
-					String newFileName = UUID.randomUUID().toString() + extension;
-					Path filePath = Paths.get(baseDir, newFileName);
-					// 디렉토리 생성
-					Files.createDirectories(filePath.getParent());
-					// 파일 저장
-					Files.copy(photo.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-
-					// File 엔티티 생성
-					FileInfoEntity FileInfoEntity = new FileInfoEntity();
-					FileInfoEntity.setOrigFileName(fileName);
-					FileInfoEntity.setFilePath(filePath.toString());
-					FileInfoEntity.setFileSize(photo.getSize());
-					FileInfoEntity.setFileGroupEntity(fileGroupEntity);
-					FileInfoEntity.setNewFileName(newFileName);
-					// 리스트에 추가
-					fileInfoEntityList.add(FileInfoEntity);
-
-				} catch (IOException e) {
-					throw new IOException();
-				}
-			}
-		}
-		fileGroupEntity.setFileList(fileInfoEntityList);
-
-		return fileGroupEntity;
-	}
+//	@Override
+//	public FileGroupEntity uploadPhotos(List<MultipartFile> photos, FileGroupEntity fileGroupEntity, String middlePath)
+//			throws IOException {
+//
+//		List<FileInfoEntity> fileInfoEntityList = new ArrayList<>();
+//		String baseDir = fileBasePath + middlePath;
+//
+//		if (photos != null) {
+//			for (MultipartFile photo : photos) {
+//				try {
+//					// 파일 저장 경로 생성
+//					String fileName = photo.getOriginalFilename();
+//					String extension = fileName.substring(fileName.lastIndexOf("."));
+//					String newFileName = UUID.randomUUID().toString() + extension;
+//					Path filePath = Paths.get(baseDir, newFileName);
+//					// 디렉토리 생성
+//					Files.createDirectories(filePath.getParent());
+//					// 파일 저장
+//					Files.copy(photo.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+//
+//					// File 엔티티 생성
+//					FileInfoEntity FileInfoEntity = new FileInfoEntity();
+//					FileInfoEntity.setOrigFileName(fileName);
+//					FileInfoEntity.setFilePath(filePath.toString());
+//					FileInfoEntity.setFileSize(photo.getSize());
+//					FileInfoEntity.setFileGroupEntity(fileGroupEntity);
+//					FileInfoEntity.setNewFileName(newFileName);
+//					// 리스트에 추가
+//					fileInfoEntityList.add(FileInfoEntity);
+//
+//				} catch (IOException e) {
+//					throw new IOException();
+//				}
+//			}
+//		}
+//		fileGroupEntity.setFileList(fileInfoEntityList);
+//
+//		return fileGroupEntity;
+//	}
 
 	@Override
 	public FileInfoEntity storeFile(MultipartFile file, FileCategory fileCategory) throws IOException {
+	    String baseDir = fileBasePath + fileCategory.getPath();
+	    System.out.println("baseDir : " + baseDir);
+	    
+	    String fileName = file.getOriginalFilename();
+	    String extension = fileName.substring(fileName.lastIndexOf("."));
+	    String newFileName = UUID.randomUUID() + extension;
+	    
+	    // Set S3 key to include the file category path
+	    String keyName = fileCategory.getPath() + newFileName;
+	    System.out.println("keyName : " + keyName);
+	    
+	    String fileUrl;
+	    try {
+	        ObjectMetadata objectMetadata = new ObjectMetadata();
+	        objectMetadata.setContentLength(file.getSize());
+	        objectMetadata.setContentType(file.getContentType());
+	        
+	        amazonS3Client.putObject(
+	            new PutObjectRequest(bucketName, keyName, file.getInputStream(), objectMetadata)
+	                .withCannedAcl(CannedAccessControlList.PublicRead));
+	        
+	        fileUrl = amazonS3Client.getUrl(bucketName, keyName).toString();
+	        System.out.println("fileUrl : " + fileUrl);
+	        
+	    } catch (IOException e) {
+	        throw new IOException("Failed to store file", e);
+	    }
 
-		String baseDir = fileBasePath + fileCategory.getPath();
-		String fileName = file.getOriginalFilename();
-		String extension = fileName.substring(fileName.lastIndexOf("."));
-		String newFileName = UUID.randomUUID() + extension;
-		Path filePath = Paths.get(baseDir, newFileName);
-		try {
-			Files.createDirectories(filePath.getParent());
-			Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-		} catch (IOException e) {
-			throw new IOException();
-		}
+	    FileInfoEntity fileInfoEntity = new FileInfoEntity();
+	    fileInfoEntity.setOrigFileName(fileName);
+	    fileInfoEntity.setFilePath(fileUrl);
+	    fileInfoEntity.setFileSize(file.getSize());
+	    fileInfoEntity.setNewFileName(newFileName);
+	    fileRepository.save(fileInfoEntity);
 
-		FileInfoEntity fileInfoEntity = new FileInfoEntity();
-		fileInfoEntity.setOrigFileName(fileName);
-		fileInfoEntity.setFilePath(filePath.toString());
-		fileInfoEntity.setFileSize(file.getSize());
-		fileInfoEntity.setNewFileName(newFileName);
-
-		return fileInfoEntity;
-
+	    return fileInfoEntity;
 	}
+
 
 	@Override
 	public String uploadPhoto(MultipartFile multipartFile, String middlePath) throws IOException {
@@ -117,21 +133,18 @@ public class FileServiceImpl implements FileService {
 			String extension = fileName.substring(fileName.lastIndexOf("."));
 			String newFileName = UUID.randomUUID() + extension;
 			Path filePath = Paths.get(baseDir, newFileName);
-			 String  uploadFileUrl = "";
+			String uploadFileUrl = "";
+			
 			try {
-//				Files.createDirectories(filePath.getParent());
-//				Files.copy(multipartFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING); // 업로드된 파일의
-//																	
-				// InputStream
-			       ObjectMetadata objectMetadata = new ObjectMetadata();
-		            objectMetadata.setContentLength(multipartFile.getSize());
-		            objectMetadata.setContentType(multipartFile.getContentType());
+				ObjectMetadata objectMetadata = new ObjectMetadata();
+				objectMetadata.setContentLength(multipartFile.getSize());
+				objectMetadata.setContentType(multipartFile.getContentType());
 
-				 amazonS3Client.putObject(
-	                        new PutObjectRequest(bucketName, keyName, multipartFile.getInputStream(), objectMetadata)
-	                                .withCannedAcl(CannedAccessControlList.PublicRead));
+				amazonS3Client.putObject(
+						new PutObjectRequest(bucketName, keyName, multipartFile.getInputStream(), objectMetadata)
+								.withCannedAcl(CannedAccessControlList.PublicRead));
 
-	              uploadFileUrl = amazonS3Client.getUrl(bucketName, keyName).toString(); // S3에서 파일 URL을 가져옴// 얻기
+				uploadFileUrl = amazonS3Client.getUrl(bucketName, keyName).toString(); // S3에서 파일 URL을 가져옴// 얻기
 			} catch (IOException e) {
 				throw new IOException();
 			}
@@ -144,35 +157,40 @@ public class FileServiceImpl implements FileService {
 	}
 
 	public String[] uploadShorts(ShortsRequestDTO shortsRequestDTO, String middlePath) throws IOException {
-	    String baseDir = fileBasePath + middlePath;
+		String baseDir = fileBasePath + middlePath;
 
-	    String fileName = shortsRequestDTO.getThumbnailPhoto().getOriginalFilename();
-	    String extension = fileName.substring(fileName.lastIndexOf("."));
-	    String newFileName = UUID.randomUUID() + extension;
-	    Path filePath = Paths.get(baseDir, newFileName);
+		String fileName = shortsRequestDTO.getThumbnailPhoto().getOriginalFilename();
+		String extension = fileName.substring(fileName.lastIndexOf("."));
+		String newFileName = UUID.randomUUID() + extension;
+		Path filePath = Paths.get(baseDir, newFileName);
 
-	    String videoBaseDir = baseDir + "/video/";
-	    String videoFileName = shortsRequestDTO.getVideo().getOriginalFilename();
-	    String videoExtension = videoFileName.substring(videoFileName.lastIndexOf("."));
-	    String newVideoFileName = UUID.randomUUID() + videoExtension;
-	    Path videoFilePath = Paths.get(videoBaseDir, newVideoFileName);
+		String videoBaseDir = baseDir + "/video/";
+		String videoFileName = shortsRequestDTO.getVideo().getOriginalFilename();
+		String videoExtension = videoFileName.substring(videoFileName.lastIndexOf("."));
+		String newVideoFileName = UUID.randomUUID() + videoExtension;
+		Path videoFilePath = Paths.get(videoBaseDir, newVideoFileName);
+		
+		
+		
 
-	    try {
-	        // Create directories for thumbnail
-	        Files.createDirectories(filePath.getParent());
-	        Files.copy(shortsRequestDTO.getThumbnailPhoto().getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+		try {
+			// Create directories for thumbnail
+			Files.createDirectories(filePath.getParent());
+			Files.copy(shortsRequestDTO.getThumbnailPhoto().getInputStream(), filePath,
+					StandardCopyOption.REPLACE_EXISTING);
 
-	        // Create directories for video
-	        Files.createDirectories(videoFilePath.getParent());
-	        Files.copy(shortsRequestDTO.getVideo().getInputStream(), videoFilePath, StandardCopyOption.REPLACE_EXISTING); // 수정된 부분
+			// Create directories for video
+			Files.createDirectories(videoFilePath.getParent());
+			Files.copy(shortsRequestDTO.getVideo().getInputStream(), videoFilePath,
+					StandardCopyOption.REPLACE_EXISTING); // 수정된 부분
 
-	    } catch (IOException e) {
-	        // 예외 발생 시 로그를 남기고, 예외 메시지를 추가하여 더 유용한 정보를 제공합니다.
-	        throw new IOException("파일 업로드 중 오류 발생: " + e.getMessage(), e);
-	    }
+		} catch (IOException e) {
+			// 예외 발생 시 로그를 남기고, 예외 메시지를 추가하여 더 유용한 정보를 제공합니다.
+			throw new IOException("파일 업로드 중 오류 발생: " + e.getMessage(), e);
+		}
 
-	    String[] filePaths = {filePath.toString(), videoFilePath.toString()};
-	    return filePaths;
+		String[] filePaths = { filePath.toString(), videoFilePath.toString() };
+		return filePaths;
 	}
 
 	@Override
@@ -181,8 +199,5 @@ public class FileServiceImpl implements FileService {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-	
-
 
 }

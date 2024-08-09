@@ -1,20 +1,10 @@
-package topetBack.topetBack.like.domain;
+package topetBack.topetBack.likes.domain;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
+import jakarta.persistence.*;
 import org.hibernate.annotations.Comment;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,16 +15,16 @@ import topetBack.topetBack.member.domain.Member;
 @Entity // Member 라는 객체와 DB 테이블을 매핑합니다. JPA가 관리합니다.
 @NoArgsConstructor
 @Table(name = "likes")
-public class Like {
+public class Likes {
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author_id", nullable = false)
     private Member author;
 	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "community_id", nullable = false)
     @JsonIgnore
     private CommunityEntity community;
@@ -48,13 +38,13 @@ public class Like {
     }
 	
 	@Builder
-	public Like(CommunityEntity community , Member author) {
+	public Likes(CommunityEntity community , Member author) {
 		this.community = community;
 		this.author = author;
 	}
 
-	public static Like of(CommunityEntity community , Member author) {
-		Like likes = Like.builder()
+	public static Likes of(CommunityEntity community , Member author) {
+		Likes likes = Likes.builder()
                 .community(community)
                 .author(author)
                 .build();
@@ -62,11 +52,9 @@ public class Like {
     }
 	
 	public LikeResponseDTO toResponseDTO() {
-      
-        
         return LikeResponseDTO.builder()
                 .id(this.id)
-                .author(this.author)
+//                .author(this.author.toSummaryResponseDTO())
                 .build();
                 
                 

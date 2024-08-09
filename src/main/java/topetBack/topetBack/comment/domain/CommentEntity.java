@@ -3,6 +3,7 @@ package topetBack.topetBack.comment.domain;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.CreationTimestamp;
@@ -58,11 +59,11 @@ public class CommentEntity {
     private boolean deleted;
 
     @Comment("작성자")
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Member author;
 
     @Comment("게시판")
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private CommunityEntity community;
 
     @Column(nullable = false)
@@ -76,7 +77,7 @@ public class CommentEntity {
     @JsonBackReference
     private CommentEntity parent;
 
-    @OneToMany(mappedBy = "parent", orphanRemoval = true)
+    @OneToMany(mappedBy = "parent", orphanRemoval = true, fetch = FetchType.LAZY)
     @JsonManagedReference
     private List<CommentEntity> children = new ArrayList<>();
     
@@ -96,25 +97,30 @@ public class CommentEntity {
                     .createdTime(child.createdTime)
                     .updatedTime(child.updatedTime)
                     .author(child.author.toSummaryResponseDTO())
-                    .community(child.community.toSummaryResponseDTO()) // 자식 댓글은 community를 가지지 않도록 설정
                     .content(child.content)
-                    .deleted(child.deleted)
-                    .children(new ArrayList<>())
                     .parentId(this.id)
                     .build());
         }
-
 
         return CommentResponseDTO.builder()
                 .id(this.id)
                 .createdTime(this.createdTime)
                 .updatedTime(this.updatedTime)
                 .author(this.author.toSummaryResponseDTO())
+                .content(this.content)
+                .children(childrenDTOs)
+                .parentId(Optional.ofNullable(this.parent).map(CommentEntity::getId).orElse(null))
+                .build();
+    }
+
+    public MyCommentResponseDTO toMyCommentResponseDTO() {
+        return MyCommentResponseDTO.builder()
+                .id(this.id)
+                .createdTime(this.createdTime)
+                .updatedTime(this.updatedTime)
                 .community(this.community.toSummaryResponseDTO())
                 .content(this.content)
-                .deleted(this.deleted)
-                .children(childrenDTOs)
-                .parentId(this.parent != null ? this.parent.getId() : null)
+                .parentId(Optional.ofNullable(this.parent).map(CommentEntity::getId).orElse(null))
                 .build();
     }
 

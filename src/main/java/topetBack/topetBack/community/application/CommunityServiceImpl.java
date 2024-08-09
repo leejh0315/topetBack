@@ -89,7 +89,7 @@ public class CommunityServiceImpl implements CommunityService {
         
         System.out.println("검색어 확인" + combinedPredicate);
         // 동적 쿼리와 페이징을 함께 사용
-        Slice<CommunityEntity> communityEntitySlice = communityRepository.findAll(combinedPredicate, pageable);
+        Slice<CommunityEntity> communityEntitySlice = communityRepository.findAllWithPredicate(combinedPredicate, pageable);
         return communityEntitySlice.stream()
                 .map(CommunityEntity::toResponseDTO)
                 .collect(Collectors.toList());

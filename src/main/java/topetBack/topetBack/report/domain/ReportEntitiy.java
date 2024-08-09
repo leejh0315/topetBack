@@ -1,11 +1,9 @@
 package topetBack.topetBack.report.domain;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -22,8 +20,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import topetBack.topetBack.community.domain.CommunityEntity;
-import topetBack.topetBack.file.domain.FileGroupEntity;
-import topetBack.topetBack.like.domain.Like;
 import topetBack.topetBack.member.domain.Member;
 
 @Getter

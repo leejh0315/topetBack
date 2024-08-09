@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import lombok.extern.slf4j.Slf4j;
 import topetBack.topetBack.file.application.FileService;
 import topetBack.topetBack.file.domain.FileCategory;
+import topetBack.topetBack.file.domain.FileInfoEntity;
 import topetBack.topetBack.member.dao.MemberPetRepository;
 import topetBack.topetBack.member.domain.Member;
 import topetBack.topetBack.member.domain.MemberPet;
@@ -45,8 +46,8 @@ public class PetServiceImpl implements PetService{
     	petRequestDTO.setUid(uid);
     	
         if(image != null) {
-        	String profileSrc = fileService.uploadPhoto(image, FileCategory.PET.getPath());
-        	petRequestDTO.setProfileSrc(profileSrc);
+        	FileInfoEntity fileInfoEntity = fileService.storeFile(image, FileCategory.PET);
+        	petRequestDTO.setProfileSrc(fileInfoEntity.getFilePath());
         }
         PetEntity result = petRepository.save(petRequestDTO.toPetEntity());
         if(petRequestDTO.getMember() != null){

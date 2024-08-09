@@ -13,6 +13,7 @@ import topetBack.topetBack.comment.dao.CommentRepository;
 import topetBack.topetBack.comment.domain.CommentEntity;
 import topetBack.topetBack.comment.domain.CommentRequestDTO;
 import topetBack.topetBack.comment.domain.CommentResponseDTO;
+import topetBack.topetBack.comment.domain.MyCommentResponseDTO;
 import topetBack.topetBack.community.dao.CommunityRepository;
 import topetBack.topetBack.community.domain.CommunityEntity;
 import topetBack.topetBack.member.dao.MemberRepository;
@@ -59,33 +60,33 @@ public class CommentServiceImpl implements CommentService{
 	     return result.toResponseDTO();
 	 }
 
-	 
-	@Transactional
-	public List<CommentResponseDTO> getCommentsByCommunityId(Long communityId) {
-		return commentRepository.findByCommunityId(communityId);
+	public List<CommentResponseDTO> getCommentsByCommunityId(Long communityId, int page, int size) {
+		PageRequest pageable = PageRequest.of(page, size);
+		Slice<CommentEntity> comments = commentRepository.findByCommunityId(communityId, pageable);
+		return comments.stream().map(CommentEntity::toResponseDTO).collect(Collectors.toList());
 	 }
 
-	public List<CommentResponseDTO> getCommentsByAuthorId(Long authorId, int page, int size) {
+	public List<MyCommentResponseDTO> getCommentsByAuthorId(Long authorId, int page, int size) {
 		PageRequest pageable = PageRequest.of(page, size);
-		Slice<CommentResponseDTO> commentResponseDTOSlice = commentRepository.findByAuthorId(authorId, pageable);
-        return commentResponseDTOSlice.stream().collect(Collectors.toList());
+		Slice<CommentEntity> commentResponseDTOSlice = commentRepository.findByAuthorId(authorId, pageable);
+		return commentResponseDTOSlice.stream().map(CommentEntity::toMyCommentResponseDTO).collect(Collectors.toList());
 	}
 
-	 @Transactional
-	    public CommentResponseDTO updateComment(CommentRequestDTO commentRequestDTO) throws NotFoundException {
-	        CommentEntity comment = commentRepository.findById(commentRequestDTO.getId())
-	                .orElseThrow(() -> new NotFoundException("해당 댓글을 찾을수 없습니다 : " + commentRequestDTO.getId()));
-	        comment.setContent(commentRequestDTO.getContent());
-	        commentRepository.save(comment); // JPA save 메서드를 사용하여 업데이트
-	        return comment.toResponseDTO();
-	    }
+	@Transactional
+	public CommentResponseDTO updateComment(CommentRequestDTO commentRequestDTO) throws NotFoundException {
+		CommentEntity comment = commentRepository.findById(commentRequestDTO.getId())
+				.orElseThrow(() -> new NotFoundException("해당 댓글을 찾을수 없습니다 : " + commentRequestDTO.getId()));
+		comment.setContent(commentRequestDTO.getContent());
+		commentRepository.save(comment); // JPA save 메서드를 사용하여 업데이트
+		return comment.toResponseDTO();
+	}
 	 
 	 
 	 @Transactional
 	 public void delete(Long id) {
 		 CommentEntity comment = commentRepository.findById(id)
-	                .orElseThrow(() -> new IllegalArgumentException("해당 댓글을 찾을수 없습니다 : " + id));
-		 
+					.orElseThrow(() -> new IllegalArgumentException("해당 댓글을 찾을수 없습니다 : " + id));
+
 		 commentRepository.delete(comment);
 	 }
 

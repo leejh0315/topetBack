@@ -10,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 import topetBack.topetBack.community.dao.CommunityRepository;
 import topetBack.topetBack.community.domain.CommunityEntity;
 import topetBack.topetBack.community.domain.CommunityResponseDTO;
-import topetBack.topetBack.like.domain.Like;
+import topetBack.topetBack.likes.domain.Likes;
 import topetBack.topetBack.member.domain.Member;
 import topetBack.topetBack.report.dao.ReportRepository;
 import topetBack.topetBack.report.domain.ReportEntitiy;

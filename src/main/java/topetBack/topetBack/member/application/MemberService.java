@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
-import jakarta.servlet.http.Cookie;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -19,9 +18,13 @@ import topetBack.topetBack.config.SessionManager;
 import topetBack.topetBack.file.application.FileService;
 import topetBack.topetBack.file.domain.FileCategory;
 import topetBack.topetBack.file.domain.FileGroupEntity;
+import topetBack.topetBack.file.domain.FileInfoEntity;
 import topetBack.topetBack.member.dao.MemberPetRepository;
 import topetBack.topetBack.member.dao.MemberRepository;
-import topetBack.topetBack.member.domain.*;
+import topetBack.topetBack.member.domain.Member;
+import topetBack.topetBack.member.domain.MemberPet;
+import topetBack.topetBack.member.domain.MemberRequestDTO;
+import topetBack.topetBack.member.domain.SessionMember;
 import topetBack.topetBack.pet.domain.PetEntity;
 
 @Service
@@ -84,8 +87,9 @@ public class MemberService {
     public Member userInfoRegister(Member member, String nickName, MultipartFile image) throws IOException {
     	SessionMember sessionMember = member.toSessionMember();
     	sessionMember.setName(nickName);
-    	String profileSrc = fileService.uploadPhoto(image, FileCategory.MEMBER.getPath());
-    	sessionMember.setProfileSrc(profileSrc);
+    	FileInfoEntity fileInfoEntity =fileService.storeFile(image, FileCategory.MEMBER);
+    	sessionMember.setProfileSrc(fileInfoEntity.getFilePath());
+    	
     	Member newMember = memberRepository.save(sessionMember.toMember());
     	return newMember;
     }

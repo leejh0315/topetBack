@@ -1,9 +1,8 @@
-package topetBack.topetBack.like;
+package topetBack.topetBack.likes;
 
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,8 +16,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import topetBack.topetBack.community.domain.CommunityResponseDTO;
 import topetBack.topetBack.config.SessionManager;
-import topetBack.topetBack.like.application.LikeService;
-import topetBack.topetBack.like.domain.LikeResponseDTO;
+import topetBack.topetBack.likes.application.LikeService;
+import topetBack.topetBack.likes.domain.LikeResponseDTO;
 import topetBack.topetBack.member.domain.Member;
 import topetBack.topetBack.member.domain.SessionMember;
 
