@@ -21,7 +21,7 @@ public class FileInfoEntity {
 
     @Column(nullable = false)
     private String newFileName;	//파일 새로운 이름
-    
+
     private Long fileSize;
     
     
@@ -34,9 +34,7 @@ public class FileInfoEntity {
     public FileResponseDTO toResponseDTO() {
 
         return FileResponseDTO.builder()
-                .origFileName(this.origFileName)
-                .newFileName(this.newFileName)
-                .filePath(this.filePath)
+                .path(this.filePath)
                 .build();
     }
 

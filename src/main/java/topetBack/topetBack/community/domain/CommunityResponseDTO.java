@@ -24,6 +24,6 @@ public class CommunityResponseDTO {
 	private String animal;
     private List<FileResponseDTO> images;
     private int commentCount;
-	private int likeCount;
+	private long likeCount;
 
 }

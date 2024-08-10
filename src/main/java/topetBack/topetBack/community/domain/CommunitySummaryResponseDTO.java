@@ -12,12 +12,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CommunityListResponseDTO {
+public class CommunitySummaryResponseDTO {
 	private Long id;
 	private String title;
-	private String content;
-	private String hashtag;
-	private FileResponseDTO thumbnail;
-	private int commentCount;
-	private long likeCount;
 }

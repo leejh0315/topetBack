@@ -95,7 +95,7 @@ public class ScheduleController {
 		return ResponseEntity.ok(scheduleResponseDTO);
     }
 
-    @GetMapping("/home/{id}")
+    @GetMapping("/{id}")
     public List<ScheduleResponseDTO> getHomeSchedule(HttpServletRequest req, @PathVariable("id")Long id) throws JsonMappingException, JsonProcessingException {
     	Member sessionMember = sessionManager.getSessionObject(req).toMember();
     	
@@ -105,11 +105,7 @@ public class ScheduleController {
     			//scheduleService.findByAuthor(sessionMember);
     	List<ScheduleResponseDTO> homeSchedule = new ArrayList<ScheduleResponseDTO>();
     	LocalDate today = LocalDate.now();
-    	
-    	
-    	 
-    	
-    	
+
     	for(ScheduleResponseDTO scheduleRespDTO : scheduleResponseDTO) {
     		LocalDate startDate = scheduleRespDTO.getStartDate().toLocalDate();
     		LocalDate endDate = scheduleRespDTO.getEndDate().toLocalDate();
@@ -149,20 +145,15 @@ public class ScheduleController {
     															@ModelAttribute ScheduleRequestDTO scheduleRequestDTO, 
     															@RequestParam(value="photo", required=false) MultipartFile image,
     															@RequestParam(value="author", required=false)Long authorId) throws IOException{
-    	
-    	
+
     	System.out.println(scheduleRequestDTO);
-    	
-    	
+
     	Member sessionMember = sessionManager.getSessionObject(req).toMember();
-    	
     	
     	scheduleRequestDTO.setUpdateAuthor(sessionMember);
     	
-    	
     	ScheduleResponseDTO scheduleResponseDTO = scheduleService.createSchedule(scheduleRequestDTO, image);
-    	
-    	
+
     	return ResponseEntity.ok(scheduleResponseDTO);
     }
     

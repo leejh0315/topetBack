@@ -3,11 +3,9 @@ package topetBack.topetBack.community;
 import java.util.List;
 
 import org.apache.ibatis.javassist.NotFoundException;
-import org.hibernate.internal.build.AllowSysOut;
 import org.springframework.data.querydsl.binding.QuerydslPredicate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -26,6 +24,7 @@ import topetBack.topetBack.community.application.CommunityService;
 import topetBack.topetBack.community.domain.CommunityEntity;
 import topetBack.topetBack.community.domain.CommunityRequestDTO;
 import topetBack.topetBack.community.domain.CommunityResponseDTO;
+import topetBack.topetBack.community.domain.CommunityListResponseDTO;
 import topetBack.topetBack.config.SessionManager;
 import topetBack.topetBack.member.domain.Member;
 
@@ -53,11 +52,11 @@ public class CommunityController {
 
 	// 게시판 리스트
 	 @GetMapping("/{animal}/{category}")
-	    public ResponseEntity<List<CommunityResponseDTO>> boardList(@QuerydslPredicate(root = CommunityEntity.class) Predicate predicate,
-	                                        @PathVariable("animal") String animal, 
-	                                        @PathVariable("category") String category,
-	                                        @RequestParam(name = "page") int page, 
-	                                        @RequestParam(name = "size") int size
+	    public ResponseEntity<List<CommunityListResponseDTO>> boardList(@QuerydslPredicate(root = CommunityEntity.class) Predicate predicate,
+                                                                        @PathVariable("animal") String animal,
+                                                                        @PathVariable("category") String category,
+                                                                        @RequestParam(name = "page") int page,
+                                                                        @RequestParam(name = "size") int size
 	                                        ) {
 		 	System.out.println("***************************************************************************************************************");
 		 	System.out.println("getMappin 실행 시작 ");
@@ -70,7 +69,7 @@ public class CommunityController {
 	            category = "정보공유";
 	        }
 
-	        List<CommunityResponseDTO> communityList = communityService.getCommunityListByAnimalAndCategory(animal, category, page, size , predicate);
+	        List<CommunityListResponseDTO> communityList = communityService.getCommunityListByAnimalAndCategory(animal, category, page, size , predicate);
 
 		 	System.out.println("***************************************************************************************************************");
 		 	System.out.println("getMappin 실행 종료 ");

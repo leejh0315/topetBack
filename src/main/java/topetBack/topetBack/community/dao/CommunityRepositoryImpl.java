@@ -1,5 +1,9 @@
 package topetBack.topetBack.community.dao;
 
+import com.querydsl.core.types.ExpressionUtils;
+import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,14 +23,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static topetBack.topetBack.comment.domain.QCommentEntity.commentEntity;
+import static topetBack.topetBack.community.domain.QCommunityEntity.communityEntity;
+import static topetBack.topetBack.likes.domain.QLikes.likes;
 
 @Repository
 public class CommunityRepositoryImpl implements CommunityRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
-
-    private final static QCommunityEntity communityEntity = QCommunityEntity.communityEntity;
-    private final static QMember memberEntity = QMember.member;
 
 
     @Autowired
