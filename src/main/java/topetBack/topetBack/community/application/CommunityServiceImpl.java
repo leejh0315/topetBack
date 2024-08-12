@@ -17,6 +17,8 @@ import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
 
 import org.springframework.web.multipart.MultipartFile;
+
+import topetBack.topetBack.block.dao.BlockRepository;
 import topetBack.topetBack.comment.dao.CommentRepository;
 import topetBack.topetBack.community.dao.CommunityRepository;
 import topetBack.topetBack.community.domain.*;
@@ -30,12 +32,14 @@ public class CommunityServiceImpl implements CommunityService {
 
     private final CommunityRepository communityRepository;
 	private final FileService fileService;
+    private final BlockRepository blockRepository;
 	private final CommentRepository commentRepository;
 
-    public CommunityServiceImpl(CommunityRepository communityRepository, FileService fileService , CommentRepository commentRepository) {
+    public CommunityServiceImpl(CommunityRepository communityRepository, FileService fileService , CommentRepository commentRepository , BlockRepository blockRepository) {
         this.communityRepository = communityRepository;
         this.fileService = fileService;
         this.commentRepository = commentRepository;
+        this.blockRepository = blockRepository;
     }
 
     @Override
@@ -62,7 +66,7 @@ public class CommunityServiceImpl implements CommunityService {
     }
 
     @Override
-    public CommunityResponseDTO getCommunityById(long communityId){
+    public CommunityResponseDTO getCommunityById(long communityId){	
     	
         return communityRepository.findById(communityId).get().toResponseDTO();
     }
@@ -75,14 +79,18 @@ public class CommunityServiceImpl implements CommunityService {
                 .collect(Collectors.toList());
     }
 
-    public List<CommunityListResponseDTO> getCommunityListByAnimalAndCategory(String animal, String category, int page, int size , Predicate predicate) {
+    public List<CommunityListResponseDTO> getCommunityListByAnimalAndCategory(String animal, String category, int page, int size , Predicate predicate , Long currentUserId) {
         PageRequest pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdTime"));
+        
+        List<Long> blockedUserIds = blockRepository.findBlockedUserIdsByBlocker(currentUserId);
+
         // 기본 필터링 추가
         BooleanExpression baseFilter = QCommunityEntity.communityEntity.animal.eq(animal)
-                .and(QCommunityEntity.communityEntity.category.eq(category));
+                .and(QCommunityEntity.communityEntity.category.eq(category))
+                .and(QCommunityEntity.communityEntity.author.id.notIn(blockedUserIds));
 
         // baseFilter와 전달된 predicate를 결합
-        Predicate combinedPredicate = baseFilter.and(predicate);
+        Predicate combinedPredicate = baseFilter.and(predicate);	
         
         System.out.println("검색어 확인" + combinedPredicate);
         // 동적 쿼리와 페이징을 함께 사용

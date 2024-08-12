@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.*;
 
 import topetBack.topetBack.block.application.BlockService;
 import topetBack.topetBack.block.domain.BlockRequestDTO;
+import topetBack.topetBack.member.dao.MemberRepository;
+import topetBack.topetBack.member.domain.Member;
 
 @RestController
 @RequestMapping("/block")
@@ -13,13 +15,23 @@ public class BlockController {
 
     @Autowired
     private BlockService blockService;
+    
+    @Autowired
+    private MemberRepository memberRepository;
+    
 
     // 차단
-    @PostMapping("/block")
-    public ResponseEntity<String> blockUser(@RequestParam Long blockerId, @RequestParam Long blockedId) {
+    @PostMapping("/")
+    public ResponseEntity<String> blockUser(@RequestParam(name = "blockerId") Long blockerId, @RequestParam(name = "blockedId") Long blockedId) {
+    	//memberservice findid로 바꿀예정
+    	Member blocker = memberRepository.findById(blockerId)
+                .orElseThrow(() -> new RuntimeException("차단 사용자 못찾음"));
+        Member blocked = memberRepository.findById(blockedId)
+                .orElseThrow(() -> new RuntimeException("차단자 못찾음"));
+
         BlockRequestDTO blockRequestDTO = BlockRequestDTO.builder()
-                .blocker(BlockRequestDTO.builder().id(blockerId).build().getBlocker())
-                .blocked(BlockRequestDTO.builder().id(blockedId).build().getBlocked())
+                .blocker(blocker)
+                .blocked(blocked)
                 .build();
 
         blockService.blockUser(blockRequestDTO);
@@ -28,10 +40,16 @@ public class BlockController {
 
     // 차단 해제
     @PostMapping("/unblock")
-    public ResponseEntity<String> unblockUser(@RequestParam Long blockerId, @RequestParam Long blockedId) {
+    public ResponseEntity<String> unblockUser(@RequestParam(name = "blockerId") Long blockerId, @RequestParam(name = "blockedId") Long blockedId) {
+    	//memberservice findid로 바꿀예정
+    	Member blocker = memberRepository.findById(blockerId)
+                .orElseThrow(() -> new RuntimeException("차단 사용자 못찾음"));
+        Member blocked = memberRepository.findById(blockedId)
+                .orElseThrow(() -> new RuntimeException("차단자 못찾음"));
+
         BlockRequestDTO blockRequestDTO = BlockRequestDTO.builder()
-                .blocker(BlockRequestDTO.builder().id(blockerId).build().getBlocker())
-                .blocked(BlockRequestDTO.builder().id(blockedId).build().getBlocked())
+                .blocker(blocker)
+                .blocked(blocked)
                 .build();
 
         blockService.unblockUser(blockRequestDTO);
@@ -40,7 +58,7 @@ public class BlockController {
 
     // 차단 여부 확인
     @GetMapping("/is-blocked")
-    public ResponseEntity<Boolean> isUserBlocked(@RequestParam Long blockerId, @RequestParam Long blockedId) {
+    public ResponseEntity<Boolean> isUserBlocked(@RequestParam(name = "blockerId") Long blockerId, @RequestParam(name = "blockedId") Long blockedId) {
         boolean isBlocked = blockService.isBlocked(blockerId, blockedId);
         return ResponseEntity.ok(isBlocked);
     }

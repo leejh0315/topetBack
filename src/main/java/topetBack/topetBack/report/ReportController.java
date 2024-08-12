@@ -27,10 +27,10 @@ public class ReportController {
 	public final ReportService reportService;
     private final SessionManager sessionManager;
 
-	@PostMapping("/{id}")
-    public ResponseEntity<CommunityResponseDTO> reportPost(@PathVariable("id") Long id, HttpServletRequest req , @RequestBody String reason) throws JsonMappingException, JsonProcessingException {
+	@PostMapping("/")
+    public ResponseEntity<?> reportPost(@RequestParam(name = "type") String type,@RequestParam(name = "id") Long id, HttpServletRequest req , @RequestBody String reason) throws JsonMappingException, JsonProcessingException {
 		SessionMember member = sessionManager.getSessionObject(req);
 		
-        return reportService.reportPost(id, member.toMember() , reason);
+        return reportService.reportPost(type , id, member.toMember() , reason);
     }
 }

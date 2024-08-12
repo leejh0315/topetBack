@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.querydsl.core.types.Predicate;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -56,8 +58,9 @@ public class CommunityController {
                                                                         @PathVariable("animal") String animal,
                                                                         @PathVariable("category") String category,
                                                                         @RequestParam(name = "page") int page,
-                                                                        @RequestParam(name = "size") int size
-	                                        ) {
+                                                                        @RequestParam(name = "size") int size,
+                                                                        HttpServletRequest req
+	                                        ) throws JsonMappingException, JsonProcessingException {
 		 	System.out.println("***************************************************************************************************************");
 		 	System.out.println("getMappin 실행 시작 ");
 		 	System.out.println("***************************************************************************************************************");
@@ -68,8 +71,9 @@ public class CommunityController {
 	        } else {
 	            category = "정보공유";
 	        }
+	        Long currentUserId = sessionManager.getSessionObject(req).toMember().getId();
 
-	        List<CommunityListResponseDTO> communityList = communityService.getCommunityListByAnimalAndCategory(animal, category, page, size , predicate);
+	        List<CommunityListResponseDTO> communityList = communityService.getCommunityListByAnimalAndCategory(animal, category, page, size , predicate , currentUserId);
 
 		 	System.out.println("***************************************************************************************************************");
 		 	System.out.println("getMappin 실행 종료 ");

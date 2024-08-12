@@ -24,7 +24,6 @@ import java.util.List;
 
 import static topetBack.topetBack.comment.domain.QCommentEntity.commentEntity;
 import static topetBack.topetBack.community.domain.QCommunityEntity.communityEntity;
-import static topetBack.topetBack.like.domain.QLike.like;
 
 @Repository
 public class CommunityRepositoryImpl implements CommunityRepositoryCustom {

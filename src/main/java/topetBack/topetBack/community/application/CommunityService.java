@@ -22,7 +22,7 @@ public interface  CommunityService {
 
 	CommunityResponseDTO getCommunityById(long communityId);
 
-	List<CommunityListResponseDTO> getCommunityListByAnimalAndCategory(String animal, String category, int page, int size , Predicate predicate);
+	List<CommunityListResponseDTO> getCommunityListByAnimalAndCategory(String animal, String category, int page, int size , Predicate predicate ,Long currentUserId);
 	
 	CommunityResponseDTO updateCommunity(Long id, CommunityRequestDTO communityRequestDTO) throws NotFoundException;
 	

@@ -40,7 +40,9 @@ public class QCommunityEntity extends EntityPathBase<CommunityEntity> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
-    public final ListPath<topetBack.topetBack.likes.domain.Likes, topetBack.topetBack.like.domain.QLike> likesList = this.<topetBack.topetBack.likes.domain.Likes, topetBack.topetBack.like.domain.QLike>createList("likesList", topetBack.topetBack.likes.domain.Likes.class, topetBack.topetBack.like.domain.QLike.class, PathInits.DIRECT2);
+    public final NumberPath<Integer> likeCount = createNumber("likeCount", Integer.class);
+
+    public final ListPath<topetBack.topetBack.likes.domain.Likes, topetBack.topetBack.likes.domain.QLikes> likesList = this.<topetBack.topetBack.likes.domain.Likes, topetBack.topetBack.likes.domain.QLikes>createList("likesList", topetBack.topetBack.likes.domain.Likes.class, topetBack.topetBack.likes.domain.QLikes.class, PathInits.DIRECT2);
 
     public final StringPath title = createString("title");
 

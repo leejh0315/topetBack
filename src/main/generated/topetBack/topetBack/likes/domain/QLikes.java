@@ -1,4 +1,4 @@
-package topetBack.topetBack.like.domain;
+package topetBack.topetBack.likes.domain;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 
@@ -9,20 +9,18 @@ import javax.annotation.processing.Generated;
 import com.querydsl.core.types.Path;
 import com.querydsl.core.types.dsl.PathInits;
 
-import topetBack.topetBack.likes.domain.Likes;
-
 
 /**
- * QLike is a Querydsl query type for Like
+ * QLikes is a Querydsl query type for Likes
  */
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
-public class QLike extends EntityPathBase<Likes> {
+public class QLikes extends EntityPathBase<Likes> {
 
-    private static final long serialVersionUID = -1283873136L;
+    private static final long serialVersionUID = -257853142L;
 
     private static final PathInits INITS = PathInits.DIRECT2;
 
-    public static final QLike like = new QLike("like1");
+    public static final QLikes likes = new QLikes("likes");
 
     public final topetBack.topetBack.member.domain.QMember author;
 
@@ -32,23 +30,23 @@ public class QLike extends EntityPathBase<Likes> {
 
     public final BooleanPath isLike = createBoolean("isLike");
 
-    public QLike(String variable) {
+    public QLikes(String variable) {
         this(Likes.class, forVariable(variable), INITS);
     }
 
-    public QLike(Path<? extends Likes> path) {
+    public QLikes(Path<? extends Likes> path) {
         this(path.getType(), path.getMetadata(), PathInits.getFor(path.getMetadata(), INITS));
     }
 
-    public QLike(PathMetadata metadata) {
+    public QLikes(PathMetadata metadata) {
         this(metadata, PathInits.getFor(metadata, INITS));
     }
 
-    public QLike(PathMetadata metadata, PathInits inits) {
+    public QLikes(PathMetadata metadata, PathInits inits) {
         this(Likes.class, metadata, inits);
     }
 
-    public QLike(Class<? extends Likes> type, PathMetadata metadata, PathInits inits) {
+    public QLikes(Class<? extends Likes> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.author = inits.isInitialized("author") ? new topetBack.topetBack.member.domain.QMember(forProperty("author")) : null;
         this.community = inits.isInitialized("community") ? new topetBack.topetBack.community.domain.QCommunityEntity(forProperty("community"), inits.get("community")) : null;
