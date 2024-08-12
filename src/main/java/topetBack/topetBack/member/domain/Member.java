@@ -55,6 +55,7 @@ public class Member implements Serializable {
 				.socialId(this.socialId)
 				.email(this.email)
 				.name(this.name)
+				.profileSrc(this.profileSrc)
 				.build();
 	}
 
@@ -69,6 +70,9 @@ public class Member implements Serializable {
 	public void updateMember(MemberRequestDTO memberRequestDTO){
 		if(memberRequestDTO.getName() != null){
 			this.name = memberRequestDTO.getName();
+		}
+		if(memberRequestDTO.getProfileSrc() != null){
+			this.profileSrc = memberRequestDTO.getProfileSrc();
 		}
 	}
 

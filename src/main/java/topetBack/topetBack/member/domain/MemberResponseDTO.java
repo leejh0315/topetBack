@@ -14,4 +14,5 @@ public class MemberResponseDTO {
 	private String socialId;
 	private String name;
 	private String email;
+	private String profileSrc;
 }

@@ -109,20 +109,20 @@ public class MemberController {
 	}
 
 	@PatchMapping("/update")
-	public ResponseEntity<SessionMember> updateMember(HttpServletRequest req, MemberRequestDTO memberRequestDTO) throws JsonMappingException, JsonProcessingException {
+	public ResponseEntity<MemberResponseDTO> updateMember(MemberRequestDTO memberRequestDTO) throws IOException {
 
-		Cookie cookie = CookieUtils.findCookieFromRequest(req);
-		memberRequestDTO.setCookie(cookie);
-
-		SessionMember updatedSessionMember = memberService.updateMember(memberRequestDTO);
+		MemberResponseDTO updatedSessionMember = memberService.updateMember(memberRequestDTO);
 
 		return ResponseEntity.ok(updatedSessionMember);
 	}
 
 	@GetMapping("/home")
-	public SessionMember getHome(HttpServletRequest req) throws JsonMappingException, JsonProcessingException {
+	public ResponseEntity<MemberResponseDTO> getHome(HttpServletRequest req) throws JsonProcessingException {
+
 		SessionMember member = sessionManager.getSessionObject(req);
-		return member;
+
+		MemberResponseDTO memberResponseDTO = memberService.findById(member.getId());
+		return ResponseEntity.ok(memberResponseDTO);
 	}
 	
 	//로그아웃
