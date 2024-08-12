@@ -43,6 +43,9 @@ public class SessionManager {
 		Cookie cookie = new Cookie(SESSION_COOKIE_NAME, sessionId);
 		cookie.setMaxAge(180 * 60); // 세션 만료 시간 설정 (초 단위)//180분
 		cookie.setPath("/"); // 쿠키 경로 설정
+		cookie.setHttpOnly(true);
+		cookie.setSecure(true);
+		cookie.setAttribute("SameSite", "None");
 		resp.addCookie(cookie);
 		return sessionId;
 		// key value

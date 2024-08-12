@@ -17,7 +17,7 @@ public class CommunityListResponseDTO {
 	private String title;
 	private String content;
 	private String hashtag;
-	private FileResponseDTO thumbnail;
+	private String thumbnail;
 	private int commentCount;
 	private long likeCount;
 }

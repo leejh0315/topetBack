@@ -17,6 +17,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import topetBack.topetBack.file.domain.FileGroupEntity;
+import topetBack.topetBack.file.domain.FileResponseDTO;
 import topetBack.topetBack.likes.domain.Likes;
 import topetBack.topetBack.member.domain.Member;
 
@@ -107,6 +108,7 @@ public class CommunityEntity {
                 .thumbnail(
                         Optional.ofNullable(this.fileGroupEntity.getFileResponseDTOList())
                                 .flatMap(list -> list.stream().findFirst())
+                                .map(FileResponseDTO::getPath)
                                 .orElse(null)
                 )
                 .commentCount(this.commentCount)
