@@ -35,7 +35,7 @@ public class BlockServiceImpl implements BlockService {
             BlockEntity blockEntity = blockRequestDTO.toBlockEntity();
             blockRepository.save(blockEntity);
         }
-        
+     
     }
 
     // 차단 해제

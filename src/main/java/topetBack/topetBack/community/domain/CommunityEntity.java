@@ -61,7 +61,7 @@ public class CommunityEntity {
 	@Column(nullable = false)
     @Comment("카테고리")
     private String category;
-
+	
 	@Column(nullable = true)
     @Comment("반려 동물")
     private String animal;
@@ -99,9 +99,18 @@ public class CommunityEntity {
                 .build();
     }
 
+    public CommunitySummaryResponseDTO toSummaryResponseDTO() {
+        return CommunitySummaryResponseDTO.builder()
+                .id(this.id)
+                .title(this.title)
+                .build();
+    }	
+    
     public CommunityListResponseDTO toListResponseDTO() {
         return CommunityListResponseDTO.builder()
                 .id(this.id)
+                .createdTime(this.createdTime)
+                .updatedTime(this.updatedTime)
                 .title(this.title)
                 .content(this.content)
                 .hashtag(this.hashtag)
@@ -116,12 +125,6 @@ public class CommunityEntity {
                 .build();
     }
 
-    public CommunitySummaryResponseDTO toSummaryResponseDTO(){
-        return CommunitySummaryResponseDTO.builder()
-                .id(this.id)
-                .title(this.title)
-                .build();
-    }
 
     
     public void updateCommunity(String title, String content , String hashtag) {
