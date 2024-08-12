@@ -2,6 +2,8 @@ package topetBack.topetBack.report.domain;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,10 +16,13 @@ import topetBack.topetBack.member.domain.Member;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class CommentReportEntity {
 	
 	private Long id;
-	private Member author;
-	private String reason;
-	private CommentEntity comment;
+    private String reason;
+    private Long commentId;
+    private String commentText;
+    private Long authorId;
+    private String authorName;
 }

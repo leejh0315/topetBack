@@ -1,22 +1,20 @@
 package topetBack.topetBack.report.application;
 
-import java.util.Optional;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import topetBack.topetBack.comment.dao.CommentRepository;
 import topetBack.topetBack.comment.domain.CommentEntity;
 import topetBack.topetBack.community.dao.CommunityRepository;
 import topetBack.topetBack.community.domain.CommunityEntity;
-import topetBack.topetBack.community.domain.CommunityResponseDTO;
 import topetBack.topetBack.member.domain.Member;
 import topetBack.topetBack.report.dao.ReportRepository;
 import topetBack.topetBack.report.domain.CommentReportEntity;
 import topetBack.topetBack.report.domain.CommunityReportEntity;
 import topetBack.topetBack.report.domain.ReportEntitiy;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -36,13 +34,14 @@ public class ReportServiceImpl implements ReportService {
                 ReportEntitiy reportEntity = ReportEntitiy.builder()
                         .author(author)
                         .reason(reason)
-                        .community(community) // community 설정
+                        .community(community)
                         .build();
                 
                 reportRepository.save(reportEntity);
-                return ResponseEntity.ok(reportEntity.toCommunityResponseDTO());
+                CommunityReportEntity dto = reportEntity.toCommunityReportDTO();
+                return ResponseEntity.ok(dto);
             } else {
-                return ResponseEntity.status(404).body("커뮤니티 찾을수없습");
+                return ResponseEntity.status(404).body("커뮤니티를 찾을 수 없습니다.");
             }
         } else if ("comment".equals(type)) {
             Optional<CommentEntity> commentOpt = commentRepository.findById(id);
@@ -51,16 +50,17 @@ public class ReportServiceImpl implements ReportService {
                 ReportEntitiy reportEntity = ReportEntitiy.builder()
                         .author(author)
                         .reason(reason)
-                        .comment(comment) // comment 설정
+                        .comment(comment)
                         .build();
                 
                 reportRepository.save(reportEntity);
-                return ResponseEntity.ok(reportEntity.toCommentResponseDTO());
+                CommentReportEntity dto = reportEntity.toCommentReportDTO();
+                return ResponseEntity.ok(dto);
             } else {
-                return ResponseEntity.status(404).body("댓글 찾을수없습");
+                return ResponseEntity.status(404).body("댓글을 찾을 수 없습니다.");
             }
         } else {
-            return ResponseEntity.status(400).body("Invalid report type");
+            return ResponseEntity.status(400).body("잘못된 신고 유형입니다.");
         }
     }
 }
