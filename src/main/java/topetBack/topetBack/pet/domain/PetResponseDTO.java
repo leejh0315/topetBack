@@ -30,6 +30,6 @@ public class PetResponseDTO {
 	private String uid;
 	private String neutered;
 
-	private List<MemberResponseDTO> member = new ArrayList<MemberResponseDTO>();
+	private List<MemberResponseDTO> members = new ArrayList<>();
  
 }

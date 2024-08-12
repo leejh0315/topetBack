@@ -20,7 +20,6 @@ import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import topetBack.topetBack.member.domain.Member;
 import topetBack.topetBack.member.domain.SessionMember;
-import topetBack.topetBack.pet.domain.PetEntity;
 import topetBack.topetBack.pet.domain.PetResponseDTO;
 
 @Component
@@ -56,7 +55,7 @@ public class SessionManager {
 		if (sessionCookie != null) {
 			String sessionId = sessionCookie.getValue();
 			System.out.println("sessionManager에서 쿠키를 통해 찾은 sessionId : " + sessionId);
-			
+
 			SessionMember sessionData = (SessionMember) redisTemplate.opsForValue().get(sessionId);
 			if (sessionData.getPets() != null) {
 				sessionData.getPets().add(petResponseDTO);
@@ -103,6 +102,22 @@ public class SessionManager {
 		return null;
 	}
 
+	public SessionMember getSessionMember(Cookie cookie) throws JsonMappingException, JsonProcessingException {
+
+		String sessionId = cookie.getValue();
+
+		SessionMember sessionData = (SessionMember) redisTemplate.opsForValue().get(sessionId);
+		System.out.println(sessionData);
+		if (sessionData != null) {
+			if (sessionData instanceof SessionMember) {
+				SessionMember sessionMember = (SessionMember) sessionData;
+				return sessionMember;
+			}
+		}
+
+		return null;
+	}
+
 	public SessionMember updateMember(Member member, Cookie cookie) {
 		log.info("session update");
 		assert cookie != null;
@@ -141,5 +156,5 @@ public class SessionManager {
 		}
 		return null;
 	}
-	
+
 }

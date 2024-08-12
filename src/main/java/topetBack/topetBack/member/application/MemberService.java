@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -71,9 +72,9 @@ public class MemberService {
     	memberPetRepository.save(memberPet);
     }
 
-	@Transactional
-	public SessionMember updateMember(MemberRequestDTO memberRequestDTO){
-		Member member = memberRepository.findById(memberRequestDTO.getId())
+	public SessionMember updateMember(MemberRequestDTO memberRequestDTO) throws JsonProcessingException {
+		SessionMember sessionMember = sessionManager.getSessionMember(memberRequestDTO.getCookie());
+		Member member = memberRepository.findById(sessionMember.getId())
 				.orElseThrow(() -> new RuntimeException("Member 가 없음"));
 
 		member.updateMember(memberRequestDTO);
