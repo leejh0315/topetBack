@@ -1,7 +1,5 @@
 package topetBack.topetBack.report;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,8 +30,7 @@ public class ReportController {
 	@PostMapping("/{id}")
     public ResponseEntity<CommunityResponseDTO> reportPost(@PathVariable("id") Long id, HttpServletRequest req , @RequestBody String reason) throws JsonMappingException, JsonProcessingException {
 		SessionMember member = sessionManager.getSessionObject(req);
-		ResponseEntity<CommunityResponseDTO> report = reportService.reportPost(id, member.toMember(), reason);
-
-		return report;
+		
+        return reportService.reportPost(id, member.toMember() , reason);
     }
 }

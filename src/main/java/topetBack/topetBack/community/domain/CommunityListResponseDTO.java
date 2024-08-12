@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import topetBack.topetBack.file.domain.FileResponseDTO;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -14,6 +15,8 @@ import java.util.List;
 @NoArgsConstructor
 public class CommunityListResponseDTO {
 	private Long id;
+	private LocalDateTime createdTime;
+	private LocalDateTime updatedTime;
 	private String title;
 	private String content;
 	private String hashtag;
