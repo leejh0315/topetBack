@@ -1,13 +1,18 @@
 package topetBack.topetBack.block;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import topetBack.topetBack.block.application.BlockService;
 import topetBack.topetBack.block.domain.BlockRequestDTO;
+import topetBack.topetBack.block.domain.BlockResponseDTO;
 import topetBack.topetBack.member.dao.MemberRepository;
 import topetBack.topetBack.member.domain.Member;
+import topetBack.topetBack.report.domain.ReportEntitiy;
 
 @RestController
 @RequestMapping("/block")
@@ -61,5 +66,14 @@ public class BlockController {
     public ResponseEntity<Boolean> isUserBlocked(@RequestParam(name = "blockerId") Long blockerId, @RequestParam(name = "blockedId") Long blockedId) {
         boolean isBlocked = blockService.isBlocked(blockerId, blockedId);
         return ResponseEntity.ok(isBlocked);
+    }
+    
+    //내 차단 리스트
+    @GetMapping("myBlockList/{id}")
+    public ResponseEntity<List<BlockResponseDTO>> findByMyBlockList(@PathVariable("id") Long id){
+    	List<BlockResponseDTO> myBlockList = blockService.findByAuthorId(id);
+    	return new ResponseEntity<>(myBlockList, HttpStatus.OK);
+    	
+    	
     }
 }

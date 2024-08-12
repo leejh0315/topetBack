@@ -16,13 +16,11 @@ import topetBack.topetBack.community.domain.CommunityListResponseDTO;
 @Service
 public interface  CommunityService {
 
-	List<CommunityResponseDTO> getCommunityListByCategory(String category);
-
 	CommunityResponseDTO createCommunity(CommunityRequestDTO communityRequestDTO) throws IOException;
 
 	CommunityResponseDTO getCommunityById(long communityId);
 
-	List<CommunityListResponseDTO> getCommunityListByAnimalAndCategory(String animal, String category, int page, int size , Predicate predicate ,Long currentUserId);
+	public List<CommunityListResponseDTO> getCommunityListByAnimalAndCategory(String animal, String category, int page, int size, Predicate predicate, Long currentUserId, String orderby);
 	
 	CommunityResponseDTO updateCommunity(Long id, CommunityRequestDTO communityRequestDTO) throws NotFoundException;
 	
@@ -31,8 +29,6 @@ public interface  CommunityService {
 	void deleteCommunity(Long id) throws NotFoundException;
 	
 	List<CommunityResponseDTO> getCommunityListByAnimalAndLike(String animal);
-	
-	List<CommunityResponseDTO> getCommunityListByAnimalAndCategoryAndLike(String animal , String category , int page , int size ,Predicate predicate);
-	
+		
 	
 }

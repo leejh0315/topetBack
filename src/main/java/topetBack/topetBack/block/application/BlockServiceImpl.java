@@ -1,5 +1,9 @@
 package topetBack.topetBack.block.application;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -7,6 +11,7 @@ import topetBack.topetBack.block.dao.BlockRepository;
 import topetBack.topetBack.block.domain.BlockEntity;
 import topetBack.topetBack.block.domain.BlockRequestDTO;
 import topetBack.topetBack.block.domain.BlockResponseDTO;
+import topetBack.topetBack.community.domain.CommunityEntity;
 import topetBack.topetBack.member.dao.MemberRepository;
 import topetBack.topetBack.member.domain.Member;
 
@@ -54,4 +59,16 @@ public class BlockServiceImpl implements BlockService {
 
         return blockRepository.existsByBlockerAndBlocked(blocker, blocked);
     }
+    
+    @Override
+    public List<BlockResponseDTO> findByAuthorId(Long id){
+    	
+    	Optional<BlockEntity> myBlockList = blockRepository.findById(id);
+		return myBlockList.stream()
+                .map(BlockEntity:: toBlockResponseDTO)
+                .collect(Collectors.toList());
+    	
+    }
+    
+
 }

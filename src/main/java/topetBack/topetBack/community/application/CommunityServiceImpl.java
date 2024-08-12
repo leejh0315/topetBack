@@ -70,18 +70,13 @@ public class CommunityServiceImpl implements CommunityService {
     	
         return communityRepository.findById(communityId).get().toResponseDTO();
     }
-
+    
+    //게시판 리스트
     @Override
-    public List<CommunityResponseDTO> getCommunityListByCategory(String category) {
-        List<CommunityEntity> communityEntityList = communityRepository.findByCategory(category);
-        return communityEntityList.stream()
-                .map(CommunityEntity::toResponseDTO)
-                .collect(Collectors.toList());
-    }
+    public List<CommunityListResponseDTO> getCommunityListByAnimalAndCategory(String animal, String category, int page, int size, Predicate predicate, Long currentUserId, String orderby) {
+        PageRequest pageable = PageRequest.of(page, size);
 
-    public List<CommunityListResponseDTO> getCommunityListByAnimalAndCategory(String animal, String category, int page, int size , Predicate predicate , Long currentUserId) {
-        PageRequest pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdTime"));
-        
+        // 차단된 유저의 게시물을 제외하는 필터
         List<Long> blockedUserIds = blockRepository.findBlockedUserIdsByBlocker(currentUserId);
 
         // 기본 필터링 추가
@@ -90,15 +85,18 @@ public class CommunityServiceImpl implements CommunityService {
                 .and(QCommunityEntity.communityEntity.author.id.notIn(blockedUserIds));
 
         // baseFilter와 전달된 predicate를 결합
-        Predicate combinedPredicate = baseFilter.and(predicate);	
-        
-        System.out.println("검색어 확인" + combinedPredicate);
-        // 동적 쿼리와 페이징을 함께 사용
-        Slice<CommunityEntity> communityEntitySlice = communityRepository.findAllWithPredicate(combinedPredicate, pageable);
+        Predicate combinedPredicate = baseFilter.and(predicate);
+
+        System.out.println("검색어 확인: " + combinedPredicate);
+
+        // 동적 쿼리와 페이징을 함께 사용하여 정렬 기준(orderby)에 따라 결과를 가져옴
+        Slice<CommunityEntity> communityEntitySlice = communityRepository.findAllWithPredicate(combinedPredicate, pageable, orderby);
+
         return communityEntitySlice.stream()
                 .map(CommunityEntity::toListResponseDTO)
                 .collect(Collectors.toList());
     }
+
 
     @Override
     public void deleteCommunity(Long post_id) throws NotFoundException {
@@ -132,16 +130,6 @@ public class CommunityServiceImpl implements CommunityService {
                 .collect(Collectors.toList());
 	}
 	
-	@Transactional
-	public List<CommunityResponseDTO> getCommunityListByAnimalAndCategoryAndLike(String animal, String category, int page, int size, Predicate predicate) {
-        PageRequest pageable = PageRequest.of(page, size);
-
-        List<CommunityEntity> communityEntityList = communityRepository.findAllByAnimalAndCategoryWithLikesSorted(animal, category, predicate, pageable);
-
-        return communityEntityList.stream()
-                .map(CommunityEntity::toResponseDTO)
-                .collect(Collectors.toList());
-    }
 	@Transactional
 	public List<CommunityResponseDTO> getCommunityListByAnimalAndLike(String animal){
 		

@@ -59,6 +59,7 @@ public class CommunityController {
                                                                         @PathVariable("category") String category,
                                                                         @RequestParam(name = "page") int page,
                                                                         @RequestParam(name = "size") int size,
+                                                                        @RequestParam(required = false, defaultValue = "createdTime", value = "orderby") String orderby,
                                                                         HttpServletRequest req
 	                                        ) throws JsonMappingException, JsonProcessingException {
 		 	System.out.println("***************************************************************************************************************");
@@ -73,7 +74,7 @@ public class CommunityController {
 	        }
 	        Long currentUserId = sessionManager.getSessionObject(req).toMember().getId();
 
-	        List<CommunityListResponseDTO> communityList = communityService.getCommunityListByAnimalAndCategory(animal, category, page, size , predicate , currentUserId);
+	        List<CommunityListResponseDTO> communityList = communityService.getCommunityListByAnimalAndCategory(animal, category, page, size , predicate , currentUserId , orderby);
 
 		 	System.out.println("***************************************************************************************************************");
 		 	System.out.println("getMappin 실행 종료 ");
@@ -114,33 +115,13 @@ public class CommunityController {
     	return new ResponseEntity<>(communityList, HttpStatus.OK);
     }
     
-    
-    //인기순
-    @GetMapping("/{animal}/{category}/sortLike")
-    public ResponseEntity<List<CommunityResponseDTO>> boardLikeList(@QuerydslPredicate(root = CommunityEntity.class) Predicate predicate,
-                                            @PathVariable("animal") String animal, 
-                                            @PathVariable("category") String category,
-                                            @RequestParam(name = "page") int page, 
-	                                        @RequestParam(name = "size") int size) {
-        
-        if ("freedomAndDaily".equals(category)) {
-            category = "자유/일상";
-        } else if ("curious".equals(category)) {
-            category = "궁금해요";
-        } else {
-            category = "정보공유";
-        }
-
-        List<CommunityResponseDTO> communityList = communityService.getCommunityListByAnimalAndCategoryAndLike(animal, category , page , size , predicate);
-
-        return new ResponseEntity<>(communityList, HttpStatus.OK);
-    }
-    
     //동물통합 인기순
     @GetMapping("/{animal}/sortLike")
     public ResponseEntity<List<CommunityResponseDTO>> boardLikeAnimalList(Model model, @PathVariable("animal") String animal) {
         List<CommunityResponseDTO> communityList = communityService.getCommunityListByAnimalAndLike(animal);
         return new ResponseEntity<>(communityList, HttpStatus.OK);
     }	
+    
+    
     
 }

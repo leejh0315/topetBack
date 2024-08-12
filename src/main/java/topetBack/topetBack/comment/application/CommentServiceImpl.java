@@ -1,5 +1,6 @@
 package topetBack.topetBack.comment.application;
 
+import java.nio.file.AccessDeniedException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -9,6 +10,7 @@ import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
+import topetBack.topetBack.block.dao.BlockRepository;
 import topetBack.topetBack.comment.dao.CommentRepository;
 import topetBack.topetBack.comment.domain.CommentEntity;
 import topetBack.topetBack.comment.domain.CommentRequestDTO;
@@ -26,22 +28,33 @@ public class CommentServiceImpl implements CommentService{
 	private final CommentRepository commentRepository;
 	private final CommunityRepository communityRepository;
 	private final MemberRepository memberRepository;
+    private final BlockRepository blockRepository;
 
 
-	 public CommentServiceImpl(CommentRepository commentRepository, CommunityRepository communityRepository, MemberRepository memberRepository) {
+
+	 public CommentServiceImpl(CommentRepository commentRepository, CommunityRepository communityRepository, MemberRepository memberRepository , BlockRepository blockRepository) {
 	        this.commentRepository = commentRepository;
 	        this.communityRepository = communityRepository;
 	        this.memberRepository = memberRepository;
+	        this.blockRepository = blockRepository;
 
 	    }
 
 	 @Transactional
-	 public CommentResponseDTO insert(Long CommunityId, CommentRequestDTO commentRequestDTO) throws NotFoundException {
+	 public CommentResponseDTO insert(Long CommunityId, CommentRequestDTO commentRequestDTO) throws NotFoundException, AccessDeniedException {
 	     Member member = memberRepository.findById(commentRequestDTO.getAuthor().getId())
 	             .orElseThrow(() -> new NotFoundException("해당 댓글을 찾을수 없습니다 : " + commentRequestDTO.getAuthor().getId()));
 
 	     CommunityEntity communityEntity = communityRepository.findById(CommunityId)
 	             .orElseThrow(() -> new NotFoundException("해당 댓글을 찾을수 없습니다 : " + CommunityId));
+	     
+	     // 차단된 유저 ID 리스트 가져오기
+	     List<Long> blockedUserIds = blockRepository.findBlockedUserIdsByBlocker(member.getId());
+
+	     // 차단된 유저인지 확인
+	     if (blockedUserIds.contains(member.getId())) {
+	         throw new AccessDeniedException("차단된 사용자로부터의 댓글은 허용되지 않습니다.");
+	     }
 	     
 	     CommentEntity commentEntity = commentRequestDTO.toCommentEntity();
 
@@ -50,9 +63,8 @@ public class CommentServiceImpl implements CommentService{
 	                 .orElseThrow(() -> new NotFoundException("해당 댓글을 찾을수 없습니다 : " + commentRequestDTO.getParentId()));
 	         commentEntity.updateParent(parentComment);
 	     }
-	         commentEntity.updateCommunity(communityEntity);
-	   
-
+	    
+	     commentEntity.updateCommunity(communityEntity);
 	     commentEntity.updateAuthor(member);
 
 	     CommentEntity result = commentRepository.save(commentEntity);

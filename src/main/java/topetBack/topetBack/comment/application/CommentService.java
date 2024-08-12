@@ -1,5 +1,6 @@
 package topetBack.topetBack.comment.application;
 
+import java.nio.file.AccessDeniedException;
 import java.util.List;
 
 import org.apache.ibatis.javassist.NotFoundException;
@@ -13,7 +14,7 @@ import topetBack.topetBack.comment.domain.MyCommentResponseDTO;
 
 @Service
 public interface CommentService {
-	CommentResponseDTO insert(Long CommunityId , CommentRequestDTO commentRequestDTO) throws NotFoundException;
+	CommentResponseDTO insert(Long CommunityId , CommentRequestDTO commentRequestDTO) throws NotFoundException, AccessDeniedException;
 	List<CommentResponseDTO> getCommentsByCommunityId(Long communityId, int page, int size);
 	List<MyCommentResponseDTO> getCommentsByAuthorId(Long authorId, int page, int size);
 	CommentResponseDTO updateComment(CommentRequestDTO commentUpdateRequestDTO) throws NotFoundException;

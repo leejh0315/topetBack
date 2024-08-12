@@ -12,6 +12,6 @@ import topetBack.topetBack.community.domain.CommunityEntity;
 
 @Repository
 public interface CommunityRepositoryCustom {
-	List<CommunityEntity> findAllByAnimalAndCategoryWithLikesSorted(String animal, String category, Predicate predicate, Pageable pageable);
-	Slice<CommunityEntity> findAllWithPredicate(Predicate predicate, Pageable pageable);
+//	Slice<CommunityEntity> findAllByAnimalAndCategoryWithLikesSorted(String animal, String category, Predicate predicate, Pageable pageable);
+	Slice<CommunityEntity> findAllWithPredicate(Predicate predicate, Pageable pageable, String orderby);
 }

@@ -36,38 +36,43 @@ public class CommunityRepositoryImpl implements CommunityRepositoryCustom {
         this.queryFactory = queryFactory;
     }
 
-    public List<CommunityEntity> findAllByAnimalAndCategoryWithLikesSorted(String animal, String category, Predicate predicate, Pageable pageable) {
-
-
-        BooleanExpression baseFilter = communityEntity.animal.eq(animal)
-                .and(communityEntity.category.eq(category));
-
-        Predicate combinedPredicate = baseFilter.and(predicate);
-
-        PageRequest pageRequest = (PageRequest) pageable;
-
-        return queryFactory.selectFrom(communityEntity)
-                .where(combinedPredicate)
-                .orderBy(communityEntity.likesList.size().desc())
-                .offset(pageRequest.getOffset())
-                .limit(pageRequest.getPageSize())
-                .fetch();
-    }
+//    public Slice<CommunityEntity> findAllByAnimalAndCategoryWithLikesSorted(Predicate predicate, Pageable pageable) {
+//
+//
+//        PageRequest pageRequest = (PageRequest) pageable;
+//
+//        return queryFactory.selectFrom(communityEntity)
+//                .where(predicate)
+//                .orderBy(communityEntity.likesList.size().desc())
+//                .offset(pageRequest.getOffset())
+//                .limit(pageRequest.getPageSize())
+//                .fetch();
+//    }
+    
+   
 
     @Override
-    public Slice<CommunityEntity> findAllWithPredicate(Predicate predicate, Pageable pageable){
+    public Slice<CommunityEntity> findAllWithPredicate(Predicate predicate, Pageable pageable, String orderby) {
+        JPAQuery<Long> idQuery = queryFactory
+                .select(communityEntity.id)
+                .from(communityEntity)
+                .where(predicate);
 
-        List<Long> ids = queryFactory
-                .select(communityEntity.id).from(communityEntity)
-                .where(predicate)
-                .orderBy(communityEntity.createdTime.desc())
+        // 정렬 기준에 따라 다르게 처리
+        if ("likes".equalsIgnoreCase(orderby)) {
+            idQuery.orderBy(communityEntity.likesList.size().desc());
+        } else {
+            idQuery.orderBy(communityEntity.createdTime.desc());
+        }
+
+        List<Long> ids = idQuery
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
 
         boolean hasNext = ids.size() == pageable.getPageSize();
 
-        if(ids.isEmpty()){
+        if (ids.isEmpty()) {
             return new SliceImpl<>(new ArrayList<>(), pageable, hasNext);
         }
 
@@ -79,8 +84,16 @@ public class CommunityRepositoryImpl implements CommunityRepositoryCustom {
                 .leftJoin(communityEntity.fileGroupEntity.fileList).fetchJoin()
                 .where(communityEntity.id.in(ids));
 
+        // 동일한 정렬 기준을 적용하여 CommunityEntity를 가져옴
+        if ("likes".equalsIgnoreCase(orderby)) {
+            query.orderBy(communityEntity.likesList.size().desc());
+        } else {
+            query.orderBy(communityEntity.createdTime.desc());
+        }
+
         List<CommunityEntity> content = query.fetch();
 
         return new SliceImpl<>(content, pageable, hasNext);
     }
+
 }
