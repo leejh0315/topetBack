@@ -3,6 +3,8 @@ package topetBack.topetBack.comment;
 import java.util.List;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -42,8 +44,10 @@ public class CommentController {
 	 public ResponseEntity<List<CommentResponseDTO>> getCommentsByCommunityId(Model model,
 																			  @PathVariable("id") Long id,
 																			  @RequestParam(name = "page") int page,
-																			  @RequestParam(name = "size") int size) {
-		    List<CommentResponseDTO> comments = commentService.getCommentsByCommunityId(id, page, size);
+																			  @RequestParam(name = "size") int size,
+																			  HttpServletRequest req) throws JsonMappingException, JsonProcessingException {
+	        Long currentUserId = sessionManager.getSessionObject(req).toMember().getId();
+		    List<CommentResponseDTO> comments = commentService.getCommentsByCommunityId(id, page, size ,currentUserId);
 		    return new ResponseEntity<>(comments, HttpStatus.OK);
 	 }
 

@@ -97,7 +97,7 @@ public class CommunityServiceImpl implements CommunityService {
                 .collect(Collectors.toList());
     }
 
-
+    //삭제
     @Override
     public void deleteCommunity(Long post_id) throws NotFoundException {
     	   CommunityEntity community = communityRepository.findById(post_id)
@@ -106,6 +106,7 @@ public class CommunityServiceImpl implements CommunityService {
         communityRepository.deleteById(post_id);
     }
     
+    //수정
     @Transactional
     public CommunityResponseDTO updateCommunity(Long id, CommunityRequestDTO communityRequestDTO) throws NotFoundException {
         CommunityEntity communityEntity = communityRepository.findById(id)
@@ -122,8 +123,9 @@ public class CommunityServiceImpl implements CommunityService {
         return updatedCommunity.toResponseDTO();
     }
 
+    //내 게시글 보기
 	@Override
-	public List<CommunityResponseDTO> findByAuthorId(Long id) {		//내 게시글 보기
+	public List<CommunityResponseDTO> findByAuthorId(Long id) {		
 		List<CommunityEntity> myCommunityList = communityRepository.findByAuthorId(id);
 		return myCommunityList.stream()
                 .map(CommunityEntity::toResponseDTO)
@@ -131,17 +133,12 @@ public class CommunityServiceImpl implements CommunityService {
 	}
 	
 	@Transactional
-	public List<CommunityResponseDTO> getCommunityListByAnimalAndLike(String animal){
-		
+	public List<CommunityResponseDTO> getCommunityListByAnimalAndLike(String animal){		
 		List<CommunityEntity> communityEntityList = communityRepository.findAnimalOrderByLikesCountDesc(animal);
         return communityEntityList.stream()
                 .map(CommunityEntity::toResponseDTO)
                 .collect(Collectors.toList());
 	}
-	
-	
-	
-	
 
 
 }

@@ -2,6 +2,8 @@ package topetBack.topetBack.comment.dao;
 
 import java.util.List;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -18,6 +20,9 @@ public interface CommentRepository extends JpaRepository<CommentEntity, Long>, C
 
 	@Transactional
     void deleteByCommunityId(Long communityId);
+
+	Slice<CommentEntity> findByCommunityIdAndAuthorIdNotIn(Long communityId, List<Long> blockedUserIds,
+			PageRequest pageable);
 	
 	
 	

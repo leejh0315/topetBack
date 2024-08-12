@@ -48,14 +48,6 @@ public class CommentServiceImpl implements CommentService{
 	     CommunityEntity communityEntity = communityRepository.findById(CommunityId)
 	             .orElseThrow(() -> new NotFoundException("해당 댓글을 찾을수 없습니다 : " + CommunityId));
 	     
-	     // 차단된 유저 ID 리스트 가져오기
-	     List<Long> blockedUserIds = blockRepository.findBlockedUserIdsByBlocker(member.getId());
-
-	     // 차단된 유저인지 확인
-	     if (blockedUserIds.contains(member.getId())) {
-	         throw new AccessDeniedException("차단된 사용자로부터의 댓글은 허용되지 않습니다.");
-	     }
-	     
 	     CommentEntity commentEntity = commentRequestDTO.toCommentEntity();
 
 	     if (commentRequestDTO.getParentId() != null) {
@@ -66,15 +58,20 @@ public class CommentServiceImpl implements CommentService{
 	    
 	     commentEntity.updateCommunity(communityEntity);
 	     commentEntity.updateAuthor(member);
-
 	     CommentEntity result = commentRepository.save(commentEntity);
 
 	     return result.toResponseDTO();
 	 }
 
-	public List<CommentResponseDTO> getCommentsByCommunityId(Long communityId, int page, int size) {
+	public List<CommentResponseDTO> getCommentsByCommunityId(Long communityId, int page, int size , Long currentUserId) {
 		PageRequest pageable = PageRequest.of(page, size);
-		Slice<CommentEntity> comments = commentRepository.findByCommunityId(communityId, pageable);
+		
+		  // 차단된 유저의 댓글을 제외하는 필터
+	    List<Long> blockedUserIds = blockRepository.findBlockedUserIdsByBlocker(currentUserId);
+
+	    // 차단된 유저의 ID 리스트를 사용하여 필터링
+	    Slice<CommentEntity> comments = commentRepository.findByCommunityIdAndAuthorIdNotIn(communityId, blockedUserIds, pageable);
+	    
 		return comments.stream().map(CommentEntity::toResponseDTO).collect(Collectors.toList());
 	 }
 
