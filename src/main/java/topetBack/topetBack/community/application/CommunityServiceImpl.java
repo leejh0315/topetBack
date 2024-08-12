@@ -19,10 +19,7 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import org.springframework.web.multipart.MultipartFile;
 import topetBack.topetBack.comment.dao.CommentRepository;
 import topetBack.topetBack.community.dao.CommunityRepository;
-import topetBack.topetBack.community.domain.CommunityEntity;
-import topetBack.topetBack.community.domain.CommunityRequestDTO;
-import topetBack.topetBack.community.domain.CommunityResponseDTO;
-import topetBack.topetBack.community.domain.QCommunityEntity;
+import topetBack.topetBack.community.domain.*;
 import topetBack.topetBack.file.application.FileService;
 import topetBack.topetBack.file.domain.FileCategory;
 import topetBack.topetBack.file.domain.FileGroupEntity;
@@ -78,7 +75,7 @@ public class CommunityServiceImpl implements CommunityService {
                 .collect(Collectors.toList());
     }
 
-    public List<CommunityResponseDTO> getCommunityListByAnimalAndCategory(String animal, String category, int page, int size , Predicate predicate) {
+    public List<CommunityListResponseDTO> getCommunityListByAnimalAndCategory(String animal, String category, int page, int size , Predicate predicate) {
         PageRequest pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdTime"));
         // 기본 필터링 추가
         BooleanExpression baseFilter = QCommunityEntity.communityEntity.animal.eq(animal)
@@ -91,7 +88,7 @@ public class CommunityServiceImpl implements CommunityService {
         // 동적 쿼리와 페이징을 함께 사용
         Slice<CommunityEntity> communityEntitySlice = communityRepository.findAllWithPredicate(combinedPredicate, pageable);
         return communityEntitySlice.stream()
-                .map(CommunityEntity::toResponseDTO)
+                .map(CommunityEntity::toListResponseDTO)
                 .collect(Collectors.toList());
     }
 

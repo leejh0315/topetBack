@@ -3,6 +3,7 @@ package topetBack.topetBack.community.domain;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import jakarta.persistence.*;
 import org.hibernate.annotations.Comment;
@@ -16,6 +17,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import topetBack.topetBack.file.domain.FileGroupEntity;
+import topetBack.topetBack.file.domain.FileResponseDTO;
 import topetBack.topetBack.likes.domain.Likes;
 import topetBack.topetBack.member.domain.Member;
 
@@ -97,13 +99,29 @@ public class CommunityEntity {
                 .build();
     }
 
-    public CommunitySummaryResponseDTO toSummaryResponseDTO() {
+    public CommunityListResponseDTO toListResponseDTO() {
+        return CommunityListResponseDTO.builder()
+                .id(this.id)
+                .title(this.title)
+                .content(this.content)
+                .hashtag(this.hashtag)
+                .thumbnail(
+                        Optional.ofNullable(this.fileGroupEntity.getFileResponseDTOList())
+                                .flatMap(list -> list.stream().findFirst())
+                                .map(FileResponseDTO::getPath)
+                                .orElse(null)
+                )
+                .commentCount(this.commentCount)
+                .likeCount(this.likeCount)
+                .build();
+    }
+
+    public CommunitySummaryResponseDTO toSummaryResponseDTO(){
         return CommunitySummaryResponseDTO.builder()
                 .id(this.id)
                 .title(this.title)
                 .build();
     }
-
 
     
     public void updateCommunity(String title, String content , String hashtag) {

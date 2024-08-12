@@ -10,7 +10,7 @@ import com.querydsl.core.types.Predicate;
 
 import topetBack.topetBack.community.domain.CommunityRequestDTO;
 import topetBack.topetBack.community.domain.CommunityResponseDTO;
-import topetBack.topetBack.member.domain.Member;
+import topetBack.topetBack.community.domain.CommunityListResponseDTO;
 
 
 @Service
@@ -22,7 +22,7 @@ public interface  CommunityService {
 
 	CommunityResponseDTO getCommunityById(long communityId);
 
-	public List<CommunityResponseDTO> getCommunityListByAnimalAndCategory(String animal, String category, int page, int size , Predicate predicate);
+	List<CommunityListResponseDTO> getCommunityListByAnimalAndCategory(String animal, String category, int page, int size , Predicate predicate);
 	
 	CommunityResponseDTO updateCommunity(Long id, CommunityRequestDTO communityRequestDTO) throws NotFoundException;
 	

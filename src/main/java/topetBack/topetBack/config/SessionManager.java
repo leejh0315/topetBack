@@ -20,7 +20,6 @@ import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import topetBack.topetBack.member.domain.Member;
 import topetBack.topetBack.member.domain.SessionMember;
-import topetBack.topetBack.pet.domain.PetEntity;
 import topetBack.topetBack.pet.domain.PetResponseDTO;
 
 @Component
@@ -44,6 +43,9 @@ public class SessionManager {
 		Cookie cookie = new Cookie(SESSION_COOKIE_NAME, sessionId);
 		cookie.setMaxAge(180 * 60); // 세션 만료 시간 설정 (초 단위)//180분
 		cookie.setPath("/"); // 쿠키 경로 설정
+		cookie.setHttpOnly(true);
+		cookie.setSecure(true);
+		cookie.setAttribute("SameSite", "None");
 		resp.addCookie(cookie);
 		return sessionId;
 		// key value
@@ -56,7 +58,7 @@ public class SessionManager {
 		if (sessionCookie != null) {
 			String sessionId = sessionCookie.getValue();
 			System.out.println("sessionManager에서 쿠키를 통해 찾은 sessionId : " + sessionId);
-			
+
 			SessionMember sessionData = (SessionMember) redisTemplate.opsForValue().get(sessionId);
 			if (sessionData.getPets() != null) {
 				sessionData.getPets().add(petResponseDTO);
@@ -103,6 +105,22 @@ public class SessionManager {
 		return null;
 	}
 
+	public SessionMember getSessionMember(Cookie cookie) throws JsonMappingException, JsonProcessingException {
+
+		String sessionId = cookie.getValue();
+
+		SessionMember sessionData = (SessionMember) redisTemplate.opsForValue().get(sessionId);
+		System.out.println(sessionData);
+		if (sessionData != null) {
+			if (sessionData instanceof SessionMember) {
+				SessionMember sessionMember = (SessionMember) sessionData;
+				return sessionMember;
+			}
+		}
+
+		return null;
+	}
+
 	public SessionMember updateMember(Member member, Cookie cookie) {
 		log.info("session update");
 		assert cookie != null;
@@ -141,5 +159,5 @@ public class SessionManager {
 		}
 		return null;
 	}
-	
+
 }

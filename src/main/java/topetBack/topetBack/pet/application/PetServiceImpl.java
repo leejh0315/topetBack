@@ -100,7 +100,7 @@ public class PetServiceImpl implements PetService{
                     .map(Member::toResponseDTO)
                     .collect(Collectors.toList());
 
-            petResponseDTO.setMember(membersDTO);
+            petResponseDTO.setMembers(membersDTO);
 
             return petResponseDTO;
         }).orElse(null);

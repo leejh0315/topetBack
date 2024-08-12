@@ -16,7 +16,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import topetBack.topetBack.comment.domain.CommentEntity;
 import topetBack.topetBack.community.domain.CommunityEntity;
-import topetBack.topetBack.community.domain.CommunitySummaryResponseDTO;
 
 import static topetBack.topetBack.comment.domain.QCommentEntity.commentEntity;
 import static topetBack.topetBack.community.domain.QCommunityEntity.communityEntity;
