@@ -104,7 +104,6 @@ public class ScheduleEntity {
 	private String photoSrc;
     
     public ScheduleResponseDTO toResponseDTO() {
-
         return ScheduleResponseDTO.builder()
                 .id(this.id)
                 .startDate(this.startDate)
@@ -121,5 +120,8 @@ public class ScheduleEntity {
                 .photoSrc(this.photoSrc)
                 .build();
     }
+    
+    
+
 
 }

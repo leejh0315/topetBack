@@ -32,7 +32,6 @@ import topetBack.topetBack.pet.domain.PetResponseDTO;
 import topetBack.topetBack.schedule.application.ScheduleService;
 
 @RestController
-@Slf4j
 @RequiredArgsConstructor
 @RequestMapping("/member")
 public class MemberController {
@@ -52,8 +51,7 @@ public class MemberController {
 	private final PetService petService;
 	private final SessionManager sessionManager;
 	private final ScheduleService scheduleService;
-	
-	
+
 	@GetMapping("/kakaoLogin")
 	public String getKakaoLogin() {
 		System.out.println("get KakaoLogin");
@@ -71,42 +69,42 @@ public class MemberController {
 			throws Exception {
 		RedirectView redirectView = new RedirectView();
 		Map<String, Object> response = kakaoLoginService.kakaoLogin(code);
-		if (response != null) {
-			Member member = new Member(0L, response.get("kid").toString(), (String) response.get("email"), (String) response.get("nickname"), "", new FileGroupEntity());
-			String sId = response.get("kid").toString();
-			Optional<Member> dbMember = memberService.findBySocialId(sId);
-			if (dbMember.isPresent()) {
-				System.out.println("주입할 필요 없어서 안했음");
-			} else {
-				memberService.memberJoin(member);
-				System.out.println("주입완료");
-				redirectView.setUrl(frontAddress + "/userregister");
-			}
-			Member newMember = memberService.findBySocialId(response.get("kid").toString()).get();
-			List<MemberPet> memberPet = memberService.findByMember(newMember);
-			List<PetResponseDTO> pets = new ArrayList<PetResponseDTO>();
-			for(int i = 0 ; i < memberPet.size(); i++) {
-				pets.add(petService.findById(memberPet.get(i).getPet().getId()));
-			}
-			String sessionId = sessionManager.create(newMember, pets, resp);
-			redirectView.setUrl(frontAddress + "/home");
-		} else {
+		if (response.isEmpty()) {
 			redirectView.setUrl(frontAddress + "/");
+			return redirectView;
 		}
+		Member member = new Member(0L, response.get("kid").toString(), (String) response.get("email"),
+				(String) response.get("nickname"), "", new FileGroupEntity());
+		String sId = response.get("kid").toString();
+		Optional<Member> dbMember = memberService.findBySocialId(sId);
+		if (dbMember.isPresent()) {
+			System.out.println("주입할 필요 없어서 안했음");
+		} else {
+			memberService.memberJoin(member);
+			System.out.println("주입완료");
+			redirectView.setUrl(frontAddress + "/userregister");
+		}
+		Member newMember = memberService.findBySocialId(response.get("kid").toString()).get();
+		List<MemberPet> memberPet = memberService.findByMember(newMember);
+		List<PetResponseDTO> pets = new ArrayList<PetResponseDTO>();
+		for (int i = 0; i < memberPet.size(); i++) {
+			pets.add(petService.findById(memberPet.get(i).getPet().getId()));
+		}
+		String sessionId = sessionManager.create(newMember.getId(), resp);
+		redirectView.setUrl(frontAddress + "/login");
 		return redirectView;
 	}
-	
-	@PostMapping("/userregister")
-	public ResponseEntity<Member> postUserRegister(HttpServletRequest req, HttpServletResponse resp, 
-													@RequestParam(value="profileName", required=false) String profileName,
-													@RequestParam(value="photo", required=false) MultipartFile image
-													) throws IOException{
-		
-		Member member = sessionManager.getSessionObject(req).toMember();
-		Member newMember = memberService.userInfoRegister(member, profileName, image);
-		sessionManager.refreshMember(newMember, resp, req);
-		return ResponseEntity.ok(member);
-	}
+//	@PostMapping("/userregister")
+//	public ResponseEntity<Member> postUserRegister(HttpServletRequest req, HttpServletResponse resp, 
+//													@RequestParam(value="profileName", required=false) String profileName,
+//													@RequestParam(value="photo", required=false) MultipartFile image
+//													) throws IOException{
+//		
+//		Member member = sessionManager.getSessionObject(req).toMember();
+//		Member newMember = memberService.userInfoRegister(member, profileName, image);
+////		sessionManager.refreshMember(newMember, resp, req);
+//		return ResponseEntity.ok(member);
+//	}
 
 	@PatchMapping("/update")
 	public ResponseEntity<MemberResponseDTO> updateMember(MemberRequestDTO memberRequestDTO) throws IOException {
@@ -118,23 +116,30 @@ public class MemberController {
 
 	@GetMapping("/home")
 	public ResponseEntity<MemberResponseDTO> getHome(HttpServletRequest req) throws JsonProcessingException {
-
-		SessionMember member = sessionManager.getSessionObject(req);
-
-		MemberResponseDTO memberResponseDTO = memberService.findById(member.getId());
+		Long memberId = sessionManager.getSessionObject(req);
+		System.out.println("home요청");
+		MemberResponseDTO memberResponseDTO = memberService.findById(memberId);
 		return ResponseEntity.ok(memberResponseDTO);
 	}
-	
-	//로그아웃
+
+//	@GetMapping("/getMyPet/{id}")
+//	public ResponseEntity<PetResponseDTO> getPet(@PathVariable("id")Long id){
+//
+//		PetResponseDTO pet = petService.findById(id);
+//		System.out.println(ResponseEntity.ok(pet));
+//		return ResponseEntity.ok(pet);
+//	}
+
+	// 로그아웃
 	@PostMapping("/logout")
-	public String logout(HttpServletRequest req) {
-		String result = sessionManager.remove(req);
-		if(result.equals("success")) {
+	public String logout(HttpServletRequest req, HttpServletResponse resp) {
+		System.out.println("Logout 요청");
+		String result = sessionManager.remove(req, resp);
+		if (result.equals("success")) {
 			return "success";
-		}else{
+		} else {
 			return "fail";
 		}
 	}
-	
 
 }

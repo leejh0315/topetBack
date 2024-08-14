@@ -16,4 +16,10 @@ public class MemberRequestDTO {
 	private String name;
 	private MultipartFile photo;
 	private String profileSrc;
+	
+	public Member toMember() {
+		return Member.builder()
+				.id(this.id)
+				.build();
+	}
 }

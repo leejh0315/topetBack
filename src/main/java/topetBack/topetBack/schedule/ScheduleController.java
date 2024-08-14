@@ -65,16 +65,16 @@ public class ScheduleController {
 //    }
 
     @PostMapping("/post")
-    public ResponseEntity<Object> schedulePost(@ModelAttribute ScheduleRequestDTO scheduleRequestDTO, 
+    public ResponseEntity<Object> schedulePost(
+    							@ModelAttribute ScheduleRequestDTO scheduleRequestDTO, 
     							@RequestParam(value="photo", required=false) MultipartFile image,
     							@RequestParam(value="animal", required=true) PetEntity pet,
 //    							 @PathVariable("id")Long id,
     							BindingResult bindingResult, HttpServletRequest req) throws IOException{
     	
-    	Member sessionMember = sessionManager.getSessionObject(req).toMember();
-    	scheduleRequestDTO.setAuthor(sessionMember);
+//    	Member sessionMember = sessionManager.getSessionObject(req).toMember();
+//    	scheduleRequestDTO.setAuthor(sessionMember);
     	scheduleRequestDTO.setAnimal(pet);   	
-    	
     	
     	System.out.println("schedulePost요청왔음");
     	
@@ -97,7 +97,7 @@ public class ScheduleController {
 
     @GetMapping("/{id}")
     public List<ScheduleResponseDTO> getHomeSchedule(HttpServletRequest req, @PathVariable("id")Long id) throws JsonMappingException, JsonProcessingException {
-    	Member sessionMember = sessionManager.getSessionObject(req).toMember();
+//    	Member sessionMember = sessionManager.getSessionObject(req).toMember();
     	
     	List<ScheduleResponseDTO> scheduleResponseDTO = scheduleService.findByAnimalId(id);
     	
@@ -147,11 +147,11 @@ public class ScheduleController {
     															@RequestParam(value="author", required=false)Long authorId) throws IOException{
 
     	System.out.println(scheduleRequestDTO);
-
-    	Member sessionMember = sessionManager.getSessionObject(req).toMember();
-    	
-    	scheduleRequestDTO.setUpdateAuthor(sessionMember);
-    	
+//
+//    	Member sessionMember = sessionManager.getSessionObject(req).toMember();
+//    	
+//    	scheduleRequestDTO.setUpdateAuthor(sessionMember);
+//    	
     	ScheduleResponseDTO scheduleResponseDTO = scheduleService.createSchedule(scheduleRequestDTO, image);
 
     	return ResponseEntity.ok(scheduleResponseDTO);

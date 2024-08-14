@@ -42,11 +42,11 @@ public class LoginFilter implements Filter {
 		
 		if(isLoginCheckPath(uri)) {
 			HttpSession session = req.getSession(true);
-			Member member = sessionManager.getSessionObject(req).toMember();
-			System.out.println(member);
+			Long memberId = sessionManager.getSessionObject(req);
+			System.out.println(memberId);
 			log.info("Session: {}", session);
-			log.info("Member: {}", member);
-			if(member == null ||session == null) {
+			log.info("Member: {}", memberId);
+			if(memberId == null ||session == null) {
 				log.info("로그인 없이 접근 시도 {}", uri);
 				resp.sendRedirect("/api");
 				return;

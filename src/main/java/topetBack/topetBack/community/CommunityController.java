@@ -44,8 +44,8 @@ public class CommunityController {
     String communityPost(@ModelAttribute CommunityRequestDTO communityRequestDTO, 
     		HttpServletRequest req) throws Exception  {
     	
-    	Member sessionMember = sessionManager.getSessionObject(req).toMember();
-		communityRequestDTO.setAuthor(sessionMember);
+//    	Member sessionMember = sessionManager.getSessionObject(req).toMember();
+//		communityRequestDTO.setAuthor(sessionMember);
 		CommunityResponseDTO communityResponseDTO = communityService.createCommunity(communityRequestDTO);
 
 
@@ -72,7 +72,7 @@ public class CommunityController {
 	        } else {
 	            category = "정보공유";
 	        }
-	        Long currentUserId = sessionManager.getSessionObject(req).toMember().getId();
+	        Long currentUserId = sessionManager.getSessionObject(req);
 
 	        List<CommunityListResponseDTO> communityList = communityService.getCommunityListByAnimalAndCategory(animal, category, page, size , predicate , currentUserId , orderby);
 

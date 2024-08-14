@@ -52,8 +52,8 @@ public class Member implements Serializable {
 		
 		return MemberResponseDTO.builder()
 				.id(this.id)
-				.socialId(this.socialId)
-				.email(this.email)
+//				.socialId(this.socialId)
+//				.email(this.email)
 				.name(this.name)
 				.profileSrc(this.profileSrc)
 				.build();

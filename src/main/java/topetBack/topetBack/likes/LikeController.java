@@ -19,7 +19,7 @@ import topetBack.topetBack.config.SessionManager;
 import topetBack.topetBack.likes.application.LikeService;
 import topetBack.topetBack.likes.domain.LikeResponseDTO;
 import topetBack.topetBack.member.domain.Member;
-import topetBack.topetBack.member.domain.SessionMember;
+import topetBack.topetBack.member.domain.MemberRequestDTO;
 
 
 @RestController
@@ -31,20 +31,20 @@ public class LikeController {
 	
 	@PostMapping("/{id}")
     public	 ResponseEntity<CommunityResponseDTO> likePost(@PathVariable("id") Long id, HttpServletRequest req) throws JsonMappingException, JsonProcessingException {
-		SessionMember member = sessionManager.getSessionObject(req);
-        return likeService.likePost(id, member.toMember());
+		Long memberId = sessionManager.getSessionObject(req);
+        return likeService.likePost(id, memberId);
     }
 	
 	@GetMapping("/get")
-	 public List<LikeResponseDTO> getPost(HttpServletRequest request) throws JsonMappingException, JsonProcessingException {
-		Member member = sessionManager.getSessionObject(request).toMember();
-       return likeService.findByAuthor(member);
+	 public List<LikeResponseDTO> getPost(HttpServletRequest request, MemberRequestDTO memberRequestDTO) throws JsonMappingException, JsonProcessingException {
+//		Long memberId = sessionManager.getSessionObject(request);
+       return likeService.findByAuthor(memberRequestDTO.toMember());
    }
 	
 	@GetMapping("/detail/{id}")
-	public boolean detailGetPost(@PathVariable("id") Long id, HttpServletRequest request) throws JsonMappingException, JsonProcessingException {
-		Member member = sessionManager.getSessionObject(request).toMember();
-	    boolean likedByCurrentUser = likeService.getDetailLike(id, member);
+	public boolean detailGetPost(@PathVariable("id") Long id, HttpServletRequest request, MemberRequestDTO memberRequestDTO) throws JsonMappingException, JsonProcessingException {
+//		Member member = sessionManager.getSessionObject(request).toMember();
+	    boolean likedByCurrentUser = likeService.getDetailLike(id, memberRequestDTO.toMember());
        return likedByCurrentUser;
    }
 	

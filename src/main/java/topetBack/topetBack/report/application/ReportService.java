@@ -8,5 +8,5 @@ import topetBack.topetBack.member.domain.Member;
 
 @Service
 public interface ReportService {
-    ResponseEntity<?> reportPost(String type, Long id, Member author, String reason);
+    ResponseEntity<?> reportPost(String type, Long id, Long authorId, String reason);
 }

@@ -1,7 +1,6 @@
 package topetBack.topetBack.pet.controller;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -27,7 +26,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import topetBack.topetBack.config.SessionManager;
 import topetBack.topetBack.member.application.MemberService;
-import topetBack.topetBack.member.domain.Member;
 import topetBack.topetBack.pet.application.PetService;
 import topetBack.topetBack.pet.dao.PetRepository;
 import topetBack.topetBack.pet.domain.PetEntity;
@@ -57,17 +55,16 @@ public class PetController {
 								HttpServletRequest req,
 								HttpServletResponse resp
 								) throws IOException {
-	    Member sessionMember = sessionManager.getSessionObject(req).toMember();
-	    petRequestDTO.setMember(sessionMember);
+//	    Member sessionMember = sessionManager.getSessionObject(req).toMember();
+//	    petRequestDTO.setMember(sessionMember);
 
 	    // PetService를 통해 Pet 등록
 	    PetResponseDTO petResponseDTO = petService.createPet(petRequestDTO, image);
 	    
-	    sessionManager.refreshPetAdd(petResponseDTO, resp, req);
+//	    sessionManager.refreshPetAdd(petResponseDTO, resp, req);
 	    
 	    return ResponseEntity.ok(petResponseDTO);
 	}
-
 //	@Transactional
 //	@PostMapping("/petRegistrationTest")
 //	public ResponseEntity<PetResponseDTO> petRegistrationTest(@RequestParam(value="photo", required=false) MultipartFile image,
@@ -84,11 +81,17 @@ public class PetController {
 //		return ResponseEntity.ok(petResponseDTO);
 //	}
 
-	@GetMapping("/getMyPet/{id}")
-	public ResponseEntity<PetResponseDTO> getPet(@PathVariable("id")Long id){
-
+	
+	@GetMapping("/home/getMyPets/{id}")
+	public ResponseEntity<List<PetResponseDTO>> getMyPets(@PathVariable("id")Long id){
+		List<PetResponseDTO> myPets = memberService.findPetByMember(id);
+		System.out.println(myPets);
+		return ResponseEntity.ok(myPets);
+	}
+	
+	@GetMapping("/petProfileDetail/{id}")
+	public ResponseEntity<PetResponseDTO> petProfileDetail(@PathVariable("id") Long id){
 		PetResponseDTO pet = petService.findById(id);
-		System.out.println(ResponseEntity.ok(pet));
 		return ResponseEntity.ok(pet);
 	}
 	
@@ -114,17 +117,15 @@ public class PetController {
 	public ResponseEntity<PetResponseDTO> addPet(@RequestBody Map<String, String> uid, HttpServletRequest req,
 			HttpServletResponse resp) throws JsonMappingException, JsonProcessingException{
 		
-		Member sessionMember = sessionManager.getSessionObject(req).toMember();
-		
-		
+		Long memberId = sessionManager.getSessionObject(req);
 		
 		PetResponseDTO pet = petService.findByUid(uid.get("uid"));
 		if(pet != null) {
 			PetEntity petEntity =petService.findEntityByUid(uid.get("uid"));
-			memberService.saveMemberPet(sessionMember, petEntity);
+			memberService.saveMemberPet(memberId, petEntity);
 		}
 		
-		sessionManager.refreshPetAdd(pet, resp, req);
+//		sessionManager.refreshPetAdd(pet, resp, req);
 		
 		return ResponseEntity.ok(pet);		
 		

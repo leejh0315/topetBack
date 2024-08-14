@@ -34,6 +34,7 @@ public class BlockController {
         Member blocked = memberRepository.findById(blockedId)
                 .orElseThrow(() -> new RuntimeException("차단자 못찾음"));
 
+        
         BlockRequestDTO blockRequestDTO = BlockRequestDTO.builder()
                 .blocker(blocker)
                 .blocked(blocked)
