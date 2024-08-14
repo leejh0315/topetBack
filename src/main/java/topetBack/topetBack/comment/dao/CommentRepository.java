@@ -21,8 +21,9 @@ public interface CommentRepository extends JpaRepository<CommentEntity, Long>, C
 	@Transactional
     void deleteByCommunityId(Long communityId);
 
-	Slice<CommentEntity> findByCommunityIdAndAuthorIdNotIn(Long communityId, List<Long> blockedUserIds,
-			PageRequest pageable);
+	List<CommentEntity> findByCommunityId(Long post_id);
+
+
 	
 	
 	

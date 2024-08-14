@@ -48,6 +48,8 @@ public class CommentServiceImpl implements CommentService{
 	     CommunityEntity communityEntity = communityRepository.findById(CommunityId)
 	             .orElseThrow(() -> new NotFoundException("해당 댓글을 찾을수 없습니다 : " + CommunityId));
 	     
+	    
+	     
 	     CommentEntity commentEntity = commentRequestDTO.toCommentEntity();
 
 	     if (commentRequestDTO.getParentId() != null) {
@@ -57,21 +59,18 @@ public class CommentServiceImpl implements CommentService{
 	     }
 	    
 	     commentEntity.updateCommunity(communityEntity);
+	   
+
 	     commentEntity.updateAuthor(member);
+
 	     CommentEntity result = commentRepository.save(commentEntity);
 
 	     return result.toResponseDTO();
 	 }
 
-	public List<CommentResponseDTO> getCommentsByCommunityId(Long communityId, int page, int size , Long currentUserId) {
+	public List<CommentResponseDTO> getCommentsByCommunityId(Long communityId, int page, int size) {
 		PageRequest pageable = PageRequest.of(page, size);
-		
-		  // 차단된 유저의 댓글을 제외하는 필터
-	    List<Long> blockedUserIds = blockRepository.findBlockedUserIdsByBlocker(currentUserId);
-
-	    // 차단된 유저의 ID 리스트를 사용하여 필터링
-	    Slice<CommentEntity> comments = commentRepository.findByCommunityIdAndAuthorIdNotIn(communityId, blockedUserIds, pageable);
-	    
+		Slice<CommentEntity> comments = commentRepository.findByCommunityId(communityId, pageable);
 		return comments.stream().map(CommentEntity::toResponseDTO).collect(Collectors.toList());
 	 }
 

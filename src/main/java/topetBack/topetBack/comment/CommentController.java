@@ -45,9 +45,8 @@ public class CommentController {
 																			  @PathVariable("id") Long id,
 																			  @RequestParam(name = "page") int page,
 																			  @RequestParam(name = "size") int size,
-																			  HttpServletRequest req) throws JsonMappingException, JsonProcessingException {
-	        Long currentUserId = sessionManager.getSessionObject(req).toMember().getId();
-		    List<CommentResponseDTO> comments = commentService.getCommentsByCommunityId(id, page, size ,currentUserId);
+																			  HttpServletRequest req) throws JsonMappingException {
+		    List<CommentResponseDTO> comments = commentService.getCommentsByCommunityId(id, page, size);
 		    return new ResponseEntity<>(comments, HttpStatus.OK);
 	 }
 

@@ -20,12 +20,14 @@ import org.springframework.web.multipart.MultipartFile;
 
 import topetBack.topetBack.block.dao.BlockRepository;
 import topetBack.topetBack.comment.dao.CommentRepository;
+import topetBack.topetBack.comment.domain.CommentEntity;
 import topetBack.topetBack.community.dao.CommunityRepository;
 import topetBack.topetBack.community.domain.*;
 import topetBack.topetBack.file.application.FileService;
 import topetBack.topetBack.file.domain.FileCategory;
 import topetBack.topetBack.file.domain.FileGroupEntity;
 import topetBack.topetBack.file.domain.FileInfoEntity;
+import topetBack.topetBack.report.dao.ReportRepository;
 
 @Service
 public class CommunityServiceImpl implements CommunityService {
@@ -34,12 +36,14 @@ public class CommunityServiceImpl implements CommunityService {
 	private final FileService fileService;
     private final BlockRepository blockRepository;
 	private final CommentRepository commentRepository;
+	private final ReportRepository reportRepository;
 
-    public CommunityServiceImpl(CommunityRepository communityRepository, FileService fileService , CommentRepository commentRepository , BlockRepository blockRepository) {
+    public CommunityServiceImpl(CommunityRepository communityRepository, FileService fileService , CommentRepository commentRepository , BlockRepository blockRepository , ReportRepository reportRepository) {
         this.communityRepository = communityRepository;
         this.fileService = fileService;
         this.commentRepository = commentRepository;
         this.blockRepository = blockRepository;
+        this.reportRepository = reportRepository;
     }
 
     @Override
@@ -98,13 +102,24 @@ public class CommunityServiceImpl implements CommunityService {
     }
 
     //삭제
-    @Override
+    @Transactional
     public void deleteCommunity(Long post_id) throws NotFoundException {
-    	   CommunityEntity community = communityRepository.findById(post_id)
-                   .orElseThrow(() -> new NotFoundException("해당 커뮤니티를 찾을 수 없습니다: " + post_id));
-    	commentRepository.deleteByCommunityId(post_id);
+        CommunityEntity community = communityRepository.findById(post_id)
+                .orElseThrow(() -> new NotFoundException("해당 커뮤니티를 찾을 수 없습니다: " + post_id));
+        
+        List<CommentEntity> comments = commentRepository.findByCommunityId(post_id);
+        
+        for (CommentEntity comment : comments) {
+            reportRepository.deleteByComment(comment);
+        }
+        
+        reportRepository.deleteByCommunity(community);
+        
+        commentRepository.deleteByCommunityId(post_id);
+        
         communityRepository.deleteById(post_id);
     }
+
     
     //수정
     @Transactional

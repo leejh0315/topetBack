@@ -34,22 +34,7 @@ public class CommunityRepositoryImpl implements CommunityRepositoryCustom {
     @Autowired
     public CommunityRepositoryImpl(JPAQueryFactory queryFactory) {
         this.queryFactory = queryFactory;
-    }
-
-//    public Slice<CommunityEntity> findAllByAnimalAndCategoryWithLikesSorted(Predicate predicate, Pageable pageable) {
-//
-//
-//        PageRequest pageRequest = (PageRequest) pageable;
-//
-//        return queryFactory.selectFrom(communityEntity)
-//                .where(predicate)
-//                .orderBy(communityEntity.likesList.size().desc())
-//                .offset(pageRequest.getOffset())
-//                .limit(pageRequest.getPageSize())
-//                .fetch();
-//    }
-    
-   
+    }   
 
     @Override
     public Slice<CommunityEntity> findAllWithPredicate(Predicate predicate, Pageable pageable, String orderby) {
