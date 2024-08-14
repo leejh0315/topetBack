@@ -145,8 +145,6 @@ public class SocialLoginServiceImpl implements SocialLoginService{
             
             //userInfo.put("nickname", nickname);
             //userInfo.put("email", email);
-            
-            
             userInfoMap.put("nickname", nickname);
             userInfoMap.put("email", email);
             userInfoMap.put("kid", kakaoId);

@@ -11,8 +11,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class MemberResponseDTO {
 	private Long id;
-	private String socialId;
+//	private String socialId;
 	private String name;
-	private String email;
+//	private String email;
 	private String profileSrc;
 }

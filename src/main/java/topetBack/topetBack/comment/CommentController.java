@@ -32,9 +32,9 @@ public class CommentController {
 
 	 @PostMapping("/post/{id}")
 	    public ResponseEntity<CommentResponseDTO> communityPost(@ModelAttribute CommentRequestDTO commentRequestDTO , @PathVariable("id")Long id, HttpServletRequest req) throws Exception  {
-		 	SessionMember member = sessionManager.getSessionObject(req);
+//		 	SessionMember member = sessionManager.getSessionObject(req);
 		 			
-			commentRequestDTO.setAuthor(member.toMember());
+//			commentRequestDTO.setAuthor(member.toMember());
 			CommentResponseDTO commentEntity = commentService.insert(id, commentRequestDTO);
 			
 	        return ResponseEntity.ok(commentEntity);
@@ -46,7 +46,8 @@ public class CommentController {
 																			  @RequestParam(name = "page") int page,
 																			  @RequestParam(name = "size") int size,
 																			  HttpServletRequest req) throws JsonMappingException, JsonProcessingException {
-	        Long currentUserId = sessionManager.getSessionObject(req).toMember().getId();
+	        Long currentUserId = sessionManager.getSessionObject(req);
+	        
 		    List<CommentResponseDTO> comments = commentService.getCommentsByCommunityId(id, page, size ,currentUserId);
 		    return new ResponseEntity<>(comments, HttpStatus.OK);
 	 }
@@ -55,8 +56,8 @@ public class CommentController {
 	 public ResponseEntity<List<MyCommentResponseDTO>> getCommentsByAuthorId(HttpServletRequest request,
 																		   @RequestParam(name = "page") int page,
 																		   @RequestParam(name = "size") int size) throws JsonProcessingException {
-		 SessionMember member = sessionManager.getSessionObject(request);
-		 List<MyCommentResponseDTO> comments = commentService.getCommentsByAuthorId(member.getId(), page, size);
+		 Long memberId = sessionManager.getSessionObject(request);
+		 List<MyCommentResponseDTO> comments = commentService.getCommentsByAuthorId(memberId, page, size);
 
 		 return ResponseEntity.ok(comments);
 	 }

@@ -1,14 +1,22 @@
 package topetBack.topetBack.member.dao;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
 import com.querydsl.jpa.impl.JPAQueryFactory;
+
 import topetBack.topetBack.member.domain.Member;
 import topetBack.topetBack.member.domain.QMember;
 import topetBack.topetBack.member.domain.QMemberPet;
+import topetBack.topetBack.pet.domain.PetEntity;
+import topetBack.topetBack.pet.domain.QPetEntity;
 
-import java.util.List;
 
 public class MemberPetRepositoryCustomImpl implements MemberPetRepositoryCustom {
 
+	@Autowired
     private final JPAQueryFactory jpaQueryFactory;
 
     public MemberPetRepositoryCustomImpl(JPAQueryFactory jpaQueryFactory) {
@@ -27,4 +35,16 @@ public class MemberPetRepositoryCustomImpl implements MemberPetRepositoryCustom 
                 .where(memberPet.pet.id.eq(petId))
                 .fetch();
     }
+
+	@Override
+	public List<PetEntity> findPetByMember(Long memberId) {
+		QMemberPet memberPet = QMemberPet.memberPet;
+		QPetEntity petEntity = QPetEntity.petEntity;
+		return jpaQueryFactory
+				.select(petEntity)
+				.from(memberPet)
+				.join(memberPet.pet, petEntity)
+				.where(memberPet.member.id.eq(memberId))
+				.fetch();
+	}
 }

@@ -30,12 +30,10 @@ public class ScheduleServiceImpl implements ScheduleService{
     }
     @Transactional
     public ScheduleResponseDTO createSchedule(ScheduleRequestDTO scheduleRequestDTO, MultipartFile image) throws IOException{
-    	
     	if(image != null) {
     		String photoSrc = fileService.uploadPhoto(image, FileCategory.SCHEDULE.getPath());
     		scheduleRequestDTO.setPhotoSrc(photoSrc);
     	}
-    	
     	ScheduleEntity scheduleEntity = scheduleRequestDTO.toScheduleEntity();
     	ScheduleEntity result = scheduleRepository.save(scheduleEntity);
     	return result.toResponseDTO();

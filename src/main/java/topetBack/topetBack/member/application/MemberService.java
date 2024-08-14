@@ -6,6 +6,7 @@ package topetBack.topetBack.member.application;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,9 +20,15 @@ import topetBack.topetBack.file.domain.FileCategory;
 import topetBack.topetBack.file.domain.FileGroupEntity;
 import topetBack.topetBack.file.domain.FileInfoEntity;
 import topetBack.topetBack.member.dao.MemberPetRepository;
+import topetBack.topetBack.member.dao.MemberPetRepositoryCustom;
 import topetBack.topetBack.member.dao.MemberRepository;
-import topetBack.topetBack.member.domain.*;
+import topetBack.topetBack.member.domain.Member;
+import topetBack.topetBack.member.domain.MemberPet;
+import topetBack.topetBack.member.domain.MemberRequestDTO;
+import topetBack.topetBack.member.domain.MemberResponseDTO;
+import topetBack.topetBack.member.domain.SessionMember;
 import topetBack.topetBack.pet.domain.PetEntity;
+import topetBack.topetBack.pet.domain.PetResponseDTO;
 
 @Service
 public class MemberService {
@@ -29,15 +36,21 @@ public class MemberService {
 	private final MemberRepository memberRepository;
 	private final MemberPetRepository memberPetRepository;
 	private final FileService fileService;
-	
     private static final Logger logger = LoggerFactory.getLogger(MemberService.class);
 	private final SessionManager sessionManager;
+	
 
-	public MemberService(MemberRepository memberRepository, MemberPetRepository memberPetRepository, FileService fileService, @Qualifier("sessionManager") SessionManager sessionManager) {
+	public MemberService(MemberRepository memberRepository, 
+			MemberPetRepository memberPetRepository, FileService fileService
+			, @Qualifier("sessionManager") SessionManager sessionManager
+//			,@Qualifier("memberPetRepositoryCustom") MemberPetRepositoryCustom memberPetRepositoryCustom
+			) {
         this.memberRepository = memberRepository;
         this.memberPetRepository = memberPetRepository;
         this.fileService = fileService;
 		this.sessionManager = sessionManager;
+	
+	
 	}
     
     public Optional<Member> findBySocialId(String socialId) {
@@ -67,22 +80,20 @@ public class MemberService {
     	return memberPetRepository.findByMember(member);
     }
     
-    public void saveMemberPet(Member member, PetEntity petEntity) {
-    	MemberPet memberPet = new MemberPet(member, petEntity);
+    public void saveMemberPet(Long memberId, PetEntity petEntity) {
+    	Optional<Member> member = memberRepository.findById(memberId);
+    	MemberPet memberPet = new MemberPet(member.get(), petEntity);
     	memberPetRepository.save(memberPet);
     }
 
 	public MemberResponseDTO updateMember(MemberRequestDTO memberRequestDTO) throws IOException {
 		Member member = memberRepository.findById(memberRequestDTO.getId())
 				.orElseThrow(() -> new RuntimeException("Member 가 없음"));
-
 		if(!memberRequestDTO.getPhoto().isEmpty()){
 			FileInfoEntity fileInfoEntity =fileService.storeFile(memberRequestDTO.getPhoto(), FileCategory.MEMBER);
 			memberRequestDTO.setProfileSrc(fileInfoEntity.getFilePath());
 		}
-
 		member.updateMember(memberRequestDTO);
-
 		Member updatedMember = memberRepository.save(member);
 
 		return updatedMember.toResponseDTO();
@@ -99,4 +110,12 @@ public class MemberService {
     	return newMember;
     }
     
+    public List<PetResponseDTO> findPetByMember(Long memberId) {
+		List<PetEntity> petEntity = memberPetRepository.findPetByMember(memberId);
+		return petEntity
+				.stream()
+				.map(PetEntity::toResponseDTO)
+				.collect(Collectors.toList());
+	}
+//    
 }

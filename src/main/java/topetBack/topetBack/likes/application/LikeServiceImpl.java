@@ -13,8 +13,9 @@ import topetBack.topetBack.community.dao.CommunityRepository;
 import topetBack.topetBack.community.domain.CommunityEntity;
 import topetBack.topetBack.community.domain.CommunityResponseDTO;
 import topetBack.topetBack.likes.dao.LikeRepository;
-import topetBack.topetBack.likes.domain.Likes;
 import topetBack.topetBack.likes.domain.LikeResponseDTO;
+import topetBack.topetBack.likes.domain.Likes;
+import topetBack.topetBack.member.dao.MemberRepository;
 import topetBack.topetBack.member.domain.Member;
 
 @Service
@@ -23,17 +24,22 @@ public class LikeServiceImpl  implements LikeService{
 	
 	private final LikeRepository likeRepository;
     private final CommunityRepository communityRepository;
+    private final MemberRepository memberRepository;
 
     @Transactional
-    public ResponseEntity<CommunityResponseDTO> likePost(Long id , Member author) {
+    public ResponseEntity<CommunityResponseDTO> likePost(Long id , Long memberId) {
+    	
+    	Optional<Member> member = memberRepository.findById(memberId);
+    	
+    	
     	Optional<CommunityEntity> community = communityRepository.findById(id);
     	if(community.isEmpty()) {
     		
     	}
     	
-    	Optional<Likes> found = likeRepository.findByCommunityAndAuthor(community.get(), author);
+    	Optional<Likes> found = likeRepository.findByCommunityAndAuthor(community.get(), member.get());
     	if(found.isEmpty()) { //좋아요 X
-    		Likes likes = Likes.of(community.get(), author);
+    		Likes likes = Likes.of(community.get(), member.get());
     		likeRepository.save(likes);
     	} else {
     		likeRepository.delete(found.get());

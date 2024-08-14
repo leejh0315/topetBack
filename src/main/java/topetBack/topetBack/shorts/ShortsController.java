@@ -36,8 +36,8 @@ public class ShortsController {
 			@RequestParam(value="thumbnailPhoto", required=true) MultipartFile image,
 			@RequestParam(value="video", required=false) MultipartFile video) throws IOException{
 		
-		Member member = sessionManager.getSessionObject(req).toMember();
-		shortsRequestDTO.setAuthor(member);
+//		Member member = sessionManager.getSessionObject(req).toMember();
+//		shortsRequestDTO.setAuthor(member);
 		ShortsResponseDTO shortsResponseDTO =  shortsService.shortsSave(shortsRequestDTO);
 		return ResponseEntity.ok(shortsResponseDTO);
 	}
