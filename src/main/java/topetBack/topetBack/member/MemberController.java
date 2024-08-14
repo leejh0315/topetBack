@@ -108,10 +108,11 @@ public class MemberController {
 
 	@PatchMapping("/update")
 	public ResponseEntity<MemberResponseDTO> updateMember(MemberRequestDTO memberRequestDTO) throws IOException {
-
-		MemberResponseDTO updatedSessionMember = memberService.updateMember(memberRequestDTO);
-
-		return ResponseEntity.ok(updatedSessionMember);
+		
+		System.out.println("memberRequestDTO : " + memberRequestDTO);
+		
+		MemberResponseDTO updatedMember = memberService.updateMember(memberRequestDTO);
+		return ResponseEntity.ok(updatedMember);
 	}
 
 	@GetMapping("/home")

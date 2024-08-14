@@ -83,7 +83,7 @@ public class SessionManager {
 //	}
 
 	@Transactional
-	public Long getSessionObject(HttpServletRequest req) throws JsonMappingException, JsonProcessingException {
+	public Long getSessionObject(HttpServletRequest req)  {
 		log.info("session getSessionObject");
 		Cookie sessionCookie = findCookie(req, SESSION_COOKIE_NAME);
 		System.out.println("getSessionObject sessionCookie : " + sessionCookie.getValue());

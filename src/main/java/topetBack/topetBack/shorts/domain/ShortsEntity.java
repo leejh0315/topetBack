@@ -7,6 +7,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,10 +24,12 @@ import topetBack.topetBack.member.domain.Member;
 @Table(name = "shorts")
 @ToString
 @Entity
+@SequenceGenerator(name = "common_seq", sequenceName = "INTEREST_SEQ", allocationSize = 1)
 public class ShortsEntity {
     
 	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) //MySQL의 AUTO_INCREMENT를 사용
+    //@GeneratedValue(strategy = GenerationType.IDENTITY) //MySQL의 AUTO_INCREMENT를 사용
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "common_seq")
     @Comment("쇼츠 번호")
     private Long id;
     

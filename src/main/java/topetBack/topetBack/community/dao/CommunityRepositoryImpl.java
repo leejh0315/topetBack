@@ -1,29 +1,21 @@
 package topetBack.topetBack.community.dao;
 
-import com.querydsl.core.types.ExpressionUtils;
-import com.querydsl.core.types.Projections;
-import com.querydsl.core.types.dsl.Expressions;
-import com.querydsl.jpa.JPAExpressions;
-import com.querydsl.jpa.impl.JPAQuery;
-import com.querydsl.jpa.impl.JPAQueryFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Slice;
-import org.springframework.data.domain.SliceImpl;
-import org.springframework.stereotype.Repository;
-import topetBack.topetBack.community.domain.CommunityEntity;
-import topetBack.topetBack.community.domain.QCommunityEntity;
-import com.querydsl.core.types.Predicate;
-import com.querydsl.core.types.dsl.BooleanExpression;
-
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.PageRequest;
-import topetBack.topetBack.member.domain.QMember;
+import static topetBack.topetBack.community.domain.QCommunityEntity.communityEntity;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static topetBack.topetBack.comment.domain.QCommentEntity.commentEntity;
-import static topetBack.topetBack.community.domain.QCommunityEntity.communityEntity;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.SliceImpl;
+import org.springframework.stereotype.Repository;
+
+import com.querydsl.core.types.Predicate;
+import com.querydsl.jpa.impl.JPAQuery;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+
+import topetBack.topetBack.community.domain.CommunityEntity;
 
 @Repository
 public class CommunityRepositoryImpl implements CommunityRepositoryCustom {

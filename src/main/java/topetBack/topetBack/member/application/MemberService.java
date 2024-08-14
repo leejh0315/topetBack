@@ -89,12 +89,16 @@ public class MemberService {
 	public MemberResponseDTO updateMember(MemberRequestDTO memberRequestDTO) throws IOException {
 		Member member = memberRepository.findById(memberRequestDTO.getId())
 				.orElseThrow(() -> new RuntimeException("Member 가 없음"));
-		if(!memberRequestDTO.getPhoto().isEmpty()){
+		
+		if(memberRequestDTO.getPhoto() != null && !memberRequestDTO.getPhoto().isEmpty()){
+			System.out.println("포토잇ㄷ.ㅏ");
 			FileInfoEntity fileInfoEntity =fileService.storeFile(memberRequestDTO.getPhoto(), FileCategory.MEMBER);
 			memberRequestDTO.setProfileSrc(fileInfoEntity.getFilePath());
 		}
 		member.updateMember(memberRequestDTO);
+		
 		Member updatedMember = memberRepository.save(member);
+		
 
 		return updatedMember.toResponseDTO();
 

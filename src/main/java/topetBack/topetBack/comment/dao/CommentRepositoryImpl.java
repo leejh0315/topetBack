@@ -1,24 +1,25 @@
 package topetBack.topetBack.comment.dao;
 
+import static topetBack.topetBack.comment.domain.QCommentEntity.commentEntity;
+import static topetBack.topetBack.community.domain.QCommunityEntity.communityEntity;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import com.querydsl.core.types.Projections;
-import com.querydsl.jpa.impl.JPAQuery;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
 import org.springframework.stereotype.Repository;
 
+import com.querydsl.core.types.Projections;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import topetBack.topetBack.comment.domain.CommentEntity;
 import topetBack.topetBack.community.domain.CommunityEntity;
-
-import static topetBack.topetBack.comment.domain.QCommentEntity.commentEntity;
-import static topetBack.topetBack.community.domain.QCommunityEntity.communityEntity;
+import topetBack.topetBack.shorts.domain.ShortsEntity;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -85,6 +86,32 @@ public class CommentRepositoryImpl implements CommentRepositoryCustom {
 
         return new SliceImpl<>(content, pageable, hasNext);
     }
+
+	@Override
+	public Slice<CommentEntity> findByShortsId(Long id, Pageable pageable) {
+		 List<Long> ids = queryFactory
+	                .select(commentEntity.id).from(commentEntity)
+	                .where(commentEntity.shorts.id.eq(id).and(commentEntity.deleted.isFalse()).and(commentEntity.parent.isNull()))
+	                .orderBy(commentEntity.createdTime.desc())
+	                .offset(pageable.getOffset())
+	                .limit(pageable.getPageSize())
+	                .fetch();
+
+	        boolean hasNext = ids.size() == pageable.getPageSize();
+
+	        if(ids.isEmpty()){
+	            return new SliceImpl<>(new ArrayList<>(), pageable, hasNext);
+	        }
+
+	        List<CommentEntity> content = queryFactory.selectFrom(commentEntity)
+	                .leftJoin(commentEntity.author).fetchJoin()
+	                .leftJoin(commentEntity.children).fetchJoin()
+	                .where(commentEntity.id.in(ids))
+	                .orderBy(commentEntity.createdTime.desc())
+	                .fetch();
+
+	        return new SliceImpl<>(content, pageable, hasNext);
+	}
 
     
 }

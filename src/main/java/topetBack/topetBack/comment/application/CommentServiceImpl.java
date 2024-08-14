@@ -20,6 +20,8 @@ import topetBack.topetBack.community.dao.CommunityRepository;
 import topetBack.topetBack.community.domain.CommunityEntity;
 import topetBack.topetBack.member.dao.MemberRepository;
 import topetBack.topetBack.member.domain.Member;
+import topetBack.topetBack.shorts.dao.ShortsRepository;
+import topetBack.topetBack.shorts.domain.ShortsEntity;
 
 
 @Service
@@ -29,26 +31,23 @@ public class CommentServiceImpl implements CommentService{
 	private final CommunityRepository communityRepository;
 	private final MemberRepository memberRepository;
     private final BlockRepository blockRepository;
+    private final ShortsRepository shortsRepository;
+    
 
 
-
-	 public CommentServiceImpl(CommentRepository commentRepository, CommunityRepository communityRepository, MemberRepository memberRepository , BlockRepository blockRepository) {
+	 public CommentServiceImpl(CommentRepository commentRepository, CommunityRepository communityRepository, MemberRepository memberRepository , BlockRepository blockRepository, ShortsRepository shortsRepository) {
 	        this.commentRepository = commentRepository;
 	        this.communityRepository = communityRepository;
 	        this.memberRepository = memberRepository;
 	        this.blockRepository = blockRepository;
-
+	        this.shortsRepository = shortsRepository;
 	    }
 
 	 @Transactional
 	 public CommentResponseDTO insert(Long CommunityId, CommentRequestDTO commentRequestDTO) throws NotFoundException, AccessDeniedException {
 	     Member member = memberRepository.findById(commentRequestDTO.getAuthor().getId())
 	             .orElseThrow(() -> new NotFoundException("해당 댓글을 찾을수 없습니다 : " + commentRequestDTO.getAuthor().getId()));
-
-	     CommunityEntity communityEntity = communityRepository.findById(CommunityId)
-	             .orElseThrow(() -> new NotFoundException("해당 댓글을 찾을수 없습니다 : " + CommunityId));
 	     
-	    
 	     
 	     CommentEntity commentEntity = commentRequestDTO.toCommentEntity();
 
@@ -56,11 +55,21 @@ public class CommentServiceImpl implements CommentService{
 	         CommentEntity parentComment = commentRepository.findById(commentRequestDTO.getParentId())
 	                 .orElseThrow(() -> new NotFoundException("해당 댓글을 찾을수 없습니다 : " + commentRequestDTO.getParentId()));
 	         commentEntity.updateParent(parentComment);
+	         
 	     }
-	    
-	     commentEntity.updateCommunity(communityEntity);
-	   
-
+	     
+	     ///////////////////////////////////////////////////
+	     
+	     if(commentRequestDTO.getShorts() == null) {
+	    	 CommunityEntity communityEntity = communityRepository.findById(CommunityId)
+		             .orElseThrow(() -> new NotFoundException("해당 댓글을 찾을수 없습니다 : " + CommunityId));
+	    	    commentEntity.updateCommunity(communityEntity);
+	     }else {
+	    	 ShortsEntity shortsEntity = shortsRepository.findById(CommunityId)
+	    			 .orElseThrow(() -> new NotFoundException("해당 댓글을 찾을수 없습니다 : " + CommunityId));
+	    	 commentEntity.updateShorts(shortsEntity);
+	     }
+	     
 	     commentEntity.updateAuthor(member);
 
 	     CommentEntity result = commentRepository.save(commentEntity);
@@ -68,10 +77,19 @@ public class CommentServiceImpl implements CommentService{
 	     return result.toResponseDTO();
 	 }
 
-	public List<CommentResponseDTO> getCommentsByCommunityId(Long communityId, int page, int size) {
+	public List<CommentResponseDTO> getCommentsByCommunityId(Long communityId, int page, int size, String type) {
 		PageRequest pageable = PageRequest.of(page, size);
-		Slice<CommentEntity> comments = commentRepository.findByCommunityId(communityId, pageable);
-		return comments.stream().map(CommentEntity::toResponseDTO).collect(Collectors.toList());
+		
+		if(type.equals("community")) {
+			Slice<CommentEntity> comments = commentRepository.findByCommunityId(communityId, pageable);
+			return comments.stream().map(CommentEntity::toResponseDTO).collect(Collectors.toList());
+		}else {
+			Slice<CommentEntity> comments = commentRepository.findByShortsId(communityId, pageable);
+			return comments.stream().map(CommentEntity::toResponseDTO).collect(Collectors.toList());
+		}
+		
+		
+		
 	 }
 
 	public List<MyCommentResponseDTO> getCommentsByAuthorId(Long authorId, int page, int size) {

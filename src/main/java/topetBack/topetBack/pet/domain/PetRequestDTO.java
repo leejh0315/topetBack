@@ -35,7 +35,7 @@ public class PetRequestDTO {
 	private String profileSrc;
 	private String neutered;
 	
-	
+	private MultipartFile photo;
 	
 	public PetEntity toPetEntity() {
 		

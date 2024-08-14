@@ -1,34 +1,27 @@
 package topetBack.topetBack.schedule.domain;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import jakarta.annotation.Nullable;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import topetBack.topetBack.community.domain.CommunityResponseDTO;
-import topetBack.topetBack.file.domain.FileGroupEntity;
-import topetBack.topetBack.file.domain.FileInfoEntity;
-import topetBack.topetBack.file.domain.FileResponseDTO;
 import topetBack.topetBack.member.domain.Member;
 import topetBack.topetBack.pet.domain.PetEntity;
 
@@ -71,7 +64,7 @@ public class ScheduleEntity {
     @Comment("색깔")
     private String color;
     
-    @ManyToOne
+    @ManyToOne//(fetch = FetchType.LAZY)
     @JoinColumn(name = "author_id", nullable = false)
     @Comment("작성자")
     private Member author;
@@ -81,7 +74,7 @@ public class ScheduleEntity {
 //    @Comment("작성자")
 //    private Member author;
     
-    @ManyToOne//(cascade = CascadeType.PERSIST)
+    @ManyToOne//(fetch = FetchType.LAZY)//(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "animal_id")
     @Comment("동물")
     private PetEntity animal;
@@ -121,6 +114,8 @@ public class ScheduleEntity {
                 .build();
     }
     
+    
+
     
 
 

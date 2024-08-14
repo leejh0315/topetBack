@@ -16,6 +16,7 @@ import org.springframework.util.FileCopyUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -72,15 +73,10 @@ public class ScheduleController {
 //    							 @PathVariable("id")Long id,
     							BindingResult bindingResult, HttpServletRequest req) throws IOException{
     	
-//    	Member sessionMember = sessionManager.getSessionObject(req).toMember();
-//    	scheduleRequestDTO.setAuthor(sessionMember);
     	scheduleRequestDTO.setAnimal(pet);   	
-    	
     	System.out.println("schedulePost요청왔음");
-    	
     	System.out.println("scheduleRequestDTO :  "+ scheduleRequestDTO);
         scheduleValidator.validate(scheduleRequestDTO, bindingResult);
-        
         if (bindingResult.hasErrors()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(scheduleRequestDTO);
         }
@@ -96,31 +92,13 @@ public class ScheduleController {
     }
 
     @GetMapping("/{id}")
-    public List<ScheduleResponseDTO> getHomeSchedule(HttpServletRequest req, @PathVariable("id")Long id) throws JsonMappingException, JsonProcessingException {
-//    	Member sessionMember = sessionManager.getSessionObject(req).toMember();
-    	
-    	List<ScheduleResponseDTO> scheduleResponseDTO = scheduleService.findByAnimalId(id);
-    	
+    public List<ScheduleResponseDTO> getTodaySchedules(HttpServletRequest req, @PathVariable("id")Long id){
+    	System.out.println("오늘의 일정");
+    	List<ScheduleResponseDTO> scheduleResponseDTO = scheduleService.findTodaySchedules(id);
     	System.out.println("scheduleResponseDTO : " + scheduleResponseDTO);
-    			//scheduleService.findByAuthor(sessionMember);
-    	List<ScheduleResponseDTO> homeSchedule = new ArrayList<ScheduleResponseDTO>();
-    	LocalDate today = LocalDate.now();
-
-    	for(ScheduleResponseDTO scheduleRespDTO : scheduleResponseDTO) {
-    		LocalDate startDate = scheduleRespDTO.getStartDate().toLocalDate();
-    		LocalDate endDate = scheduleRespDTO.getEndDate().toLocalDate();
-    		
-    		
-    		if(isDateInRange(today, startDate, endDate)) {
-    			homeSchedule.add(scheduleRespDTO);
-    		}
-    	}
-    	return homeSchedule;
+    	return scheduleResponseDTO;
     }
-    public static boolean isDateInRange(LocalDate date, LocalDate startDate, LocalDate endDate) {
-        // Check if the date is within the inclusive range
-        return !date.isBefore(startDate) && !date.isAfter(endDate);
-    }
+    
 
 
     @GetMapping("/get/{id}")	
@@ -128,7 +106,7 @@ public class ScheduleController {
     	return scheduleService.findByAnimalId(id); 
     }
     
-    @PostMapping("/post/status/{id}")
+    @PatchMapping("/status/{id}")
     public String updateStatusById(@PathVariable("id")Long id,  @RequestBody ScheduleRequestDTO scheduleRequestDTO){
     	System.out.println("scheduleEntity :"+scheduleRequestDTO);
     	System.out.println("-----------------------------------");

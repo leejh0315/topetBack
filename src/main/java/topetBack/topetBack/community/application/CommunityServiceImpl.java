@@ -9,20 +9,22 @@ import java.util.stream.Collectors;
 import org.apache.ibatis.javassist.NotFoundException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
-
-import org.springframework.web.multipart.MultipartFile;
 
 import topetBack.topetBack.block.dao.BlockRepository;
 import topetBack.topetBack.comment.dao.CommentRepository;
 import topetBack.topetBack.comment.domain.CommentEntity;
 import topetBack.topetBack.community.dao.CommunityRepository;
-import topetBack.topetBack.community.domain.*;
+import topetBack.topetBack.community.domain.CommunityEntity;
+import topetBack.topetBack.community.domain.CommunityListResponseDTO;
+import topetBack.topetBack.community.domain.CommunityRequestDTO;
+import topetBack.topetBack.community.domain.CommunityResponseDTO;
+import topetBack.topetBack.community.domain.QCommunityEntity;
 import topetBack.topetBack.file.application.FileService;
 import topetBack.topetBack.file.domain.FileCategory;
 import topetBack.topetBack.file.domain.FileGroupEntity;
@@ -77,12 +79,12 @@ public class CommunityServiceImpl implements CommunityService {
     
     //게시판 리스트
     @Override
-    public List<CommunityListResponseDTO> getCommunityListByAnimalAndCategory(String animal, String category, int page, int size, Predicate predicate, Long currentUserId, String orderby) {
+    public List<CommunityListResponseDTO> getCommunityListByAnimalAndCategory(String animal, String category, int page, int size, Predicate predicate, Long blockera, String orderby) {
         PageRequest pageable = PageRequest.of(page, size);
 
         // 차단된 유저의 게시물을 제외하는 필터
-        List<Long> blockedUserIds = blockRepository.findBlockedUserIdsByBlocker(currentUserId);
-
+        List<Long> blockedUserIds = blockRepository.findBlockedUserIdsByBlocker(blockera);
+        
         // 기본 필터링 추가
         BooleanExpression baseFilter = QCommunityEntity.communityEntity.animal.eq(animal)
                 .and(QCommunityEntity.communityEntity.category.eq(category))

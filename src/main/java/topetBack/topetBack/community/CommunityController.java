@@ -61,9 +61,9 @@ public class CommunityController {
                                                                         @RequestParam(name = "size") int size,
                                                                         @RequestParam(required = false, defaultValue = "createdTime", value = "orderby") String orderby,
                                                                         HttpServletRequest req
-	                                        ) throws JsonMappingException, JsonProcessingException {
+	                                        )  {
 		 	System.out.println("***************************************************************************************************************");
-		 	System.out.println("getMappin 실행 시작 ");
+		 	System.out.println("getMapping 실행 시작 ");
 		 	System.out.println("***************************************************************************************************************");
 	        if ("freedomAndDaily".equals(category)) {
 	            category = "자유/일상";
@@ -77,9 +77,8 @@ public class CommunityController {
 	        List<CommunityListResponseDTO> communityList = communityService.getCommunityListByAnimalAndCategory(animal, category, page, size , predicate , currentUserId , orderby);
 
 		 	System.out.println("***************************************************************************************************************");
-		 	System.out.println("getMappin 실행 종료 ");
+		 	System.out.println("getMapping 실행 종료 ");
 		 	System.out.println("***************************************************************************************************************");
-	        
 	        
 	        return new ResponseEntity<>(communityList, HttpStatus.OK);
 	    }		
@@ -114,6 +113,8 @@ public class CommunityController {
     	List<CommunityResponseDTO> communityList = communityService.findByAuthorId(id);
     	return new ResponseEntity<>(communityList, HttpStatus.OK);
     }
+    
+    
     
     //동물통합 인기순
     @GetMapping("/{animal}/sortLike")

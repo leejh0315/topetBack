@@ -32,7 +32,7 @@ public class GptController {
 
     @PostMapping("/ask")
     public Map<String, String> askChatGPT(@RequestBody Map<String, String> request , HttpServletRequest req) throws  JsonProcessingException {
-    	Member sessionMember = sessionManager.getSessionObject(req).toMember();
+//    	Member sessionMember = sessionManager.getSessionObject(req).toMember();
         String prompt = request.get("prompt");
         String response = gptService.getChatGPTResponse(prompt);
 

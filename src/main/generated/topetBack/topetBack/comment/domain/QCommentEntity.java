@@ -27,6 +27,8 @@ public class QCommentEntity extends EntityPathBase<CommentEntity> {
     public final ListPath<CommentEntity, QCommentEntity> children = this.<CommentEntity, QCommentEntity>createList("children", CommentEntity.class, QCommentEntity.class, PathInits.DIRECT2);
 
     public final topetBack.topetBack.community.domain.QCommunityEntity community;
+    
+    public final topetBack.topetBack.shorts.domain.QShortsEntity shorts;
 
     public final StringPath content = createString("content");
 
@@ -60,6 +62,7 @@ public class QCommentEntity extends EntityPathBase<CommentEntity> {
         super(type, metadata, inits);
         this.author = inits.isInitialized("author") ? new topetBack.topetBack.member.domain.QMember(forProperty("author")) : null;
         this.community = inits.isInitialized("community") ? new topetBack.topetBack.community.domain.QCommunityEntity(forProperty("community"), inits.get("community")) : null;
+		this.shorts = inits.isInitialized("shorts") ? new topetBack.topetBack.shorts.domain.QShortsEntity(forProperty("shorts"), inits.get("shorts")) : null;
         this.parent = inits.isInitialized("parent") ? new QCommentEntity(forProperty("parent"), inits.get("parent")) : null;
     }
 

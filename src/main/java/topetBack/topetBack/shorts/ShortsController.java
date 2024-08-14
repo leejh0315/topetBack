@@ -43,8 +43,12 @@ public class ShortsController {
 	}
 	
 	@GetMapping("/getAll")
-	public ResponseEntity<List<ShortsResponseDTO>> getAllShorts(@RequestParam(name = "page") int page,
-																@RequestParam(name = "size") int size){
+	public ResponseEntity<List<ShortsResponseDTO>> getAllShorts(
+																/*@RequestParam(name = "page") int page,
+																@RequestParam(name = "size") int size*/
+																)
+	{
+		System.out.println("asd");
 		List<ShortsResponseDTO> allShorts =  shortsService.getAll();
 		return ResponseEntity.ok(allShorts);
 	}

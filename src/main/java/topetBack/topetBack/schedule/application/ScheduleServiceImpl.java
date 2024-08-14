@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 import jakarta.persistence.EntityManager;
 import topetBack.topetBack.file.application.FileService;
 import topetBack.topetBack.file.domain.FileCategory;
+import topetBack.topetBack.file.domain.FileInfoEntity;
 import topetBack.topetBack.schedule.dao.ScheduleRepository;
 import topetBack.topetBack.schedule.domain.ScheduleEntity;
 import topetBack.topetBack.schedule.domain.ScheduleRequestDTO;
@@ -31,8 +32,8 @@ public class ScheduleServiceImpl implements ScheduleService{
     @Transactional
     public ScheduleResponseDTO createSchedule(ScheduleRequestDTO scheduleRequestDTO, MultipartFile image) throws IOException{
     	if(image != null) {
-    		String photoSrc = fileService.uploadPhoto(image, FileCategory.SCHEDULE.getPath());
-    		scheduleRequestDTO.setPhotoSrc(photoSrc);
+    		FileInfoEntity fileInfoEntity = fileService.storeFile(image, FileCategory.SCHEDULE);
+    		scheduleRequestDTO.setPhotoSrc(fileInfoEntity.getFilePath());
     	}
     	ScheduleEntity scheduleEntity = scheduleRequestDTO.toScheduleEntity();
     	ScheduleEntity result = scheduleRepository.save(scheduleEntity);
@@ -62,8 +63,13 @@ public class ScheduleServiceImpl implements ScheduleService{
 	@Override
 	@Transactional
 	public void updateSchedule(ScheduleRequestDTO scheduleRequestDTO) {
-		scheduleRequestDTO.setIsComplete(!(scheduleRequestDTO.getIsComplete()));
+		scheduleRequestDTO.setIsComplete(!scheduleRequestDTO.getIsComplete());
 		scheduleRepository.save(scheduleRequestDTO.toScheduleEntity());
+	}
+	@Override
+	public List<ScheduleResponseDTO> findTodaySchedules(Long animalId) {
+		List<ScheduleResponseDTO> todaySchedules = scheduleRepository.getTodaySchedules(animalId);
+		return todaySchedules;
 	}
 
 

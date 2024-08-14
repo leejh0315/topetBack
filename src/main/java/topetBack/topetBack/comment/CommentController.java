@@ -35,18 +35,22 @@ public class CommentController {
 //		 	SessionMember member = sessionManager.getSessionObject(req);
 		 			
 //			commentRequestDTO.setAuthor(member.toMember());
+		 	System.out.println("commentRequestDTO : "+ commentRequestDTO);
+		 
 			CommentResponseDTO commentEntity = commentService.insert(id, commentRequestDTO);
 			
 	        return ResponseEntity.ok(commentEntity);
 	 }
 	 
-	 @GetMapping("/get/{id}")
+	 @GetMapping("/get/{id}/{type}")
 	 public ResponseEntity<List<CommentResponseDTO>> getCommentsByCommunityId(Model model,
 																			  @PathVariable("id") Long id,
+																			  @PathVariable("type") String type,
 																			  @RequestParam(name = "page") int page,
 																			  @RequestParam(name = "size") int size,
 																			  HttpServletRequest req) throws JsonMappingException {
-		    List<CommentResponseDTO> comments = commentService.getCommentsByCommunityId(id, page, size);
+		 	System.out.println(type);
+		    List<CommentResponseDTO> comments = commentService.getCommentsByCommunityId(id, page, size, type);
 		    return new ResponseEntity<>(comments, HttpStatus.OK);
 	 }
 

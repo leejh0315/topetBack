@@ -18,5 +18,6 @@ public interface PetService {
 	PetResponseDTO findById(Long petId);
 	PetResponseDTO findByUid(String uid);
 	PetEntity findEntityByUid(String uid);
+	PetResponseDTO updatePet(PetRequestDTO petRequestDTO);
 //	List<PetResponseDTO> findPetByMember(Long memberId);
 }

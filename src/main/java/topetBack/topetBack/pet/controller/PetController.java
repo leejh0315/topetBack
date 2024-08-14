@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -82,7 +83,7 @@ public class PetController {
 //	}
 
 	
-	@GetMapping("/home/getMyPets/{id}")
+	@GetMapping("/getMyPets/{id}")
 	public ResponseEntity<List<PetResponseDTO>> getMyPets(@PathVariable("id")Long id){
 		List<PetResponseDTO> myPets = memberService.findPetByMember(id);
 		System.out.println(myPets);
@@ -113,6 +114,16 @@ public class PetController {
 //		}
 //		
 //	}
+	
+	@PatchMapping("/update")
+	public ResponseEntity<PetResponseDTO> updatePet(PetRequestDTO petRequestDTO){
+		
+		System.out.println("petRequestDTO : " + petRequestDTO);
+//		PetResponseDTO petResponseDTO = petService.updatePet(petRequestDTO);
+		
+		return ResponseEntity.ok(null);
+	}
+	
 	@PostMapping("/postAddPet")
 	public ResponseEntity<PetResponseDTO> addPet(@RequestBody Map<String, String> uid, HttpServletRequest req,
 			HttpServletResponse resp) throws JsonMappingException, JsonProcessingException{

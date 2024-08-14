@@ -25,6 +25,7 @@ public interface CommunityRepository extends JpaRepository<CommunityEntity, Long
 
 
 	List<CommunityEntity> findByAnimalAndCategory(String animal, String category);
+	
     Slice<CommunityEntity> findByAnimalAndCategoryOrderByCreatedTimeDesc(String animal, String category, Pageable pageable);
 
 	List<CommunityEntity> findByCategory(String category);

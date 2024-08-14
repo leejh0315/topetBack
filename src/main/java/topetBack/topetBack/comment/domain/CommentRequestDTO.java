@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import topetBack.topetBack.community.domain.CommunityEntity;
 import topetBack.topetBack.member.domain.Member;
+import topetBack.topetBack.shorts.domain.ShortsEntity;
 
 @Data
 @AllArgsConstructor
@@ -18,6 +19,7 @@ public class CommentRequestDTO {
     private Long id;
     private Member author;
     private CommunityEntity community;
+    private ShortsEntity shorts;
     private String content;
     private Long parentId;
 

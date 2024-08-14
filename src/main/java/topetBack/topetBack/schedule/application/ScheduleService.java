@@ -16,5 +16,6 @@ public interface ScheduleService {
 	List<ScheduleResponseDTO> findByAuthorId(Long authorId);
 	List<ScheduleResponseDTO> findByAnimalId(Long animalId);
 	void updateSchedule(ScheduleRequestDTO scheduleRequestDTO);
+	List<ScheduleResponseDTO> findTodaySchedules(Long animalId);
 
 }

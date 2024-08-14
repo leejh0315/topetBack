@@ -136,6 +136,12 @@ public class PetServiceImpl implements PetService{
 		return petRepository.getByUid(uid);
 	}
 
+	@Override
+	public PetResponseDTO updatePet(PetRequestDTO petRequestDTO) {
+
+		return null;
+	}
+
 //	@Override
 //	public List<PetResponseDTO> findPetByMember(Long memberId) {
 //		List<PetEntity> petEntity = memberPetRepositoryCustom.findPetByMember(memberId);
