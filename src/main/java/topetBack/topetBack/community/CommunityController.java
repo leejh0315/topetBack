@@ -40,17 +40,17 @@ public class CommunityController {
 	private final SessionManager sessionManager;
 	
     @PostMapping("/post")
-    public 
-    String communityPost(@ModelAttribute CommunityRequestDTO communityRequestDTO, 
+    public String communityPost(@ModelAttribute CommunityRequestDTO communityRequestDTO, 
     		HttpServletRequest req) throws Exception  {
     	
 //    	Member sessionMember = sessionManager.getSessionObject(req).toMember();
 //		communityRequestDTO.setAuthor(sessionMember);
-    	System.out.println(communityRequestDTO);
-		CommunityResponseDTO communityResponseDTO = communityService.createCommunity(communityRequestDTO);
+    	System.out.println(communityRequestDTO.getHashtag());
+    	CommunityResponseDTO communityResponseDTO = communityService.createCommunity(communityRequestDTO);
 
 
-		return ResponseEntity.ok(communityResponseDTO).toString();
+		//return ResponseEntity.ok(communityResponseDTO).toString();
+    	return ResponseEntity.ok(null).toString();
 	}
 
 	// 게시판 리스트

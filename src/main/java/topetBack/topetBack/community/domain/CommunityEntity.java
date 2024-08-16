@@ -5,12 +5,23 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import jakarta.persistence.*;
 import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,6 +29,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import topetBack.topetBack.file.domain.FileGroupEntity;
 import topetBack.topetBack.file.domain.FileResponseDTO;
+import topetBack.topetBack.hashTag.domain.TagMapping;
 import topetBack.topetBack.likes.domain.Likes;
 import topetBack.topetBack.member.domain.Member;
 
@@ -54,9 +66,9 @@ public class CommunityEntity {
     @Comment("내용")
     private String content;
 
-	@Column(nullable = true)
-    @Comment("해시태그")
-    private String hashtag;
+//	@Column(nullable = true)
+//    @Comment("해시태그")
+//    private List<String> hashtag;
 
 	@Column(nullable = false)
     @Comment("카테고리")
@@ -70,8 +82,15 @@ public class CommunityEntity {
     @JoinColumn(name = "file_group_id")
     private FileGroupEntity fileGroupEntity;
 
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "tag_mapping_id")
+    private TagMapping tagMappings;
+    
+    
     @OneToMany(mappedBy = "community", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     private List<Likes> likesList = new ArrayList<>();
+    
+    
     
     //댓글 개수
     @Formula("(SELECT count(1) FROM comments r WHERE r.community_id = id)")
@@ -90,10 +109,11 @@ public class CommunityEntity {
                 .author(this.author.toSummaryResponseDTO())
                 .title(this.title)
                 .content(this.content)
-                .hashtag(this.hashtag)
+                .hashtag(this.tagMappings.getHashTagResponseDTOList())
                 .category(this.category)
                 .animal(this.animal)
                 .images(this.fileGroupEntity.getFileResponseDTOList())
+                
                 .commentCount(this.commentCount)
                 .likeCount(this.likeCount)
                 .build();
@@ -113,7 +133,7 @@ public class CommunityEntity {
                 .updatedTime(this.updatedTime)
                 .title(this.title)
                 .content(this.content)
-                .hashtag(this.hashtag)
+//                .hashtag(this.hashtag)
                 .thumbnail(
                         Optional.ofNullable(this.fileGroupEntity.getFileResponseDTOList())
                                 .flatMap(list -> list.stream().findFirst())
@@ -127,10 +147,11 @@ public class CommunityEntity {
 
 
     
-    public void updateCommunity(String title, String content , String hashtag) {
+    public void updateCommunity(String title, String content //, List<String> hashtag
+    		) {
         this.title = title;
         this.content = content;
-        this.hashtag = hashtag;
+//        this.hashtag = hashtag;
     }
     
     public CommunityEntity toDTO() {

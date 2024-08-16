@@ -8,8 +8,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import topetBack.topetBack.comment.domain.CommentRequestDTO;
 import topetBack.topetBack.file.domain.FileGroupEntity;
+import topetBack.topetBack.hashTag.domain.TagMapping;
 import topetBack.topetBack.member.domain.Member;
 
 @Data
@@ -20,7 +20,7 @@ public class CommunityRequestDTO {
 	private String title;
     private String content;
 	private Member author;
-    private String hashtag;
+    private List<String> hashtag;
     private String category;
     private String animal;
     private List<MultipartFile> images;
@@ -29,15 +29,17 @@ public class CommunityRequestDTO {
 	public CommunityEntity toCommunityEntity() {
 
 		FileGroupEntity fileGroupEntity = new FileGroupEntity();
-
+		TagMapping tagMapping = new TagMapping();
+			
 		return CommunityEntity.builder()
 				.author(this.author)
 				.title(this.title)
 				.content(this.content)
-				.hashtag(this.hashtag)
+//				.hashtag(this.hashtag)
 				.category(this.category)
 				.animal(this.animal)	
 				.fileGroupEntity(fileGroupEntity)
+				.tagMappings(tagMapping)
 				.build();
 	}
 

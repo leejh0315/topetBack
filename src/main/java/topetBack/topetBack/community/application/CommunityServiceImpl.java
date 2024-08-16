@@ -9,37 +9,46 @@ import java.util.stream.Collectors;
 import org.apache.ibatis.javassist.NotFoundException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.querydsl.core.types.Predicate;
-import com.querydsl.core.types.dsl.BooleanExpression;
-
-import org.springframework.web.multipart.MultipartFile;
 
 import topetBack.topetBack.block.dao.BlockRepository;
 import topetBack.topetBack.comment.dao.CommentRepository;
 import topetBack.topetBack.community.dao.CommunityRepository;
-import topetBack.topetBack.community.domain.*;
+import topetBack.topetBack.community.domain.CommunityEntity;
+import topetBack.topetBack.community.domain.CommunityListResponseDTO;
+import topetBack.topetBack.community.domain.CommunityRequestDTO;
+import topetBack.topetBack.community.domain.CommunityResponseDTO;
 import topetBack.topetBack.file.application.FileService;
 import topetBack.topetBack.file.domain.FileCategory;
 import topetBack.topetBack.file.domain.FileGroupEntity;
 import topetBack.topetBack.file.domain.FileInfoEntity;
+import topetBack.topetBack.hashTag.dao.HashTagRepository;
+import topetBack.topetBack.hashTag.dao.TagMappingRepository;
+import topetBack.topetBack.hashTag.domain.HashTagEntity;
+import topetBack.topetBack.hashTag.domain.TagMapping;
 
 @Service
 public class CommunityServiceImpl implements CommunityService {
 
     private final CommunityRepository communityRepository;
+    private final HashTagRepository hashTagRepository;
 	private final FileService fileService;
     private final BlockRepository blockRepository;
 	private final CommentRepository commentRepository;
-
-    public CommunityServiceImpl(CommunityRepository communityRepository, FileService fileService , CommentRepository commentRepository , BlockRepository blockRepository) {
+	private final TagMappingRepository tagMappingRepository;
+	
+    public CommunityServiceImpl(CommunityRepository communityRepository, FileService fileService , CommentRepository commentRepository , 
+    			BlockRepository blockRepository, HashTagRepository hashTagRepository, TagMappingRepository tagMappingRepository) {
         this.communityRepository = communityRepository;
         this.fileService = fileService;
         this.commentRepository = commentRepository;
         this.blockRepository = blockRepository;
+        this.hashTagRepository = hashTagRepository;
+        this.tagMappingRepository = tagMappingRepository;
     }
 
     @Override
@@ -48,17 +57,31 @@ public class CommunityServiceImpl implements CommunityService {
         CommunityEntity communityEntity = communityRequestDTO.toCommunityEntity();
 
         if (communityRequestDTO.getImages() != null && !communityRequestDTO.getImages().isEmpty()) {
-        	System.out.println("이미지가있다");
             FileGroupEntity fileGroupEntity = communityEntity.getFileGroupEntity();
+            
             List<FileInfoEntity> fileInfoList = new ArrayList<>();
-
             for (MultipartFile file : communityRequestDTO.getImages()) {
                 FileInfoEntity fileInfo = fileService.storeFile(file, FileCategory.COMMUNITY);
                 fileInfo.setFileGroupEntity(fileGroupEntity);
                 fileInfoList.add(fileInfo);
             }
-
             fileGroupEntity.setFileList(fileInfoList);
+        }
+        
+        if(communityRequestDTO.getHashtag() != null && !communityRequestDTO.getHashtag().isEmpty()) {
+        	 
+        	TagMapping tagMapping= communityEntity.getTagMappings();
+        	 List<HashTagEntity> hashTagList = new ArrayList<>();
+        	for(String tag : communityRequestDTO.getHashtag()) {
+        		
+        		HashTagEntity hashTagEntity = HashTagEntity.builder()
+                        .tag(tag)
+                        .build();
+        		hashTagEntity.setTagMapping(tagMapping);
+                hashTagRepository.save(hashTagEntity);
+//        		hashTagList.add(hashTagEntity);
+                }
+        	tagMappingRepository.save(tagMapping);
         }
 
         CommunityEntity result = communityRepository.save(communityEntity);
@@ -115,9 +138,11 @@ public class CommunityServiceImpl implements CommunityService {
 
         String title = Optional.ofNullable(communityRequestDTO.getTitle()).orElse(communityEntity.getTitle());
         String content = Optional.ofNullable(communityRequestDTO.getContent()).orElse(communityEntity.getContent());
-        String hashtag = Optional.ofNullable(communityRequestDTO.getHashtag()).orElse(communityEntity.getHashtag());
+//        List<String> hashtag = Optional.ofNullable(communityRequestDTO.getHashtag()).orElse(communityEntity.getHashtag());
 
-        communityEntity.updateCommunity(title, content , hashtag);
+        communityEntity.updateCommunity(title, content); 
+        		
+//        		, hashtag);
 
         CommunityEntity updatedCommunity = communityRepository.save(communityEntity);
 

@@ -119,11 +119,7 @@ public class FileServiceImpl implements FileService {
 	    fileInfoEntity.setFilePath(fileUrl);
 	    fileInfoEntity.setFileSize(file.getSize());
 	    fileInfoEntity.setNewFileName(newFileName);
-	    
-	    System.out.println(fileInfoEntity.getOrigFileName());
-	    System.out.println(fileInfoEntity.getFilePath());
-	    System.out.println(fileInfoEntity.getNewFileName());
-	    
+
 	    fileRepository.save(fileInfoEntity);
 
 	    return fileInfoEntity;

@@ -19,7 +19,7 @@ public class CommunityListResponseDTO {
 	private LocalDateTime updatedTime;
 	private String title;
 	private String content;
-	private String hashtag;
+	private List<String> hashtag;
 	private String thumbnail;
 	private int commentCount;
 	private long likeCount;
