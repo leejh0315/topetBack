@@ -12,7 +12,7 @@ import topetBack.topetBack.shorts.domain.ShortsResponseDTO;
 public interface ShortsService {
 
 	public ShortsResponseDTO shortsSave(ShortsRequestDTO shortsRequestDTO)throws IOException ; 
-	public List<ShortsResponseDTO> getAll();
+	public List<ShortsResponseDTO> getAll(int page, int size);
 	public ShortsResponseDTO getShortsDetail(Long id);	
 	public Long getRandomShorts();
 	
