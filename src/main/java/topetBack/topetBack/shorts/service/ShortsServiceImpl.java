@@ -6,6 +6,8 @@ import java.util.Optional;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
@@ -58,8 +60,10 @@ public class ShortsServiceImpl implements ShortsService{
 	
 
 	@Override
-	public List<ShortsResponseDTO> getAll() {
-		List<ShortsEntity> allShorts = shortsRepository.findAll();
+	public List<ShortsResponseDTO> getAll(int page, int size) {
+        PageRequest pageable = PageRequest.of(page, size);
+
+        Slice<ShortsEntity> allShorts = shortsRepository.findAll(pageable);
 		return allShorts.stream()
                 .map(ShortsEntity::toResponseDTO)
                 .collect(Collectors.toList());

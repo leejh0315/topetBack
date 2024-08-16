@@ -2,6 +2,7 @@ package topetBack.topetBack.likes.domain;
 
 import lombok.Builder;
 import lombok.Data;
+import topetBack.topetBack.member.domain.Member;
 import topetBack.topetBack.member.domain.MemberSummaryResponseDTO;
 
 
@@ -9,5 +10,5 @@ import topetBack.topetBack.member.domain.MemberSummaryResponseDTO;
 @Builder
 public class LikeResponseDTO {
 	private Long id;
-	private MemberSummaryResponseDTO author;
+	private Member author;
 }

@@ -133,5 +133,12 @@ public class CommunityEntity {
         this.hashtag = hashtag;
     }
     
+    public CommunityEntity toDTO() {
+        return CommunityEntity.builder()
+                .id(this.id)
+                .title(this.title)
+                .build(); // 필요한 필드만 포함
+    }
+    
 
 }

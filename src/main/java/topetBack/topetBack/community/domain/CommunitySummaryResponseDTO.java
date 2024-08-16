@@ -16,3 +16,4 @@ public class CommunitySummaryResponseDTO {
 	private Long id;
 	private String title;
 }
+	
