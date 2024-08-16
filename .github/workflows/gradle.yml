@@ -26,11 +26,21 @@ jobs:
       run: chmod +x gradlew
     - name: Build with Gradle Wrapper
       run: ./gradlew clean build -x test
+      
+    - name: Upload build artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: build-artifact
+        path: build/libs/*.jar 
 
   deploy:
     needs: build
     runs-on: ubuntu-latest
     steps:
+    - name: Download build artifact
+      uses: actions/download-artifact@v3
+      with:
+        name: build-artifact
     - uses: actions/checkout@v4
     - name: Log in to docker private repo
       uses: docker/login-action@v2
@@ -44,7 +54,7 @@ jobs:
     - name: Build and push Docker image
       uses: docker/build-push-action@v5
       with:
-        context: ./docker
+        context: ./
         file: Dockerfile
         push: true
         tags: "topet.site:5000/toPet:latest"
