@@ -57,4 +57,4 @@ jobs:
         context: ./
         file: Dockerfile
         push: true
-        tags: "topet.site:5000/toPet:latest"
+        tags: "topet.site:5000/topet:latest"
