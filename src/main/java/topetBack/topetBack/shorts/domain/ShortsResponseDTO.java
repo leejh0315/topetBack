@@ -18,4 +18,5 @@ public class ShortsResponseDTO {
 	private MemberResponseDTO author;
 	private String thumbnailPhotoSrc;
 	private String videoSrc;
+    private int likeCount;
 }

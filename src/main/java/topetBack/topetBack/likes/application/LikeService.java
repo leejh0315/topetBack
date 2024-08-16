@@ -11,7 +11,7 @@ import topetBack.topetBack.member.domain.Member;
 
 @Service
 public interface LikeService {
-	 public ResponseEntity<CommunityResponseDTO> likePost(Long id , Long memberId);
+	 public ResponseEntity<?> likePost(String type, Long id, Long memberId);
 	 public List<LikeResponseDTO> findByAuthor(Member member);
 	 public boolean getDetailLike(Long id , Member member);
 }

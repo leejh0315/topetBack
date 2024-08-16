@@ -1,6 +1,7 @@
 package topetBack.topetBack.shorts.domain;
 
 import org.hibernate.annotations.Comment;
+import org.hibernate.annotations.Formula;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -41,6 +42,10 @@ public class ShortsEntity {
 	private String thumbnailPhotoSrc;
 	private String videoSrc;
 	
+	//좋아요 개수
+    @Formula("(SELECT count(1) FROM likes l WHERE l.community_id = id)")
+    private int likeCount;
+	
 	
 	public ShortsResponseDTO toResponseDTO() {
 		return ShortsResponseDTO.builder()
@@ -50,9 +55,16 @@ public class ShortsEntity {
 				.author(this.author.toResponseDTO())
 				.thumbnailPhotoSrc(this.thumbnailPhotoSrc)
 				.videoSrc(this.videoSrc)
+				.likeCount(this.likeCount)
 				.build();
 				
 	}
 
+	public ShortsSummaryResponseDTO toSummaryResponseDTO() {
+	       return ShortsSummaryResponseDTO.builder()
+	               .id(this.id)
+	               .title(this.title)
+	               .build(); // 필요한 필드만 포함
+	   }
 	  	
 }
