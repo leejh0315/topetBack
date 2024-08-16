@@ -41,7 +41,7 @@ jobs:
         DOCKER_DAEMON_ALLOW_INSECURE_REGISTRY: true
       with:
         registry: "175.45.202.131:5000"
-        # secret 추가후 하단에 하드코딩부분 삭제 처리 및 주석부분 해제
+        # secret 추가후 하단에 하드코딩부분 삭제 처리 및 주석부분 해제 test
         # username: ${{ secrets.DOCKER_USERNAME }}
         # password: ${{ secrets.DOCKER_PASSWORD }}
         username: admin
