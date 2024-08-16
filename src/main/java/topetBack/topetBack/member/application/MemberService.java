@@ -12,7 +12,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import topetBack.topetBack.config.SessionManager;
 import topetBack.topetBack.file.application.FileService;
@@ -20,13 +19,11 @@ import topetBack.topetBack.file.domain.FileCategory;
 import topetBack.topetBack.file.domain.FileGroupEntity;
 import topetBack.topetBack.file.domain.FileInfoEntity;
 import topetBack.topetBack.member.dao.MemberPetRepository;
-import topetBack.topetBack.member.dao.MemberPetRepositoryCustom;
 import topetBack.topetBack.member.dao.MemberRepository;
 import topetBack.topetBack.member.domain.Member;
 import topetBack.topetBack.member.domain.MemberPet;
 import topetBack.topetBack.member.domain.MemberRequestDTO;
 import topetBack.topetBack.member.domain.MemberResponseDTO;
-import topetBack.topetBack.member.domain.SessionMember;
 import topetBack.topetBack.pet.domain.PetEntity;
 import topetBack.topetBack.pet.domain.PetResponseDTO;
 
@@ -104,15 +101,15 @@ public class MemberService {
 
 	}
     
-    public Member userInfoRegister(Member member, String nickName, MultipartFile image) throws IOException {
-    	SessionMember sessionMember = member.toSessionMember();
-    	sessionMember.setName(nickName);
-    	FileInfoEntity fileInfoEntity =fileService.storeFile(image, FileCategory.MEMBER);
-    	sessionMember.setProfileSrc(fileInfoEntity.getFilePath());
-    	
-    	Member newMember = memberRepository.save(sessionMember.toMember());
-    	return newMember;
-    }
+//    public Member userInfoRegister(Member member, String nickName, MultipartFile image) throws IOException {
+//    	SessionMember sessionMember = member.toSessionMember();
+//    	sessionMember.setName(nickName);
+//    	FileInfoEntity fileInfoEntity =fileService.storeFile(image, FileCategory.MEMBER);
+//    	sessionMember.setProfileSrc(fileInfoEntity.getFilePath());
+//    	
+//    	Member newMember = memberRepository.save(sessionMember.toMember());
+//    	return newMember;
+//    }
     
     public List<PetResponseDTO> findPetByMember(Long memberId) {
 		List<PetEntity> petEntity = memberPetRepository.findPetByMember(memberId);

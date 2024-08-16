@@ -1,21 +1,29 @@
 package topetBack.topetBack.community.dao;
 
-import static topetBack.topetBack.community.domain.QCommunityEntity.communityEntity;
+import com.querydsl.core.types.ExpressionUtils;
+import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.jpa.JPAExpressions;
+import com.querydsl.jpa.impl.JPAQuery;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.SliceImpl;
+import org.springframework.stereotype.Repository;
+import topetBack.topetBack.community.domain.CommunityEntity;
+import topetBack.topetBack.community.domain.QCommunityEntity;
+import com.querydsl.core.types.Predicate;
+import com.querydsl.core.types.dsl.BooleanExpression;
+
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
+import topetBack.topetBack.member.domain.QMember;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
-import org.springframework.data.domain.SliceImpl;
-import org.springframework.stereotype.Repository;
-
-import com.querydsl.core.types.Predicate;
-import com.querydsl.jpa.impl.JPAQuery;
-import com.querydsl.jpa.impl.JPAQueryFactory;
-
-import topetBack.topetBack.community.domain.CommunityEntity;
+import static topetBack.topetBack.comment.domain.QCommentEntity.commentEntity;
+import static topetBack.topetBack.community.domain.QCommunityEntity.communityEntity;
 
 @Repository
 public class CommunityRepositoryImpl implements CommunityRepositoryCustom {
@@ -26,10 +34,42 @@ public class CommunityRepositoryImpl implements CommunityRepositoryCustom {
     @Autowired
     public CommunityRepositoryImpl(JPAQueryFactory queryFactory) {
         this.queryFactory = queryFactory;
-    }   
+    }
+
+//    public Slice<CommunityEntity> findAllByAnimalAndCategoryWithLikesSorted(Predicate predicate, Pageable pageable) {
+//
+//
+//        PageRequest pageRequest = (PageRequest) pageable;
+//
+//        return queryFactory.selectFrom(communityEntity)
+//                .where(predicate)
+//                .orderBy(communityEntity.likesList.size().desc())
+//                .offset(pageRequest.getOffset())
+//                .limit(pageRequest.getPageSize())
+//                .fetch();
+//    }
+    
+    @Override
+    public Slice<CommunityEntity> findByAuthorId(Pageable pageable, Long id){
+    	List<CommunityEntity> content = queryFactory
+                .select(communityEntity)
+                .from(communityEntity)
+                .leftJoin(communityEntity.fileGroupEntity).fetchJoin()
+                .leftJoin(communityEntity.fileGroupEntity.fileList).fetchJoin()
+                .where(communityEntity.author.id.eq(id))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+    	
+    	boolean hasNext = content.size() == pageable.getPageSize();
+    	
+    	return new SliceImpl<>(content, pageable, hasNext);
+    }
+    
+   
 
     @Override
-    public Slice<CommunityEntity> findAllWithPredicate(Predicate predicate, Pageable pageable, String orderby) {
+    public Slice<CommunityEntity> findAllWithPredicate(Predicate predicate, Pageable pageable, String orderby, String animal, String category) {
         JPAQuery<Long> idQuery = queryFactory
                 .select(communityEntity.id)
                 .from(communityEntity)
@@ -56,6 +96,7 @@ public class CommunityRepositoryImpl implements CommunityRepositoryCustom {
         JPAQuery<CommunityEntity> query = queryFactory
                 .select(communityEntity)
                 .from(communityEntity)
+                .where(communityEntity.animal.eq(animal).and(communityEntity.category.eq(category)))
                 .leftJoin(communityEntity.author).fetchJoin()
                 .leftJoin(communityEntity.fileGroupEntity).fetchJoin()
                 .leftJoin(communityEntity.fileGroupEntity.fileList).fetchJoin()

@@ -18,6 +18,9 @@ public interface PetService {
 	PetResponseDTO findById(Long petId);
 	PetResponseDTO findByUid(String uid);
 	PetEntity findEntityByUid(String uid);
-	PetResponseDTO updatePet(PetRequestDTO petRequestDTO);
+	PetResponseDTO updatePet(PetRequestDTO petRequestDTO) throws IOException ;
+	
+	Long deleteMember(Long memberId, Long petId);
+	
 //	List<PetResponseDTO> findPetByMember(Long memberId);
 }

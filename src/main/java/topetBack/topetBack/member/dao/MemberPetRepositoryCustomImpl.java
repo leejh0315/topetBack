@@ -1,7 +1,7 @@
 package topetBack.topetBack.member.dao;
 
 import java.util.List;
-
+import org.hibernate.mapping.SoftDeletable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -46,5 +46,17 @@ public class MemberPetRepositoryCustomImpl implements MemberPetRepositoryCustom 
 				.join(memberPet.pet, petEntity)
 				.where(memberPet.member.id.eq(memberId))
 				.fetch();
+	}
+
+	@Override
+	public Long deleteMember(Long memberId , Long petId) {
+		// TODO Auto-generated method stub
+		
+		QMemberPet memberPet = QMemberPet.memberPet;
+		Long deleteQuery = jpaQueryFactory
+				.delete(memberPet)
+				.where(memberPet.member.id.eq(memberId).and(memberPet.pet.id.eq(petId))).execute();
+		System.out.println(deleteQuery);
+		return deleteQuery;
 	}
 }

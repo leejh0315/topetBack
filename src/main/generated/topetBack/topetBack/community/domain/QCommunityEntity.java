@@ -25,6 +25,8 @@ public class QCommunityEntity extends EntityPathBase<CommunityEntity> {
     public final StringPath animal = createString("animal");
 
     public final topetBack.topetBack.member.domain.QMember author;
+    
+    public final topetBack.topetBack.comment.domain.QCommentEntity comment;
 
     public final StringPath category = createString("category");
 
@@ -67,6 +69,7 @@ public class QCommunityEntity extends EntityPathBase<CommunityEntity> {
     public QCommunityEntity(Class<? extends CommunityEntity> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.author = inits.isInitialized("author") ? new topetBack.topetBack.member.domain.QMember(forProperty("author")) : null;
+		this.comment = inits.isInitialized("comment") ? new topetBack.topetBack.comment.domain.QCommentEntity(forProperty("comment")) : null;
         this.fileGroupEntity = inits.isInitialized("fileGroupEntity") ? new topetBack.topetBack.file.domain.QFileGroupEntity(forProperty("fileGroupEntity")) : null;
     }
 

@@ -35,11 +35,14 @@ public class PetRequestDTO {
 	private String profileSrc;
 	private String neutered;
 	
+	private Long ownerId;
+	
 	private MultipartFile photo;
 	
 	public PetEntity toPetEntity() {
 		
 		return PetEntity.builder()
+				.id(this.id)
                 .type(this.type)
                 .kind(this.kind)
                 .gender(this.gender)
@@ -51,6 +54,7 @@ public class PetRequestDTO {
                 .uid(this.uid)
                 .neutered(this.neutered)
                 .profileSrc(this.profileSrc)
+                .ownerId(this.ownerId)
                 .build();
 	}
 

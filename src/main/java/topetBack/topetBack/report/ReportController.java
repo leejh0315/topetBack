@@ -1,7 +1,6 @@
 package topetBack.topetBack.report;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,10 +12,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import topetBack.topetBack.community.application.CommunityService;
-import topetBack.topetBack.community.domain.CommunityResponseDTO;
 import topetBack.topetBack.config.SessionManager;
-import topetBack.topetBack.member.domain.SessionMember;
 import topetBack.topetBack.report.application.ReportService;
 
 @RestController

@@ -29,7 +29,8 @@ public class PetResponseDTO {
 	private String health;
 	private String uid;
 	private String neutered;
-
+	private Long ownerId;
+	
 	private List<MemberResponseDTO> members = new ArrayList<>();
  
 }

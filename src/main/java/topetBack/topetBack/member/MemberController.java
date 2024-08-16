@@ -77,22 +77,27 @@ public class MemberController {
 				(String) response.get("nickname"), "", new FileGroupEntity());
 		String sId = response.get("kid").toString();
 		Optional<Member> dbMember = memberService.findBySocialId(sId);
-		if (dbMember.isPresent()) {
-			System.out.println("주입할 필요 없어서 안했음");
-		} else {
+		
+		
+		if (dbMember.isEmpty()) {
 			memberService.memberJoin(member);
 			System.out.println("주입완료");
+			Member newMember = memberService.findBySocialId(response.get("kid").toString()).get();
+			String sessionId = sessionManager.create(newMember.getId(), resp);
 			redirectView.setUrl(frontAddress + "/userregister");
+			return redirectView;
+		} else {
+			System.out.println("주입할 필요 없어서 안했음");
+			Member newMember = memberService.findBySocialId(response.get("kid").toString()).get();
+//			List<MemberPet> memberPet = memberService.findByMember(newMember);
+//			List<PetResponseDTO> pets = new ArrayList<PetResponseDTO>();
+//			for (int i = 0; i < memberPet.size(); i++) {
+//				pets.add(petService.findById(memberPet.get(i).getPet().getId()));
+//			}
+			String sessionId = sessionManager.create(newMember.getId(), resp);
+			redirectView.setUrl(frontAddress + "/login");
+			return redirectView;
 		}
-		Member newMember = memberService.findBySocialId(response.get("kid").toString()).get();
-		List<MemberPet> memberPet = memberService.findByMember(newMember);
-		List<PetResponseDTO> pets = new ArrayList<PetResponseDTO>();
-		for (int i = 0; i < memberPet.size(); i++) {
-			pets.add(petService.findById(memberPet.get(i).getPet().getId()));
-		}
-		String sessionId = sessionManager.create(newMember.getId(), resp);
-		redirectView.setUrl(frontAddress + "/login");
-		return redirectView;
 	}
 //	@PostMapping("/userregister")
 //	public ResponseEntity<Member> postUserRegister(HttpServletRequest req, HttpServletResponse resp, 
@@ -108,9 +113,9 @@ public class MemberController {
 
 	@PatchMapping("/update")
 	public ResponseEntity<MemberResponseDTO> updateMember(MemberRequestDTO memberRequestDTO) throws IOException {
-		
+
 		System.out.println("memberRequestDTO : " + memberRequestDTO);
-		
+
 		MemberResponseDTO updatedMember = memberService.updateMember(memberRequestDTO);
 		return ResponseEntity.ok(updatedMember);
 	}

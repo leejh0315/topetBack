@@ -6,20 +6,15 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import topetBack.topetBack.config.SessionManager;
 import topetBack.topetBack.file.application.FileService;
 import topetBack.topetBack.file.domain.FileCategory;
 import topetBack.topetBack.file.domain.FileInfoEntity;
 import topetBack.topetBack.member.dao.MemberPetRepository;
-import topetBack.topetBack.member.dao.MemberPetRepositoryCustom;
 import topetBack.topetBack.member.domain.Member;
 import topetBack.topetBack.member.domain.MemberPet;
 import topetBack.topetBack.member.domain.MemberResponseDTO;
@@ -35,16 +30,19 @@ public class PetServiceImpl implements PetService{
 
 	
     private final PetRepository petRepository;
+//    private final PetOwnerRepository petOwnerRepository;
     private final MemberPetRepository memberPetRepository;
 	private final FileService fileService;
 //	private final MemberPetRepositoryCustom memberPetRepositoryCustom;
 
-    public PetServiceImpl(PetRepository petRepository, MemberPetRepository memberPetRepository, FileService fileService 
+    public PetServiceImpl(PetRepository petRepository, MemberPetRepository memberPetRepository, FileService fileService
+//    		, PetOwnerRepository petOwnerRepository
 //    		,@Qualifier("memberPetRepositoryCustom") MemberPetRepositoryCustom memberPetRepositoryCustom
     		) {
         this.petRepository = petRepository;
         this.memberPetRepository  = memberPetRepository;
         this.fileService = fileService;
+//        this.petOwnerRepository = petOwnerRepository;
 //        this.memberPetRepositoryCustom = memberPetRepositoryCustom;
     }
 	
@@ -59,9 +57,11 @@ public class PetServiceImpl implements PetService{
         	FileInfoEntity fileInfoEntity = fileService.storeFile(image, FileCategory.PET);
         	petRequestDTO.setProfileSrc(fileInfoEntity.getFilePath());
         }
+        petRequestDTO.setOwnerId(petRequestDTO.getMember().getId());
         PetEntity result = petRepository.save(petRequestDTO.toPetEntity());
         if(petRequestDTO.getMember() != null){
             MemberPet memberPet = new MemberPet(petRequestDTO.getMember(), result);
+            
             memberPetRepository.save(memberPet);
         }
         log.info("petEntity : " + result.toString());
@@ -135,11 +135,26 @@ public class PetServiceImpl implements PetService{
 	public PetEntity findEntityByUid(String uid) {
 		return petRepository.getByUid(uid);
 	}
+	
+	@Override
+	public PetResponseDTO updatePet(PetRequestDTO petRequestDTO) throws IOException {
+		if(petRequestDTO.getPhoto() != null && !petRequestDTO.getPhoto().isEmpty()){
+			System.out.println("포토잇ㄷ.ㅏ");
+			FileInfoEntity fileInfoEntity =fileService.storeFile(petRequestDTO.getPhoto(), FileCategory.PET);
+			petRequestDTO.setProfileSrc(fileInfoEntity.getFilePath());
+		}
+		
+		PetEntity updatedPet = petRepository.save(petRequestDTO.toPetEntity());
+		
+		
+		return updatedPet.toResponseDTO();
+	}
 
 	@Override
-	public PetResponseDTO updatePet(PetRequestDTO petRequestDTO) {
-
-		return null;
+	public Long deleteMember(Long memberId, Long petId) {
+		// TODO Auto-generated method stub
+		Long deleteQuery = memberPetRepository.deleteMember(memberId, petId);
+		return deleteQuery;
 	}
 
 //	@Override

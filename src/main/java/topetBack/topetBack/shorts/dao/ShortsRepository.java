@@ -1,5 +1,6 @@
 package topetBack.topetBack.shorts.dao;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -10,7 +11,8 @@ import topetBack.topetBack.shorts.domain.ShortsEntity;
 public interface ShortsRepository extends JpaRepository<ShortsEntity, Long>{
 
 //	public ShortsEntity save(ShortsEntity shortsEntity);
-	public Optional<ShortsEntity> findById(Long id);
+	Optional<ShortsEntity> findById(Long id);
 	@Query(value = "SELECT id FROM shorts ORDER BY RAND() LIMIT 1", nativeQuery = true)
-    public Long findRandomShort();
+    Long findRandomShort();
+	List<ShortsEntity> findByAuthorId(Long authorId);
 }

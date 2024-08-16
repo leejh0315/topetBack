@@ -13,7 +13,8 @@ public interface ShortsService {
 
 	public ShortsResponseDTO shortsSave(ShortsRequestDTO shortsRequestDTO)throws IOException ; 
 	public List<ShortsResponseDTO> getAll();
-	public ShortsResponseDTO getShortsDetail(Long id);	
+	public ShortsResponseDTO getShortsDetail(Long id);
+	public List<ShortsResponseDTO> getMyShorts(Long authorId);
 	public Long getRandomShorts();
 	
 }

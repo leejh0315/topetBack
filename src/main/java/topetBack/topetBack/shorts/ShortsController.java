@@ -13,12 +13,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import ch.qos.logback.core.model.Model;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import topetBack.topetBack.community.domain.CommunityResponseDTO;
 import topetBack.topetBack.config.SessionManager;
-import topetBack.topetBack.member.domain.Member;
 import topetBack.topetBack.shorts.domain.ShortsRequestDTO;
 import topetBack.topetBack.shorts.domain.ShortsResponseDTO;
 import topetBack.topetBack.shorts.service.ShortsService;
@@ -35,9 +32,6 @@ public class ShortsController {
 	public ResponseEntity<ShortsResponseDTO> postShorts(@ModelAttribute ShortsRequestDTO shortsRequestDTO, HttpServletRequest req,
 			@RequestParam(value="thumbnailPhoto", required=true) MultipartFile image,
 			@RequestParam(value="video", required=false) MultipartFile video) throws IOException{
-		
-//		Member member = sessionManager.getSessionObject(req).toMember();
-//		shortsRequestDTO.setAuthor(member);
 		ShortsResponseDTO shortsResponseDTO =  shortsService.shortsSave(shortsRequestDTO);
 		return ResponseEntity.ok(shortsResponseDTO);
 	}
@@ -65,5 +59,10 @@ public class ShortsController {
 		return ResponseEntity.ok(shortsResponseDTO);
 	}
 	
+	@GetMapping("/myshorts/{id}")
+	public ResponseEntity<List<ShortsResponseDTO>> myShorts(@PathVariable("id") Long authorId){
+		List<ShortsResponseDTO> myShorts = shortsService.getMyShorts(authorId);
+		return ResponseEntity.ok(myShorts);
+	}
 	
 }

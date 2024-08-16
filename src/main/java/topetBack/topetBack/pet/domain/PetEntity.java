@@ -72,6 +72,9 @@ public class PetEntity {
 	@Comment("사진경로")
 	private String profileSrc;
 
+	@Column(nullable = true)
+	@Comment("사진경로")
+	private Long ownerId;
 
 	public PetResponseDTO toResponseDTO() {
 		return PetResponseDTO.builder()
@@ -87,6 +90,8 @@ public class PetEntity {
 				.neutered(this.neutered)
 				.profileSrc(this.profileSrc)
 				.uid(this.uid)
+				.ownerId(this.ownerId)
+				
 				.build();
 	}
 

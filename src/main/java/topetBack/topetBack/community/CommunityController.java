@@ -46,6 +46,7 @@ public class CommunityController {
     	
 //    	Member sessionMember = sessionManager.getSessionObject(req).toMember();
 //		communityRequestDTO.setAuthor(sessionMember);
+    	System.out.println(communityRequestDTO);
 		CommunityResponseDTO communityResponseDTO = communityService.createCommunity(communityRequestDTO);
 
 
@@ -53,7 +54,7 @@ public class CommunityController {
 	}
 
 	// 게시판 리스트
-	 @GetMapping("/{animal}/{category}")
+	 @GetMapping("/list/{animal}/{category}")
 	    public ResponseEntity<List<CommunityListResponseDTO>> boardList(@QuerydslPredicate(root = CommunityEntity.class) Predicate predicate,
                                                                         @PathVariable("animal") String animal,
                                                                         @PathVariable("category") String category,
@@ -61,9 +62,9 @@ public class CommunityController {
                                                                         @RequestParam(name = "size") int size,
                                                                         @RequestParam(required = false, defaultValue = "createdTime", value = "orderby") String orderby,
                                                                         HttpServletRequest req
-	                                        )  {
+	                                        ) throws JsonMappingException, JsonProcessingException {
 		 	System.out.println("***************************************************************************************************************");
-		 	System.out.println("getMapping 실행 시작 ");
+		 	System.out.println("getMappin 실행 시작 " + category);
 		 	System.out.println("***************************************************************************************************************");
 	        if ("freedomAndDaily".equals(category)) {
 	            category = "자유/일상";
@@ -77,8 +78,9 @@ public class CommunityController {
 	        List<CommunityListResponseDTO> communityList = communityService.getCommunityListByAnimalAndCategory(animal, category, page, size , predicate , currentUserId , orderby);
 
 		 	System.out.println("***************************************************************************************************************");
-		 	System.out.println("getMapping 실행 종료 ");
+		 	System.out.println("getMappin 실행 종료 ");
 		 	System.out.println("***************************************************************************************************************");
+	        
 	        
 	        return new ResponseEntity<>(communityList, HttpStatus.OK);
 	    }		
@@ -107,14 +109,14 @@ public class CommunityController {
     }
     
     //사용자에 맞는 게시글 가져오기
-    @GetMapping("/myCommunity/{id}")
-    public ResponseEntity<List<CommunityResponseDTO>> getMyCommunity(@PathVariable("id") Long id){
-    	System.out.println("내게시글내놓거라");
-    	List<CommunityResponseDTO> communityList = communityService.findByAuthorId(id);
+    @GetMapping("/author/{id}")
+    public ResponseEntity<List<CommunityListResponseDTO>> getCommunityByAuthorId(@PathVariable("id") Long id,
+    		@RequestParam(name = "page") int page,
+    		@RequestParam(name = "size") int size){
+  
+    	List<CommunityListResponseDTO> communityList = communityService.findByAuthorId(id, page, size);
     	return new ResponseEntity<>(communityList, HttpStatus.OK);
     }
-    
-    
     
     //동물통합 인기순
     @GetMapping("/{animal}/sortLike")

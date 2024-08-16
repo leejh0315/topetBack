@@ -1,7 +1,5 @@
 package topetBack.topetBack.config;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -10,17 +8,11 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
-import topetBack.topetBack.member.domain.Member;
-import topetBack.topetBack.member.domain.SessionMember;
-import topetBack.topetBack.pet.domain.PetResponseDTO;
 
 @Component
 @Slf4j
@@ -86,7 +78,7 @@ public class SessionManager {
 	public Long getSessionObject(HttpServletRequest req)  {
 		log.info("session getSessionObject");
 		Cookie sessionCookie = findCookie(req, SESSION_COOKIE_NAME);
-		System.out.println("getSessionObject sessionCookie : " + sessionCookie.getValue());
+//		System.out.println("getSessionObject sessionCookie : " + sessionCookie.getValue());
 		if (sessionCookie != null) {
 			String sessionId = sessionCookie.getValue();
 			System.out.println("sessionManager에서 쿠키를 통해 찾은 sessionId : " + sessionId);

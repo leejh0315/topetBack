@@ -14,6 +14,7 @@ import topetBack.topetBack.pet.domain.PetEntity;
 @Repository
 public interface PetRepository extends JpaRepository<PetEntity, Object> , JpaSpecificationExecutor<PetEntity>{
 
+	
     PetEntity getById(Long id);
     PetEntity getByUid(String uid);
     @Query("SELECT p FROM PetEntity p WHERE p.uid = :uid")

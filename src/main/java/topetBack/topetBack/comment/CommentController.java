@@ -2,13 +2,19 @@ package topetBack.topetBack.comment;
 
 import java.util.List;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 
 import ch.qos.logback.core.model.Model;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,7 +24,6 @@ import topetBack.topetBack.comment.domain.CommentRequestDTO;
 import topetBack.topetBack.comment.domain.CommentResponseDTO;
 import topetBack.topetBack.comment.domain.MyCommentResponseDTO;
 import topetBack.topetBack.config.SessionManager;
-import topetBack.topetBack.member.domain.SessionMember;
 
 
 @RestController

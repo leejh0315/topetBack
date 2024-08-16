@@ -25,7 +25,6 @@ public interface CommunityRepository extends JpaRepository<CommunityEntity, Long
 
 
 	List<CommunityEntity> findByAnimalAndCategory(String animal, String category);
-	
     Slice<CommunityEntity> findByAnimalAndCategoryOrderByCreatedTimeDesc(String animal, String category, Pageable pageable);
 
 	List<CommunityEntity> findByCategory(String category);
@@ -33,7 +32,6 @@ public interface CommunityRepository extends JpaRepository<CommunityEntity, Long
 	@Override
 	Optional<CommunityEntity> findById(Long communityId);
 	
-	List<CommunityEntity> findByAuthorId(Long id);//사용자에 맞는 게시글 가져오기
 	
     @Query("SELECT c FROM CommunityEntity c LEFT JOIN c.likesList l WHERE c.animal = :animal AND c.category = :category GROUP BY c ORDER BY COUNT(l) DESC")
     Slice<CommunityEntity> findAllOrderByLikesCountDesc(@Param("animal") String animal, @Param("category") String category , Pageable pageable);

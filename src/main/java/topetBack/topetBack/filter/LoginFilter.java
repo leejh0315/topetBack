@@ -3,6 +3,7 @@ package topetBack.topetBack.filter;
 import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.PatternMatchUtils;
 
 import jakarta.servlet.Filter;
@@ -22,7 +23,9 @@ import topetBack.topetBack.member.domain.Member;
 @Slf4j
 public class LoginFilter implements Filter {
 
-	private static final String[] whiteList ={"/api/member/**", "/api/community/**", "/api/comment/**"};
+	@Value("${toPet.front.address}")
+	private String frontAddress;
+	private static final String[] whiteList ={"/api/member/**", "/api/community/**", "/api/comment/**", "/api/pet/**"};
 
 
     private final SessionManager sessionManager;
@@ -44,11 +47,11 @@ public class LoginFilter implements Filter {
 			HttpSession session = req.getSession(true);
 			Long memberId = sessionManager.getSessionObject(req);
 			System.out.println(memberId);
-			log.info("Session: {}", session);
-			log.info("Member: {}", memberId);
+			log.info("Session : {}", session);
+			log.info("MemberId : {}", memberId);
 			if(memberId == null ||session == null) {
 				log.info("로그인 없이 접근 시도 {}", uri);
-				resp.sendRedirect("/api");
+				 resp.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
 				return;
 			}
 		}

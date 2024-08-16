@@ -3,6 +3,7 @@ package topetBack.topetBack.shorts.service;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -80,6 +81,14 @@ public class ShortsServiceImpl implements ShortsService{
 	public Long getRandomShorts() {
 		Long randomShorts = shortsRepository.findRandomShort();
 		return randomShorts;
+	}
+
+
+
+	@Override
+	public List<ShortsResponseDTO> getMyShorts(Long authorId) {
+		List<ShortsEntity> myShorts = shortsRepository.findByAuthorId(authorId);
+		return myShorts.stream().map(ShortsEntity::toResponseDTO).collect(Collectors.toList());
 	}
 
 }

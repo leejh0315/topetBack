@@ -12,4 +12,7 @@ public interface MemberPetRepositoryCustom {
 
     List<Member> findMemberByPet(Long petId);
     List<PetEntity> findPetByMember(Long memberId);
+    
+    
+    Long deleteMember(Long memberId, Long petId);
 }
