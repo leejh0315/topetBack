@@ -38,7 +38,7 @@ jobs:
         echo "docker12345" | docker logintopet.site:5000 --username admin --password-stdin
     
     - name: Build Docker image
-      run: docker build -t topet.site:5000/topet:latest .
+      run: docker build -t topet.site:5000/topet:latest . 
     
     - name: Push Docker image
       run: docker push topet.site:5000/topet:latest
