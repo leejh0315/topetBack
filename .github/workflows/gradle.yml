@@ -31,23 +31,14 @@ jobs:
       run: ./gradlew clean build -x test
     
     - name: List contents of build directory
-      run: ls -la build/libs
-    
+      run: ls -la build/libs && ls -la 
+
     - name: Log in to docker private repo
-      uses: docker/login-action@v2
-      env:
-        DOCKER_BUILDKIT: 1
-        DOCKER_CLI_EXPERIMENTAL: enabled
-        DOCKER_BUILDKIT_INLINE_CACHE: 1
-        DOCKER_DAEMON_ALLOW_INSECURE_REGISTRY: true
-      with:
-        registry: "topet.site:5000"
-        username: admin
-        password: docker12345
+      run: |
+        echo "docker12345" | docker logintopet.site:5000 --username admin --password-stdin
     
-    - name: Build and push Docker image
-      uses: docker/build-push-action@v5
-      with:
-        file: ./docker/Dockerfile
-        push: true
-        tags: "topet.site:5000/topet:latest"
+    - name: Build Docker image
+      run: docker build -t topet.site:5000/topet:latest .
+    
+    - name: Push Docker image
+      run: docker push topet.site:5000/topet:latest
