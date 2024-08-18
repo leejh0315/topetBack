@@ -41,7 +41,7 @@ jobs:
       uses: actions/download-artifact@v3
       with:
         name: build-artifact
-        path: docker
+        path: ./docker
     - uses: actions/checkout@v4
     - name: Log in to docker private repo
       uses: docker/login-action@v2
