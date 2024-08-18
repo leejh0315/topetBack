@@ -1,3 +1,4 @@
 FROM openjdk:17-jdk-slim
-COPY ./docker/*-SNAPSHOT.jar app.jar
+RUN mkdir /app
+COPY ./docker/topetBack-0.0.1-SNAPSHOT.jar /app/app.jar
 ENTRYPOINT ["java","-jar","/app.jar"]
