@@ -3,6 +3,8 @@ package topetBack.topetBack.member.domain;
 import java.io.Serializable;
 import java.util.List;
 
+import org.hibernate.annotations.ColumnDefault;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -36,6 +38,7 @@ public class Member implements Serializable {
 
 	private String email;
 	
+	@ColumnDefault("https://i.pinimg.com/564x/57/70/f0/5770f01a32c3c53e90ecda61483ccb08.jpg") 
 	private String profileSrc;
 
 	
