@@ -38,7 +38,7 @@ jobs:
       uses: docker/login-action@v2
       with:
         registry: "topet.site:5000" # private registry 주소
-        # secret 추가후 하단에 하드코딩부분 삭제 처리 및 주석해제
+        # secret 등록 후 하드코딩 대체
         # username: ${{ secrets.DOCKER_USERNAME }}
         # password: ${{ secrets.DOCKER_PASSWORD }}
         username: admin
@@ -114,4 +114,8 @@ jobs:
           -----END OPENSSH PRIVATE KEY-----        
         port: 22
         script: |
-            docker ps -a 
+            docker pull topet.site:5000/topet:${{ github.run_id }}
+            sed -i "s|topet.site:5000/topet:[^ ]*|topet.site:5000/topet:${{ github.run_id }}|" /root/dockercompose/docker-compose.yml 
+            cd /root/dockercompose && docker-compose up -d --force-recreatels
+            
+
