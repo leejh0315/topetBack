@@ -74,12 +74,13 @@ public class MemberController {
 			return redirectView;
 		}
 		Member member = new Member(0L, response.get("kid").toString(), (String) response.get("email"),
-				(String) response.get("nickname"), "", new FileGroupEntity());
+				(String) response.get("nickname"), "https://i.pinimg.com/564x/57/70/f0/5770f01a32c3c53e90ecda61483ccb08.jpg", new FileGroupEntity());
 		String sId = response.get("kid").toString();
 		Optional<Member> dbMember = memberService.findBySocialId(sId);
 		
 		
 		if (dbMember.isEmpty()) {
+			
 			memberService.memberJoin(member);
 			System.out.println("주입완료");
 			Member newMember = memberService.findBySocialId(response.get("kid").toString()).get();
