@@ -5,5 +5,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PetRepositoryCustom {
 	
-	Long deleteByPetId(Long id);
+	Long deleteByPetIdCustom(Long memberId ,Long petId);
 }

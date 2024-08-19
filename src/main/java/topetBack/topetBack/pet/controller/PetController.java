@@ -70,7 +70,7 @@ public class PetController {
 		return ResponseEntity.ok(pet);
 	}
 
-	@PatchMapping("/update")
+	@PostMapping("/update")
 	public ResponseEntity<PetResponseDTO> updatePet(PetRequestDTO petRequestDTO) throws IOException {
 
 		System.out.println("petRequestDTO : " + petRequestDTO);
@@ -100,8 +100,14 @@ public class PetController {
 	}
 	
 	@PostMapping("/deletePet/{memberId}/{petId}")
-	public void deletePet(@PathVariable("petId") Long petId, Long memberId) {
-		petService.deletePet(petId);
+	public ResponseEntity<List<PetResponseDTO>> deletePet(@PathVariable("memberId") Long memberId, @PathVariable("petId") Long petId) {
+		Long deleteQuery = petService.deletePet(memberId ,petId);
+		if(deleteQuery > 0) {
+			List<PetResponseDTO> myPets = memberService.findPetByMember(memberId);
+			return ResponseEntity.ok(myPets);
+		}else {
+			return ResponseEntity.ok(null);
+		}
 	}
 	
 

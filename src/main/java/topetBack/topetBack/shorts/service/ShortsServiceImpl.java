@@ -23,73 +23,62 @@ import topetBack.topetBack.shorts.domain.ShortsSummaryResponseDTO;
 
 @Service
 @RequiredArgsConstructor
-public class ShortsServiceImpl implements ShortsService{
+public class ShortsServiceImpl implements ShortsService {
 
-	
 	private final FileService fileService;
 	private final ShortsRepository shortsRepository;
-	
+
 	@Override
 	@Transactional
 	public ShortsResponseDTO shortsSave(ShortsRequestDTO shortsRequestDTO) throws IOException {
-		
-		
+
 //		String[] paths = fileService.uploadShorts(shortsRequestDTO, FileCategory.SHORTS.getPath());
 //		shortsRequestDTO.setThumbnailPhotoSrc(paths[0]);
 //		shortsRequestDTO.setVideoSrc(paths[1]);
 //		ShortsEntity shortsEntity = shortsRepository.save(shortsRequestDTO.toShortsEntity());
 //		
-		
-		
-		FileInfoEntity imageInfoEntity = fileService.storeFile(shortsRequestDTO.getThumbnailPhoto(), FileCategory.SHORTSTUMBNAIL);
+
+		FileInfoEntity imageInfoEntity = fileService.storeFile(shortsRequestDTO.getThumbnailPhoto(),
+				FileCategory.SHORTSTUMBNAIL);
 		System.out.println(imageInfoEntity.getFilePath());
 		shortsRequestDTO.setThumbnailPhotoSrc(imageInfoEntity.getFilePath());
-		
+
 		FileInfoEntity videoInfoEntity = fileService.storeFile(shortsRequestDTO.getVideo(), FileCategory.SHORTS);
 		System.out.println(videoInfoEntity.getFilePath());
 		shortsRequestDTO.setVideoSrc(videoInfoEntity.getFilePath());
-		
-		
-		
-		
+
 		ShortsEntity shortsEntity = shortsRepository.save(shortsRequestDTO.toShortsEntity());
-		
-		
-		return shortsEntity.toResponseDTO();	
+
+		return shortsEntity.toResponseDTO();
 	}
-	
-	
+
+	@Override
+	public List<ShortsResponseDTO> getAll(int page, int size) {
+		PageRequest pageable = PageRequest.of(page, size);
+
+		Slice<ShortsEntity> allShorts = shortsRepository.findAll(pageable);
+		return allShorts.stream().map(ShortsEntity::toResponseDTO).collect(Collectors.toList());
+
+	}
 
 //	@Override
-//	public List<ShortsResponseDTO> getAll(int page, int size) {
-//        PageRequest pageable = PageRequest.of(page, size);
-//
-//        Slice<ShortsEntity> allShorts = shortsRepository.findAll(pageable);
+//	public List<ShortsResponseDTO> getAll() {
+//        List<ShortsEntity> allShorts = shortsRepository.findAll();
 //		return allShorts.stream()
 //                .map(ShortsEntity::toResponseDTO)
 //                .collect(Collectors.toList());
 //		
 //	}
-	
-	
-	@Override
-	public List<ShortsResponseDTO> getAll() {
-        List<ShortsEntity> allShorts = shortsRepository.findAll();
-		return allShorts.stream()
-                .map(ShortsEntity::toResponseDTO)
-                .collect(Collectors.toList());
-		
-	}
 
 	@Override
 	public ShortsResponseDTO getShortsDetail(Long id) {
 		Optional<ShortsEntity> shortsEntity = shortsRepository.findById(id);
-		if(shortsEntity.isEmpty()) {
+		if (shortsEntity.isEmpty()) {
 			return null;
-		}else {
+		} else {
 			return shortsEntity.get().toResponseDTO();
 		}
-		
+
 	}
 
 	@Override
@@ -98,23 +87,17 @@ public class ShortsServiceImpl implements ShortsService{
 		return randomShorts;
 	}
 
-
-
 	@Override
 	public List<ShortsResponseDTO> getMyShorts(Long authorId) {
 		List<ShortsEntity> myShorts = shortsRepository.findByAuthorId(authorId);
 		return myShorts.stream().map(ShortsEntity::toResponseDTO).collect(Collectors.toList());
 	}
 
-
-
 	@Override
 	public List<ShortsSummaryResponseDTO> getFive() {
-		List<ShortsEntity> list = shortsRepository.findFiveShorts();				
+		List<ShortsEntity> list = shortsRepository.findFiveShorts();
 		return list.stream().map(ShortsEntity::toSummaryResponseDTO).collect(Collectors.toList());
 	}
-
-
 
 	@Override
 	public List<ShortsSummaryResponseDTO> getLikedShortsByAuthorId(Long id, int page, int size) {

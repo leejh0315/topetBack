@@ -147,5 +147,18 @@ public class MemberController {
 			return "fail";
 		}
 	}
+	
+	@PostMapping("/secession/{id}")
+	public String secession(@PathVariable("id")Long memberId , HttpServletRequest req, HttpServletResponse resp) {
+		
+		memberService.deleteById(memberId);
+		String result = sessionManager.remove(req, resp);
+		if (result.equals("success")) {
+			return "success";
+		} else {
+			return "fail";
+		}
+		
+	}
 
 }

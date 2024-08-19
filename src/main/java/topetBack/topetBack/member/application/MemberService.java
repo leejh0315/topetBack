@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import jakarta.transaction.Transactional;
 import topetBack.topetBack.config.SessionManager;
 import topetBack.topetBack.file.application.FileService;
 import topetBack.topetBack.file.domain.FileCategory;
@@ -118,5 +119,9 @@ public class MemberService {
 				.map(PetEntity::toResponseDTO)
 				.collect(Collectors.toList());
 	}
+    @Transactional
+    public void deleteById(Long memberId) {
+    	memberRepository.deleteById(memberId);
+    }
 //    
 }

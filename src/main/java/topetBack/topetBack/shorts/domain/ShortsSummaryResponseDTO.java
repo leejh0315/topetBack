@@ -13,4 +13,7 @@ public class ShortsSummaryResponseDTO {
 	private Long id;
     private String content;
     private String thumbnail;
+    private int commentCount;
+    private int likeCount;
+    
 }

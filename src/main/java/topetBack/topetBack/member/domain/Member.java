@@ -1,15 +1,25 @@
 package topetBack.topetBack.member.domain;
 
 import java.io.Serializable;
+import java.util.List;
 
-
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import topetBack.topetBack.block.domain.BlockEntity;
+import topetBack.topetBack.comment.domain.CommentEntity;
+import topetBack.topetBack.community.domain.CommunityEntity;
 import topetBack.topetBack.file.domain.FileGroupEntity;
-import topetBack.topetBack.pet.domain.PetEntity;
-import topetBack.topetBack.pet.domain.PetResponseDTO;
+import topetBack.topetBack.likes.domain.Likes;
+import topetBack.topetBack.report.domain.ReportEntitiy;
+import topetBack.topetBack.schedule.domain.ScheduleEntity;
+import topetBack.topetBack.shorts.domain.ShortsEntity;
 
 @Getter
 @Entity // Member 라는 객체와 DB 테이블을 매핑합니다. JPA가 관리합니다.
@@ -28,7 +38,35 @@ public class Member implements Serializable {
 	
 	private String profileSrc;
 
+	
+    @OneToMany(mappedBy = "author",cascade = CascadeType.REMOVE)
+    private List<CommentEntity> comment;
+    
+    @OneToMany(mappedBy = "author",cascade = CascadeType.REMOVE)
+    private List<Likes> likes;
+	
+    @OneToMany(mappedBy = "author",cascade = CascadeType.REMOVE)
+    private List<ShortsEntity> shorts;
+	
+    @OneToMany(mappedBy = "author",cascade = CascadeType.REMOVE)
+    private List<CommunityEntity> community;
+    
 
+    
+    @OneToMany(mappedBy = "member",cascade = CascadeType.REMOVE)
+    private List<MemberPet> memberPet;
+    
+    
+    @OneToMany(mappedBy = "blocker",cascade = CascadeType.REMOVE)
+    private List<BlockEntity> block;
+//    
+    @OneToMany(mappedBy = "author",cascade = CascadeType.REMOVE)
+    private List<ReportEntitiy> report;
+    
+    @OneToMany(mappedBy = "author",cascade = CascadeType.REMOVE)
+    private List<ScheduleEntity> schedule;
+	
+    
     @Builder
     public Member(Long id, String socialId, String email, String nickname, String profileSrc, FileGroupEntity fileGroupEntity) {
         this.id = id;

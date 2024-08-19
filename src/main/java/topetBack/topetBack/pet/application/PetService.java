@@ -22,6 +22,6 @@ public interface PetService {
 	
 	Long deleteMember(Long memberId, Long petId);
 	
-	Long deletePet(Long petId);
+	Long deletePet(Long memberId, Long petId);
 //	List<PetResponseDTO> findPetByMember(Long memberId);
 }

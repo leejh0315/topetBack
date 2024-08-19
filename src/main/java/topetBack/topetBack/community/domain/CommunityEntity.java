@@ -2,12 +2,15 @@ package topetBack.topetBack.community.domain;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
 import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.Formula;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import jakarta.persistence.CascadeType;
@@ -27,6 +30,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import topetBack.topetBack.comment.domain.CommentEntity;
 import topetBack.topetBack.file.domain.FileGroupEntity;
 import topetBack.topetBack.file.domain.FileResponseDTO;
 import topetBack.topetBack.hashTag.domain.TagMapping;
@@ -55,7 +59,8 @@ public class CommunityEntity {
     private LocalDateTime updatedTime;
 
     @Comment("작성자")
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
+    @OnDelete(action = OnDeleteAction.CASCADE) 
     private Member author;
 
 	@Column(nullable = false)
@@ -90,7 +95,13 @@ public class CommunityEntity {
     @OneToMany(mappedBy = "community", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     private Set<Likes> likesList = new HashSet<>();
     
+    @OneToMany(mappedBy = "community",cascade = CascadeType.REMOVE)
+    private List<CommentEntity> comment;
     
+    
+    @OneToMany(mappedBy = "community",cascade = CascadeType.REMOVE)
+    private List<Likes> likes;
+	
     
     //댓글 개수
     @Formula("(SELECT count(1) FROM comments r WHERE r.community_id = id)")

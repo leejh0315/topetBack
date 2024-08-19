@@ -16,8 +16,8 @@ public interface ShortsService {
 	
 	
 	List<ShortsResponseDTO> getMyShorts(Long authorId);
-//	public List<ShortsResponseDTO> getAll(int page, int size);
-	List<ShortsResponseDTO> getAll();
+	public List<ShortsResponseDTO> getAll(int page, int size);
+//	List<ShortsResponseDTO> getAll();
 	ShortsResponseDTO getShortsDetail(Long id);	
 	Long getRandomShorts();
 	List<ShortsSummaryResponseDTO> getFive();

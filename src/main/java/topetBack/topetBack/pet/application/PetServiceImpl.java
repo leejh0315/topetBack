@@ -160,10 +160,10 @@ public class PetServiceImpl implements PetService{
 	}
 
 	@Override
-	public Long deletePet(Long petId) {
-		
+	public Long deletePet(Long memberId, Long petId) {
+		System.out.println("petServiceImpl");
 //		memberPetRepository.delete
-		petRepository.deleteByPetId(petId);
+		petRepository.deleteByPetIdCustom(memberId, petId);
 		return null;
 	}
 
