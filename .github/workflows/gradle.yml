@@ -9,6 +9,7 @@ on:
 jobs:
   build-and-deploy:
     if: contains(github.event.head_commit.message, 'deploy')
+    # commit message가 deploy를 포함할 경우에만 배포
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -35,13 +36,11 @@ jobs:
     
     - name: Log in to docker private repo
       uses: docker/login-action@v2
-      env:
-        DOCKER_BUILDKIT: 1
-        DOCKER_CLI_EXPERIMENTAL: enabled
-        DOCKER_BUILDKIT_INLINE_CACHE: 1
-        DOCKER_DAEMON_ALLOW_INSECURE_REGISTRY: true
       with:
-        registry: "topet.site:5000"
+        registry: "topet.site:5000" # private registry 주소
+        # secret 추가후 하단에 하드코딩부분 삭제 처리 및 주석해제
+        # username: ${{ secrets.DOCKER_USERNAME }}
+        # password: ${{ secrets.DOCKER_PASSWORD }}
         username: admin
         password: docker12345
     
@@ -51,4 +50,19 @@ jobs:
         context: . 
         file: ./docker/Dockerfile
         push: true
-        tags: "topet.site:5000/topet:latest"
+        tags: "topet.site:5000/topet:${{ github.run_id }}"
+
+
+    - name: executing remote ssh commands using ssh key
+      uses: appleboy/ssh-action@master
+      with:
+        # secret 등록 후 하드코딩 대체
+        # host: ${{ secrets.HOST }} 
+        # username: ${{ secrets.USERNAME }}
+        # key: ${{ secrets.SSH_KEY }}
+        host: 175.45.202.131
+        username: root
+        key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQC6kGiKDqmw2qBtZtuYJi2YGaxRFvq6DmNNXO0NaLjliGCvXQMW4Akjrbx3S1dlQMlqe97i7p2HDLdtjjabV4+atRCFoV54/oOV75Mx2b6TYtxk37EGxpPZLzQfbwgmkizWe1v0otCjmuXcgihZtjSstdoqqvOiXLaeLAf1a1N4zBmAGlhDihbox8Ov91aKobdCaeK4chwajDjvsgDJkDG0sKfA/RGPhYy8HDw0ntcjisWTJoN48zhnl7vgCB0Q8xVylz4DKqT7/UzhgD6mQz+LNpct86ZvFjiAVECPAvwXBZrPwi/xRjYnF1qGuOC+lfeau2vWxyPchzAd+n0q7s0yE+FBlK3cJGgKXIibSxsAzM61pVhzqniGOwb2chsbMjLeHcWxTBJ6iOQMP/xNxEOas7gio7tKYpiihbXa5hYdDvOFfBzvWlx8p6VQ1cwvfAhJOPYL3HNh+3GB7hz1ytJusFFiqTxs7P8ttfb5BgsaIsJXoq5uy/AM0x6i4iVjeTPW+OpfpRmw0UzdWX6fJIbCJhSur9/tCbCEDncuK6gzLzuN9kqGliff1Wiwcr9Y9lL29YF/wxnavg+kH4dPLB7liYgLC2GWfkc4ehVXvKNDRFf2CfL1GJpb/5Hd5VoJVDJ2mr5Kg0kMaDQr+vyPd13lkmSNOpX4DFU0EDpUQNrIbQ== your_email@example.com"
+        port: 22
+        script: |
+            docker ps -a 
