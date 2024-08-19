@@ -1,9 +1,9 @@
 package topetBack.topetBack.community.domain;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.CreationTimestamp;
@@ -88,7 +88,7 @@ public class CommunityEntity {
     
     
     @OneToMany(mappedBy = "community", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
-    private List<Likes> likesList = new ArrayList<>();
+    private Set<Likes> likesList = new HashSet<>();
     
     
     
@@ -133,7 +133,11 @@ public class CommunityEntity {
                 .updatedTime(this.updatedTime)
                 .title(this.title)
                 .content(this.content)
-//                .hashtag(this.hashtag)
+                .hashtag(
+                		Optional.ofNullable(this.tagMappings)  // tagMappings가 null일 수 있음을 고려
+                        .map(TagMapping::getHashTagResponseDTOList) // tagMappings가 null이 아니면 getHashTagResponseDTOList 호출
+                        .filter(list -> list != null && !list.isEmpty()) // 리스트가 null이 아니고 비어 있지 않은지 확인
+                        .orElse(null)  )
                 .thumbnail(
                         Optional.ofNullable(this.fileGroupEntity.getFileResponseDTOList())
                                 .flatMap(list -> list.stream().findFirst())

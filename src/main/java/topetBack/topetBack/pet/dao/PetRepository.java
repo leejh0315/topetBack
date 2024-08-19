@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 import topetBack.topetBack.pet.domain.PetEntity;
 
 @Repository
-public interface PetRepository extends JpaRepository<PetEntity, Object> , JpaSpecificationExecutor<PetEntity>{
+public interface PetRepository extends JpaRepository<PetEntity, Object> , JpaSpecificationExecutor<PetEntity>, PetRepositoryCustom{
 
 	
     PetEntity getById(Long id);

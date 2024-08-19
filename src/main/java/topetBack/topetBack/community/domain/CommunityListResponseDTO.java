@@ -1,13 +1,13 @@
 package topetBack.topetBack.community.domain;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import topetBack.topetBack.file.domain.FileResponseDTO;
-
-import java.time.LocalDateTime;
-import java.util.List;
+import topetBack.topetBack.hashTag.domain.HashTagResponseDTO;
 
 @Data
 @Builder
@@ -19,7 +19,7 @@ public class CommunityListResponseDTO {
 	private LocalDateTime updatedTime;
 	private String title;
 	private String content;
-	private List<String> hashtag;
+	private List<HashTagResponseDTO> hashtag;
 	private String thumbnail;
 	private int commentCount;
 	private long likeCount;

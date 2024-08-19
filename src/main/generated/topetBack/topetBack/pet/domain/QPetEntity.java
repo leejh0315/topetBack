@@ -35,6 +35,8 @@ public class QPetEntity extends EntityPathBase<PetEntity> {
 
     public final StringPath neutered = createString("neutered");
 
+    public final NumberPath<Long> ownerId = createNumber("ownerId", Long.class);
+
     public final StringPath profileSrc = createString("profileSrc");
 
     public final StringPath type = createString("type");

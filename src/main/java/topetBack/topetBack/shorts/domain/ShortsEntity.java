@@ -37,25 +37,30 @@ public class ShortsEntity {
 	@ManyToOne
 	private Member author;
 	
-	private String title;
 	private String content;
 	private String thumbnailPhotoSrc;
 	private String videoSrc;
 	
-	//좋아요 개수
-    @Formula("(SELECT count(1) FROM likes l WHERE l.community_id = id)")
-    private int likeCount;
-	
-	
+	//댓글 개수
+    @Formula("(SELECT count(1) FROM comments r WHERE r.shorts_id = id)")
+    private int commentCount;
+
+    //좋아요 개수
+    @Formula("(SELECT count(1) FROM likes l WHERE l.shorts_id = id)")
+    private int likeCount;	
+    
+    
 	public ShortsResponseDTO toResponseDTO() {
 		return ShortsResponseDTO.builder()
 				.id(this.id)
-				.title(this.title)
+//				.title(this.title)
 				.content(this.content)
 				.author(this.author.toResponseDTO())
 				.thumbnailPhotoSrc(this.thumbnailPhotoSrc)
 				.videoSrc(this.videoSrc)
-				.likeCount(this.likeCount)
+//				.likeCount(this.likeCount)
+                .commentCount(this.commentCount)
+                .likeCount(this.likeCount)
 				.build();
 				
 	}
@@ -63,7 +68,10 @@ public class ShortsEntity {
 	public ShortsSummaryResponseDTO toSummaryResponseDTO() {
 	       return ShortsSummaryResponseDTO.builder()
 	               .id(this.id)
-	               .title(this.title)
+	               .content(this.content)
+	               .thumbnail(this.thumbnailPhotoSrc)
+//	                .commentCount(this.commentCount)
+//	                .likeCount(this.likeCount)
 	               .build(); // 필요한 필드만 포함
 	   }
 	  	

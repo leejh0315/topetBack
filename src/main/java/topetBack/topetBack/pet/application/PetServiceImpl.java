@@ -56,6 +56,8 @@ public class PetServiceImpl implements PetService{
         if(image != null) {
         	FileInfoEntity fileInfoEntity = fileService.storeFile(image, FileCategory.PET);
         	petRequestDTO.setProfileSrc(fileInfoEntity.getFilePath());
+        }else {
+        	petRequestDTO.setProfileSrc("https://i.pinimg.com/564x/b5/b0/c0/b5b0c0313bfeb3cd262e16b546499a8c.jpg");
         }
         petRequestDTO.setOwnerId(petRequestDTO.getMember().getId());
         PetEntity result = petRepository.save(petRequestDTO.toPetEntity());
@@ -155,6 +157,14 @@ public class PetServiceImpl implements PetService{
 		// TODO Auto-generated method stub
 		Long deleteQuery = memberPetRepository.deleteMember(memberId, petId);
 		return deleteQuery;
+	}
+
+	@Override
+	public Long deletePet(Long petId) {
+		
+//		memberPetRepository.delete
+		petRepository.deleteByPetId(petId);
+		return null;
 	}
 
 //	@Override

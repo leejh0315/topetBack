@@ -15,7 +15,7 @@ import topetBack.topetBack.member.domain.Member;
 public class ShortsRequestDTO {
 	
 	private Long id;
-	private String title;
+//	private String title;
 	private String content;
 	private Member author;
 	private String thumbnailPhotoSrc;
@@ -30,7 +30,7 @@ public class ShortsRequestDTO {
 	public ShortsEntity toShortsEntity() {
 		return ShortsEntity.builder()
 				.id(this.id)
-				.title(this.title)
+//				.title(this.title)
 				.author(this.author)
 				.content(this.content)
 				.thumbnailPhotoSrc(this.thumbnailPhotoSrc)

@@ -28,7 +28,7 @@ public class QLikes extends EntityPathBase<Likes> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
-    public final BooleanPath isLike = createBoolean("isLike");
+    public final topetBack.topetBack.shorts.domain.QShortsEntity shorts;
 
     public QLikes(String variable) {
         this(Likes.class, forVariable(variable), INITS);
@@ -50,6 +50,7 @@ public class QLikes extends EntityPathBase<Likes> {
         super(type, metadata, inits);
         this.author = inits.isInitialized("author") ? new topetBack.topetBack.member.domain.QMember(forProperty("author")) : null;
         this.community = inits.isInitialized("community") ? new topetBack.topetBack.community.domain.QCommunityEntity(forProperty("community"), inits.get("community")) : null;
+        this.shorts = inits.isInitialized("shorts") ? new topetBack.topetBack.shorts.domain.QShortsEntity(forProperty("shorts"), inits.get("shorts")) : null;
     }
 
 }

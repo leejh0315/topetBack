@@ -3,6 +3,8 @@ package topetBack.topetBack.shorts;
 import java.io.IOException;
 import java.util.List;
 
+import org.springframework.data.querydsl.binding.QuerydslPredicate;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -13,11 +15,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.querydsl.core.types.Predicate;
+
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import topetBack.topetBack.config.SessionManager;
+import topetBack.topetBack.shorts.domain.ShortsEntity;
 import topetBack.topetBack.shorts.domain.ShortsRequestDTO;
 import topetBack.topetBack.shorts.domain.ShortsResponseDTO;
+import topetBack.topetBack.shorts.domain.ShortsSummaryResponseDTO;
 import topetBack.topetBack.shorts.service.ShortsService;
 
 @RestController
@@ -38,12 +44,13 @@ public class ShortsController {
 	
 	@GetMapping("/getAll")
 	public ResponseEntity<List<ShortsResponseDTO>> getAllShorts(
-																@RequestParam(name = "page") int page,
-																@RequestParam(name = "size") int size
+//																@RequestParam(name = "page") int page,
+//																@RequestParam(name = "size") int size
 																)
 	{
 		System.out.println("asd");
-		List<ShortsResponseDTO> allShorts =  shortsService.getAll(page,  size);
+//		List<ShortsResponseDTO> allShorts =  shortsService.getAll(page,  size);
+		List<ShortsResponseDTO> allShorts = shortsService.getAll();
 		return ResponseEntity.ok(allShorts);
 	}
 	
@@ -64,5 +71,23 @@ public class ShortsController {
 		List<ShortsResponseDTO> myShorts = shortsService.getMyShorts(authorId);
 		return ResponseEntity.ok(myShorts);
 	}
+	
+	@GetMapping("/fiveShorts")
+	public ResponseEntity<List<ShortsSummaryResponseDTO>> fiveShorts(){
+		List<ShortsSummaryResponseDTO> list = shortsService.getFive();
+		System.out.println(list);
+		return ResponseEntity.ok(list);
+	}
+	
+	  @GetMapping("/likedShorts/{id}")
+	    public ResponseEntity<List<ShortsSummaryResponseDTO>> getLikedShortsByAuthorId(@QuerydslPredicate(root = ShortsEntity.class) Predicate predicate,
+													@PathVariable("id") Long id,
+													@RequestParam(name = "page") int page,
+													@RequestParam(name = "size") int size){
+												    	
+	    	List<ShortsSummaryResponseDTO> shortsList = shortsService.getLikedShortsByAuthorId(id, page, size);
+	    	return new ResponseEntity<>(shortsList, HttpStatus.OK);
+	    }
+	    
 	
 }

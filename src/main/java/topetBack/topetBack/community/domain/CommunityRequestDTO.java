@@ -2,6 +2,7 @@ package topetBack.topetBack.community.domain;
 
 import java.util.List;
 
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 
 import lombok.AllArgsConstructor;
@@ -25,6 +26,10 @@ public class CommunityRequestDTO {
     private String animal;
     private List<MultipartFile> images;
 
+    
+    private List<MultipartFile> editPhoto;
+    private List<Long> deletedPhoto;
+    
 
 	public CommunityEntity toCommunityEntity() {
 

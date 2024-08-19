@@ -26,7 +26,7 @@ public class FileInfoEntity {
     
     
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "file_group_id")
     private FileGroupEntity fileGroupEntity;
 
@@ -34,6 +34,7 @@ public class FileInfoEntity {
     public FileResponseDTO toResponseDTO() {
 
         return FileResponseDTO.builder()
+        		.id(this.id)
                 .path(this.filePath)
                 .build();
     }

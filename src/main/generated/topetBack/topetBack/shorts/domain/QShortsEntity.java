@@ -24,13 +24,15 @@ public class QShortsEntity extends EntityPathBase<ShortsEntity> {
 
     public final topetBack.topetBack.member.domain.QMember author;
 
+    public final NumberPath<Integer> commentCount = createNumber("commentCount", Integer.class);
+
     public final StringPath content = createString("content");
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
-    public final StringPath thumbnailPhotoSrc = createString("thumbnailPhotoSrc");
+    public final NumberPath<Integer> likeCount = createNumber("likeCount", Integer.class);
 
-    public final StringPath title = createString("title");
+    public final StringPath thumbnailPhotoSrc = createString("thumbnailPhotoSrc");
 
     public final StringPath videoSrc = createString("videoSrc");
 

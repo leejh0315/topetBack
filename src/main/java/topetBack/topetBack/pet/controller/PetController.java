@@ -33,8 +33,6 @@ import topetBack.topetBack.pet.domain.PetEntity;
 import topetBack.topetBack.pet.domain.PetRequestDTO;
 import topetBack.topetBack.pet.domain.PetResponseDTO;
 
-
-
 @RestController
 @RequiredArgsConstructor
 @Slf4j
@@ -42,110 +40,69 @@ import topetBack.topetBack.pet.domain.PetResponseDTO;
 public class PetController {
 
 	private static final Logger logger = LoggerFactory.getLogger(PetController.class);
-	
-	
+
 	private final PetService petService;
 	private final SessionManager sessionManager;
 	private final PetRepository petRepository;
 	private final MemberService memberService;
 
-	
 	@PostMapping("/post")
-	public ResponseEntity<PetResponseDTO> petRegistPost(@RequestParam(value="photo", required=false) MultipartFile image,
-								PetRequestDTO petRequestDTO,
-								HttpServletRequest req,
-								HttpServletResponse resp
-								) throws IOException {
-//	    Member sessionMember = sessionManager.getSessionObject(req).toMember();
-//	    petRequestDTO.setMember(sessionMember);
-		System.out.println("욧청왓슴");
+	public ResponseEntity<PetResponseDTO> petRegistPost(
+			@RequestParam(value = "photo", required = false) MultipartFile image, PetRequestDTO petRequestDTO,
+			HttpServletRequest req, HttpServletResponse resp) throws IOException {
 		System.out.println(image);
-	    // PetService를 통해 Pet 등록
-	    PetResponseDTO petResponseDTO = petService.createPet(petRequestDTO, image);
-	    
-//	    sessionManager.refreshPetAdd(petResponseDTO, resp, req);
-	    
-	    return ResponseEntity.ok(petResponseDTO);
+		// PetService를 통해 Pet 등록
+		PetResponseDTO petResponseDTO = petService.createPet(petRequestDTO, image);
+		return ResponseEntity.ok(petResponseDTO);
 	}
-//	@Transactional
-//	@PostMapping("/petRegistrationTest")
-//	public ResponseEntity<PetResponseDTO> petRegistrationTest(@RequestParam(value="photo", required=false) MultipartFile image,
-//														@ModelAttribute PetRequestDTO petRequestDTO,
-//														HttpServletRequest req) throws IOException {
-//		if(image!=null) {
-//			List<MultipartFile> images = new ArrayList<MultipartFile>();
-//			images.add(image);
-//			petRequestDTO.setImage(images);
-//		}
-//		// PetService를 통해 Pet 등록
-//		PetResponseDTO petResponseDTO = petService.createPet(petRequestDTO);
-//
-//		return ResponseEntity.ok(petResponseDTO);
-//	}
 
-	
 	@GetMapping("/getMyPets/{id}")
-	public ResponseEntity<List<PetResponseDTO>> getMyPets(@PathVariable("id")Long id){
+	public ResponseEntity<List<PetResponseDTO>> getMyPets(@PathVariable("id") Long id) {
 		List<PetResponseDTO> myPets = memberService.findPetByMember(id);
 		System.out.println(myPets);
 		return ResponseEntity.ok(myPets);
 	}
-	
+
 	@GetMapping("/petProfileDetail/{id}")
-	public ResponseEntity<PetResponseDTO> petProfileDetail(@PathVariable("id") Long id){
+	public ResponseEntity<PetResponseDTO> petProfileDetail(@PathVariable("id") Long id) {
 		PetResponseDTO pet = petService.findById(id);
 		System.out.println(pet);
 		return ResponseEntity.ok(pet);
 	}
-	
-//	@PostMapping("/postAddPet")
-//	public String addPet(@RequestBody String uid, HttpServletRequest req,
-//			HttpServletResponse resp) throws JsonMappingException, JsonProcessingException{
-//		
-//		Member sessionMember = sessionManager.getSessionObject(req).toMember();
-//		
-//		
-//		PetResponseDTO pet = petService.findByUid(uid.toString());
-//		if(pet == null) {
-//			return "null";
-//		}else {
-//			PetEntity petEntity =petService.findEntityByUid(pet.getUid());
-//			memberService.saveMemberPet(sessionMember, petEntity);
-//			sessionManager.refreshPetAdd(pet, resp, req);
-//			return "done";
-//		}
-//		
-//	}
-	
+
 	@PatchMapping("/update")
-	public ResponseEntity<PetResponseDTO> updatePet(PetRequestDTO petRequestDTO)throws IOException {
-		
+	public ResponseEntity<PetResponseDTO> updatePet(PetRequestDTO petRequestDTO) throws IOException {
+
 		System.out.println("petRequestDTO : " + petRequestDTO);
 		PetResponseDTO petResponseDTO = petService.updatePet(petRequestDTO);
-		
+
 		return ResponseEntity.ok(petResponseDTO);
 	}
-	
+
 	@PostMapping("/postAddPet")
 	public ResponseEntity<PetResponseDTO> addPet(@RequestBody Map<String, String> uid, HttpServletRequest req,
-			HttpServletResponse resp) throws JsonMappingException, JsonProcessingException{
-		
+			HttpServletResponse resp) throws JsonMappingException, JsonProcessingException {
+
 		Long memberId = sessionManager.getSessionObject(req);
-		
+
 		PetResponseDTO pet = petService.findByUid(uid.get("uid"));
-		if(pet != null) {
-			PetEntity petEntity =petService.findEntityByUid(uid.get("uid"));
+		if (pet != null) {
+			PetEntity petEntity = petService.findEntityByUid(uid.get("uid"));
 			memberService.saveMemberPet(memberId, petEntity);
 		}
-//		sessionManager.refreshPetAdd(pet, resp, req);
-		return ResponseEntity.ok(pet);		
+		return ResponseEntity.ok(pet);
 	}
-	
+
 	@PostMapping("/deleteMember")
 	public Long deleteMember(@RequestBody Map<String, Long> data) {
 		Long deleteQuery = petService.deleteMember(data.get("memberId"), data.get("petId"));
 		return deleteQuery;
 	}
 	
-}
+	@PostMapping("/deletePet/{memberId}/{petId}")
+	public void deletePet(@PathVariable("petId") Long petId, Long memberId) {
+		petService.deletePet(petId);
+	}
+	
 
+}

@@ -3,6 +3,8 @@ package topetBack.topetBack.community.domain;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.springframework.core.io.Resource;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -27,6 +29,7 @@ public class CommunityResponseDTO {
 	private String category;
 	private String animal;
     private List<FileResponseDTO> images;
+    
     private int commentCount;
 	private long likeCount;
 

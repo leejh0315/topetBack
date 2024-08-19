@@ -24,6 +24,8 @@ public class QReportEntitiy extends EntityPathBase<ReportEntitiy> {
 
     public final topetBack.topetBack.member.domain.QMember author;
 
+    public final topetBack.topetBack.comment.domain.QCommentEntity comment;
+
     public final topetBack.topetBack.community.domain.QCommunityEntity community;
 
     public final DateTimePath<java.time.LocalDateTime> createdTime = createDateTime("createdTime", java.time.LocalDateTime.class);
@@ -51,6 +53,7 @@ public class QReportEntitiy extends EntityPathBase<ReportEntitiy> {
     public QReportEntitiy(Class<? extends ReportEntitiy> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.author = inits.isInitialized("author") ? new topetBack.topetBack.member.domain.QMember(forProperty("author")) : null;
+        this.comment = inits.isInitialized("comment") ? new topetBack.topetBack.comment.domain.QCommentEntity(forProperty("comment"), inits.get("comment")) : null;
         this.community = inits.isInitialized("community") ? new topetBack.topetBack.community.domain.QCommunityEntity(forProperty("community"), inits.get("community")) : null;
     }
 

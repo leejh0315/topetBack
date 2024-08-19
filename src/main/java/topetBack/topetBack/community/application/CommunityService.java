@@ -22,13 +22,16 @@ public interface  CommunityService {
 
 	public List<CommunityListResponseDTO> getCommunityListByAnimalAndCategory(String animal, String category, int page, int size, Predicate predicate, Long currentUserId, String orderby);
 	
-	CommunityResponseDTO updateCommunity(Long id, CommunityRequestDTO communityRequestDTO) throws NotFoundException;
+	CommunityResponseDTO updateCommunity(Long id, CommunityRequestDTO communityRequestDTO) throws NotFoundException, IOException;
 	
-	List<CommunityListResponseDTO> findByAuthorId (Long id, int page, int size);	//사용자에맞는게시글가져오기
 	
 	void deleteCommunity(Long id) throws NotFoundException;
 	
 	List<CommunityResponseDTO> getCommunityListByAnimalAndLike(String animal);
+	
+	List<CommunityListResponseDTO> findByAuthorId (Long id, int page, int size);	//사용자에맞는게시글가져오기
+	List<CommunityListResponseDTO> getLikedCommunityByAuthorId(Long authorId, int page, int size);
 		
+	List<CommunityListResponseDTO> bestCommunity();
 	
 }

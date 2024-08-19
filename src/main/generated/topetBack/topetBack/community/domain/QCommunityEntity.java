@@ -25,8 +25,6 @@ public class QCommunityEntity extends EntityPathBase<CommunityEntity> {
     public final StringPath animal = createString("animal");
 
     public final topetBack.topetBack.member.domain.QMember author;
-    
-    public final topetBack.topetBack.comment.domain.QCommentEntity comment;
 
     public final StringPath category = createString("category");
 
@@ -38,16 +36,20 @@ public class QCommunityEntity extends EntityPathBase<CommunityEntity> {
 
     public final topetBack.topetBack.file.domain.QFileGroupEntity fileGroupEntity;
 
-    public final StringPath hashtag = createString("hashtag");
-
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public final NumberPath<Integer> likeCount = createNumber("likeCount", Integer.class);
 
-    public final ListPath<topetBack.topetBack.likes.domain.Likes, topetBack.topetBack.likes.domain.QLikes> likesList = this.<topetBack.topetBack.likes.domain.Likes, topetBack.topetBack.likes.domain.QLikes>createList("likesList", topetBack.topetBack.likes.domain.Likes.class, topetBack.topetBack.likes.domain.QLikes.class, PathInits.DIRECT2);
+    public final SetPath<topetBack.topetBack.likes.domain.Likes, topetBack.topetBack.likes.domain.QLikes> likesList = this.<topetBack.topetBack.likes.domain.Likes, topetBack.topetBack.likes.domain.QLikes>createSet("likesList", topetBack.topetBack.likes.domain.Likes.class, topetBack.topetBack.likes.domain.QLikes.class, PathInits.DIRECT2);
+
+    public final topetBack.topetBack.hashTag.domain.QTagMapping tagMappings;
+    
+    public final topetBack.topetBack.hashTag.domain.QHashTagEntity hashTagEntity;
 
     public final StringPath title = createString("title");
 
+    public StringPath tag = createString("tag");
+    
     public final DateTimePath<java.time.LocalDateTime> updatedTime = createDateTime("updatedTime", java.time.LocalDateTime.class);
 
     public QCommunityEntity(String variable) {
@@ -69,8 +71,10 @@ public class QCommunityEntity extends EntityPathBase<CommunityEntity> {
     public QCommunityEntity(Class<? extends CommunityEntity> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.author = inits.isInitialized("author") ? new topetBack.topetBack.member.domain.QMember(forProperty("author")) : null;
-		this.comment = inits.isInitialized("comment") ? new topetBack.topetBack.comment.domain.QCommentEntity(forProperty("comment")) : null;
         this.fileGroupEntity = inits.isInitialized("fileGroupEntity") ? new topetBack.topetBack.file.domain.QFileGroupEntity(forProperty("fileGroupEntity")) : null;
+        this.tagMappings = inits.isInitialized("tagMappings") ? new topetBack.topetBack.hashTag.domain.QTagMapping(forProperty("tagMappings")) : null;
+        this.hashTagEntity = inits.isInitialized("hashTagEntity") ? new topetBack.topetBack.hashTag.domain.QHashTagEntity(forProperty("hashTagEntity")):null;
+        this.tag = this.hashTagEntity.tag;
     }
 
 }

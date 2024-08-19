@@ -11,5 +11,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ShortsSummaryResponseDTO {
 	private Long id;
-    private String title;
+    private String content;
+    private String thumbnail;
 }
