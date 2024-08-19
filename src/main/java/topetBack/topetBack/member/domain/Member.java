@@ -6,6 +6,7 @@ import java.util.List;
 import org.hibernate.annotations.ColumnDefault;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -32,42 +33,43 @@ public class Member implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY) // 값이 없어도 자동으로 할당 합니다.
 	private Long id;
 
+	@Column(unique=true)
 	private String socialId;
 
 	private String name;
 
 	private String email;
 	
-	@ColumnDefault("https://i.pinimg.com/564x/57/70/f0/5770f01a32c3c53e90ecda61483ccb08.jpg") 
+	@ColumnDefault("'https://i.pinimg.com/564x/57/70/f0/5770f01a32c3c53e90ecda61483ccb08.jpg'") 
 	private String profileSrc;
 
 	
-    @OneToMany(mappedBy = "author",cascade = CascadeType.REMOVE)
-    private List<CommentEntity> comment;
-    
-    @OneToMany(mappedBy = "author",cascade = CascadeType.REMOVE)
-    private List<Likes> likes;
-	
-    @OneToMany(mappedBy = "author",cascade = CascadeType.REMOVE)
-    private List<ShortsEntity> shorts;
-	
-    @OneToMany(mappedBy = "author",cascade = CascadeType.REMOVE)
-    private List<CommunityEntity> community;
-    
-
-    
-    @OneToMany(mappedBy = "member",cascade = CascadeType.REMOVE)
-    private List<MemberPet> memberPet;
-    
-    
-    @OneToMany(mappedBy = "blocker",cascade = CascadeType.REMOVE)
-    private List<BlockEntity> block;
+//    @OneToMany(mappedBy = "author",cascade = CascadeType.REMOVE)
+//    private List<CommentEntity> comment;
 //    
-    @OneToMany(mappedBy = "author",cascade = CascadeType.REMOVE)
-    private List<ReportEntitiy> report;
-    
-    @OneToMany(mappedBy = "author",cascade = CascadeType.REMOVE)
-    private List<ScheduleEntity> schedule;
+//    @OneToMany(mappedBy = "author",cascade = CascadeType.REMOVE)
+//    private List<Likes> likes;
+//	
+//    @OneToMany(mappedBy = "author",cascade = CascadeType.REMOVE)
+//    private List<ShortsEntity> shorts;
+//	
+//    @OneToMany(mappedBy = "author",cascade = CascadeType.REMOVE)
+//    private List<CommunityEntity> community;
+//    
+//
+//    
+//    @OneToMany(mappedBy = "member",cascade = CascadeType.REMOVE)
+//    private List<MemberPet> memberPet;
+//    
+//    
+//    @OneToMany(mappedBy = "blocker",cascade = CascadeType.REMOVE)
+//    private List<BlockEntity> block;
+////    
+//    @OneToMany(mappedBy = "author",cascade = CascadeType.REMOVE)
+//    private List<ReportEntitiy> report;
+//    
+//    @OneToMany(mappedBy = "author",cascade = CascadeType.REMOVE)
+//    private List<ScheduleEntity> schedule;
 	
     
     @Builder

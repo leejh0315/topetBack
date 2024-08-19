@@ -64,12 +64,12 @@ public class ShortsEntity {
 //    private int likeCount;	
 //    
     
-    @OneToMany(mappedBy = "shorts",cascade = CascadeType.REMOVE)
-    private List<CommentEntity> comment;
-    
-    
-    @OneToMany(mappedBy = "shorts",cascade = CascadeType.REMOVE)
-    private List<Likes> likes;
+//    @OneToMany(mappedBy = "shorts",cascade = CascadeType.REMOVE)
+//    private List<CommentEntity> comment;
+//    
+//    
+//    @OneToMany(mappedBy = "shorts",cascade = CascadeType.REMOVE)
+//    private List<Likes> likes;
 	
     
 	public ShortsResponseDTO toResponseDTO() {

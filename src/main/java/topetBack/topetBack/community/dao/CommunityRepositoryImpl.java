@@ -18,6 +18,7 @@ import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import topetBack.topetBack.community.domain.CommunityEntity;
+import topetBack.topetBack.member.domain.Member;
 
 @Repository
 public class CommunityRepositoryImpl implements CommunityRepositoryCustom {
@@ -48,11 +49,12 @@ public class CommunityRepositoryImpl implements CommunityRepositoryCustom {
     @Override
     public Slice<CommunityEntity> findAllWithPredicate(Predicate predicate, Pageable pageable, String orderby, String animal, String category) {
     	
+    	   JPAQuery<Long> idQuery = queryFactory
+                   .select(communityEntity.id)
+                   .from(communityEntity)
+                   .where(predicate);
     	
-        JPAQuery<Long> idQuery = queryFactory
-                .select(communityEntity.id)
-                .from(communityEntity)
-                .where(predicate);
+     
 
         // 정렬 기준에 따라 다르게 처리
         if ("likes".equalsIgnoreCase(orderby)) {

@@ -14,6 +14,7 @@ public class TopetBackApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(TopetBackApplication.class, args);
 	}
+	
 	@Bean
     public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurer() {

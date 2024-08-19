@@ -10,12 +10,16 @@ import topetBack.topetBack.member.domain.Member;
 
 public interface MemberRepository extends JpaRepository<Member, Long>{
 
-//	Optional<SessionMember> findBySocialId(String socialId);
-	Optional<Member> findBySocialId(String socialId);
-	Member findByName(String name);
-	
-	
-//	@Query("SELECT m FROM Member m JOIN FETCH m. WHERE m.id = :id")
-//    Member findByIdWithPets(@Param("id") Long id);
-}
 
+	Member save(Member member);
+	
+	
+	
+	
+	
+
+
+
+Optional<Member> findBySocialId(String socialId);
+Member findByName(String name);
+}

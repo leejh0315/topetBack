@@ -70,11 +70,14 @@ public class MemberController {
 		RedirectView redirectView = new RedirectView();
 		Map<String, Object> response = kakaoLoginService.kakaoLogin(code);
 		if (response.isEmpty()) {
-			redirectView.setUrl(frontAddress + "/");
+			redirectView.setUrl(frontAddress + "/login");
 			return redirectView;
 		}
-		Member member = new Member(0L, response.get("kid").toString(), (String) response.get("email"),
-				(String) response.get("nickname"), "https://i.pinimg.com/564x/57/70/f0/5770f01a32c3c53e90ecda61483ccb08.jpg", new FileGroupEntity());
+		
+		String defaultProfileSrc = "https://i.pinimg.com/564x/57/70/f0/5770f01a32c3c53e90ecda61483ccb08.jpg";
+		Member member = new Member(0L, response.get("kid").toString(), response.get("email").toString(),
+				response.get("nickname").toString(), defaultProfileSrc.toString(), new FileGroupEntity());
+		
 		String sId = response.get("kid").toString();
 		Optional<Member> dbMember = memberService.findBySocialId(sId);
 		

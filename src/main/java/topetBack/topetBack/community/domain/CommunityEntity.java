@@ -95,12 +95,12 @@ public class CommunityEntity {
     @OneToMany(mappedBy = "community", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     private Set<Likes> likesList = new HashSet<>();
     
-    @OneToMany(mappedBy = "community",cascade = CascadeType.REMOVE)
-    private List<CommentEntity> comment;
     
     
-    @OneToMany(mappedBy = "community",cascade = CascadeType.REMOVE)
-    private List<Likes> likes;
+//    @OneToMany(mappedBy = "community",cascade = CascadeType.REMOVE)
+//    private List<CommentEntity> comment;
+//    @OneToMany(mappedBy = "community",cascade = CascadeType.REMOVE)
+//    private List<Likes> likes;
 	
     
     //댓글 개수
