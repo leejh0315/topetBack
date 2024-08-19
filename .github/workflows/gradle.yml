@@ -62,7 +62,56 @@ jobs:
         # key: ${{ secrets.SSH_KEY }}
         host: 175.45.202.131
         username: root
-        key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQC6kGiKDqmw2qBtZtuYJi2YGaxRFvq6DmNNXO0NaLjliGCvXQMW4Akjrbx3S1dlQMlqe97i7p2HDLdtjjabV4+atRCFoV54/oOV75Mx2b6TYtxk37EGxpPZLzQfbwgmkizWe1v0otCjmuXcgihZtjSstdoqqvOiXLaeLAf1a1N4zBmAGlhDihbox8Ov91aKobdCaeK4chwajDjvsgDJkDG0sKfA/RGPhYy8HDw0ntcjisWTJoN48zhnl7vgCB0Q8xVylz4DKqT7/UzhgD6mQz+LNpct86ZvFjiAVECPAvwXBZrPwi/xRjYnF1qGuOC+lfeau2vWxyPchzAd+n0q7s0yE+FBlK3cJGgKXIibSxsAzM61pVhzqniGOwb2chsbMjLeHcWxTBJ6iOQMP/xNxEOas7gio7tKYpiihbXa5hYdDvOFfBzvWlx8p6VQ1cwvfAhJOPYL3HNh+3GB7hz1ytJusFFiqTxs7P8ttfb5BgsaIsJXoq5uy/AM0x6i4iVjeTPW+OpfpRmw0UzdWX6fJIbCJhSur9/tCbCEDncuK6gzLzuN9kqGliff1Wiwcr9Y9lL29YF/wxnavg+kH4dPLB7liYgLC2GWfkc4ehVXvKNDRFf2CfL1GJpb/5Hd5VoJVDJ2mr5Kg0kMaDQr+vyPd13lkmSNOpX4DFU0EDpUQNrIbQ== your_email@example.com"
+        key: |
+          -----BEGIN OPENSSH PRIVATE KEY-----
+          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
+          -----END OPENSSH PRIVATE KEY-----        
         port: 22
         script: |
             docker ps -a 
