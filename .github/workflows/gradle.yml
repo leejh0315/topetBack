@@ -116,6 +116,6 @@ jobs:
         script: |
             docker pull topet.site:5000/topet:${{ github.run_id }}
             sed -i "s|topet.site:5000/topet:[^ ]*|topet.site:5000/topet:${{ github.run_id }}|" /root/dockercompose/docker-compose.yml 
-            cd /root/dockercompose && docker-compose up -d --force-recreatels
+            cd /root/dockercompose && docker-compose up -d --force-recreate
             
 
